@@ -20,6 +20,12 @@ class CodeTokenizer{
 
 	private $isClassScope;
 
+	private $currentMethodName = FALSE;
+
+	private $staticVariable = FALSE;
+
+	private $scopedVariables = array();
+
 	function	__construct($code, $isClassScope){
 
 		$this->_tokens = token_get_all($code);
@@ -127,6 +133,16 @@ class CodeTokenizer{
 		else if (in_array($name, $this->_keep)) {
 			$js .= $name;
 			//keep value
+
+			if($name == '{'){
+				$this->incrementBracketCounter();
+			}
+			else if($name == '}'){
+				$this->decrementBracketCounter();
+			}
+
+
+
 		}
 		else if($name == 'T_STRING' && defined($value)){
 			$js .= constant($value);
@@ -163,12 +179,17 @@ class CodeTokenizer{
 	private function T_FUNCTION($value) {
 		$this->next ($name, $value, 2);
 
+		//Used for generating static vars in javascript.
+		$this->currentMethodName = $value;
+
 		if($this->isClassScope == TRUE){
 			return "this.$value = function";
 		}
 		else{
 			return "function $value ";
 		}
+
+		$this->setBracketCounter(0);
 	}
 
 	/**
@@ -269,8 +290,38 @@ class CodeTokenizer{
 	 * @return string
 	 */
 	private function T_VARIABLE($value) {
-		return str_replace('$', '', $value);
+
+		$variableName = str_replace('$', '', $value);
+
+		$javascript = "";
+
+		if($this->staticVariable == TRUE){
+			$javascript .= "if (typeof ".$this->currentMethodName.".$variableName == 'undefined') ";
+			$javascript .= $this->currentMethodName.".$variableName";
+			$this->staticVariable = FALSE;
+
+			$this->scopedVariables[$variableName] =  $this->currentMethodName.".$variableName";
+		}
+		else{
+
+			if(array_key_exists($variableName, $this->scopedVariables) == TRUE){
+				$variableName = $this->scopedVariables[$variableName];
+			}
+
+			$javascript = $variableName;
+		}
+
+		return $javascript;
 	}
+
+
+	private function T_STATIC($value){
+
+		$this->staticVariable = TRUE;
+
+		return "";
+	}
+
 
 	/* helpers */
 
@@ -285,7 +336,10 @@ class CodeTokenizer{
 	}
 
 	private function cVar($var) {
-		return str_replace('$', '', $var);
+
+		return  str_replace('$', '', $var);
+
+
 	}
 
 
@@ -344,6 +398,28 @@ class CodeTokenizer{
 		'T_WHITESPACE',
 	);
 
+	var $bracketCount = 0;
+
+	function	setBracketCounter($count){
+		$this->bracketCount = $count;
+	}
+
+	function incrementBracketCounter(){
+		$this->bracketCount++;
+	}
+
+	function decrementBracketCounter(){
+
+		$this->bracketCount--;
+
+		if($this->bracketCount == 0){
+			$this->endFunction();
+		}
+	}
+
+	function	endFunction(){
+		$this->scopedVariables = array();
+	}
 
 }
 
