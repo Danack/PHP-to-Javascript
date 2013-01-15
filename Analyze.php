@@ -18,7 +18,6 @@ class CodeAnalysis{
 	var $srcFilename;
 
 
-
 	/** @var string */
 	var $className;
 
@@ -42,6 +41,8 @@ class CodeAnalysis{
 
 	var $fixups = array();
 
+	var $isClassScope;
+
 
 	function	__construct($srcFilename, $className){
 
@@ -50,28 +51,46 @@ class CodeAnalysis{
 
 		$this->fileLines = file($this->srcFilename);
 
-		$this->analyzeCode();
+		if($className == FALSE){
+			$this->isClassScope = FALSE;
+		}
+		else{
+			$this->isClassScope = TRUE;
+			require_once($srcFilename);
+			$this->analyzeCodeForClass();
+		}
+
+
 	}
 
 	function	toJavascript(){
 
-		$output = "";
+		if($this->className == FALSE){
 
-		$output .= $this->getClassJavascript();
+			$javascript = $this->generateJavascriptFromFile(0, count($this->fileLines));
 
-		$output .= NL;
-
-		$output .= $this->getMethodsJavascript();
-
-		$output .= NL;
-
-		$output .= $this->getCloseJavascript();
-
-		foreach($this->fixups as $search => $replace){
-			$output = str_replace($search, $replace, $output);
+			return $javascript;
 		}
+		else{
 
-		return $output;
+			$output = "";
+
+			$output .= $this->getClassJavascript();
+
+			$output .= NL;
+
+			$output .= $this->getMethodsJavascript();
+
+			$output .= NL;
+
+			$output .= $this->getCloseJavascript();
+
+			foreach($this->fixups as $search => $replace){
+				$output = str_replace($search, $replace, $output);
+			}
+
+			return $output;
+		}
 	}
 
 
@@ -214,13 +233,13 @@ class CodeAnalysis{
 		$code .= "?>";
 
 
-		$codeTokenizer = new CodeTokenizer($code);
+		$codeTokenizer = new CodeTokenizer($code, $this->isClassScope);
 
 		return $codeTokenizer->toJavascript();
 	}
 
 
-	function	analyzeCode(){
+	function	analyzeCodeForClass(){
 		$this->class = new ReflectionClass($this->className);
 
 		$this->properties = $this->class->getProperties();

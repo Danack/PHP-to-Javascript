@@ -1,5 +1,8 @@
 <?php
 
+define('FILE_TYPE_IMAGE', 'SHOMOAN');
+
+
 class Content{
 
 	var $contentID;
@@ -12,6 +15,8 @@ class Content{
 		$this->text = $text;
 
 		$this->id = 12345;
+
+		echo "FILE_TYPE_IMAGE is ".FILE_TYPE_IMAGE;
 	}
 
 	function	getThumbnailURL($shamoan){
@@ -23,5 +28,11 @@ class Content{
 		return urlencode($output);
 	}
 }
+
+
+
+
+
+
 
 ?>

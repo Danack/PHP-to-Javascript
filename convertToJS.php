@@ -5,22 +5,21 @@
 require_once("Analyze.php");
 require_once("functions.php");
 
-
 $exportPath = "export";
 
 $filesToConvert = array(
-	"Content",
+	"Content" => 'Content',
+	'Code' => FALSE,
 );
+
 
 try{
 
-	foreach($filesToConvert as $fileToConvert){
+	foreach($filesToConvert as $fileToConvert => $classToExtract){
 
 		$srcFilename = "src/".$fileToConvert.".php";
 
-		require_once($srcFilename);
-
-		$codeAnalysis = new CodeAnalysis($srcFilename, "Content");
+		$codeAnalysis = new CodeAnalysis($srcFilename, $classToExtract);
 
 		$jsOutput = $codeAnalysis->toJavascript();
 

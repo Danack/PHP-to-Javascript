@@ -4,67 +4,10 @@
 class ProcessingFinishedException extends Exception{};
 
 
-/** @var array these token keys will be converted to their values */
-$tokensToConvert = array (
-	'T_IS_EQUAL'=>'==',
-	'T_IS_GREATER_OR_EQUAL'=>'>=',
-	'T_IS_SMALLER_OR_EQUAL'=>'<=',
-	'T_IS_IDENTICAL'=>'===',
-	'T_IS_NOT_EQUAL'=>'!=',
-	'T_IS_NOT_IDENTICAL'=>'!==',
-	'T_IS_SMALLER_OR_EQUA'=>'<=',
-	'T_BOOLEAN_AND'=>'&&',
-	'T_BOOLEAN_OR'=>'||',
-	'T_CONCAT_EQUAL'=>'+= ',
-	'T_DIV_EQUAL'=>'/=',
-	'T_DOUBLE_COLON'=>'.',
-	'T_INC'=>'++',
-	'T_MINUS_EQUAL'=>'-=',
-	'T_MOD_EQUAL'=>'%=',
-	'T_MUL_EQUAL'=>'*=',
-	'T_OBJECT_OPERATOR'=>'.',
-	'T_OR_EQUAL'=>'|=',
-	'T_PLUS_EQUAL'=>'+=',
-	'T_SL'=>'<<',
-	'T_SL_EQUAL'=>'<<=',
-	'T_SR'=>'>>',
-	'T_SR_EQUAL'=>'>>=',
-	'T_START_HEREDOC'=>'<<<',
-	'T_XOR_EQUAL'=>'^=',
-	'T_NEW'=>'new',
-	'T_ELSE'=>'else',
-	'.'=>'+',
-	'T_IF'=>'if',
-	'T_RETURN'=>'return',
-	'T_AS'=>'in',
-	'T_WHILE'=>'while',
-	'T_LOGICAL_AND' => 'AND',
-	'T_LOGICAL_OR' => 'OR',
-	'T_LOGICAL_XOR' => 'XOR',
-	'T_EVAL' => 'eval',
-	'T_ELSEIF' => 'else if',
-	'T_BREAK' => 'break',
-	'T_DOUBLE_ARROW' => ':',
-);
-
-/** @var array these tokens stays the same */
-$tokensToKeep = array(
-	'=', ',', '}', '{', ';', '(', ')', '*', '/', '+', '-', '>', '<', '[', ']',
-);
-
-/** @var array these tokens keeps their value */
-$tokensKeepValue = array (
-	'T_CONSTANT_ENCAPSED_STRING', 'T_STRING', 'T_COMMENT', 'T_ML_COMMENT', 'T_DOC_COMMENT', 'T_LNUMBER',
-	'T_WHITESPACE',
-);
-
-
-
 class CodeTokenizer{
 
 	var $sourceCode;
 
-	//var $tokens;
 
 	/** @var array holds tokens of the php file being converted */
 	private $_tokens;
@@ -75,11 +18,16 @@ class CodeTokenizer{
 	/** @var javascript gets collected here */
 	private $js = '';
 
-	function	__construct($code){
+	private $isClassScope;
+
+	function	__construct($code, $isClassScope){
 
 		$this->_tokens = token_get_all($code);
 		//$this->count = count($this->_tokens)-1; //bet it's skipping the closing ? >
 		$this->count = count($this->_tokens);
+
+		$this->isClassScope = $isClassScope;
+
 	}
 
 	function	toJavascript(){
@@ -180,6 +128,9 @@ class CodeTokenizer{
 			$js .= $name;
 			//keep value
 		}
+		else if($name == 'T_STRING' && defined($value)){
+			$js .= constant($value);
+		}
 		else if (in_array($name, $this->_keepValue)) {
 			$js .= $value;
 			//call method
@@ -200,7 +151,7 @@ class CodeTokenizer{
 	 */
 	private function T_CLASS($value) {
 		$this->next ($name, $value, 2);
-		return "function $value() ";
+		return "function $value()";
 	}
 
 	/**
@@ -211,7 +162,13 @@ class CodeTokenizer{
 	 */
 	private function T_FUNCTION($value) {
 		$this->next ($name, $value, 2);
-		return "this.$value = function";
+
+		if($this->isClassScope == TRUE){
+			return "this.$value = function";
+		}
+		else{
+			return "function $value ";
+		}
 	}
 
 	/**
@@ -221,7 +178,7 @@ class CodeTokenizer{
 	 * @return string
 	 */
 	private function T_ECHO($value) {
-		return 'document.write('.$this->parseUntil(';').');';
+		return 'document.write('.trim($this->parseUntil(';')).');';
 	}
 
 	/**
@@ -362,7 +319,7 @@ class CodeTokenizer{
 		'T_XOR_EQUAL'=>'^=',
 		'T_NEW'=>'new',
 		'T_ELSE'=>'else',
-		'.'=>'+',
+		'.'=>' + ',
 		'T_IF'=>'if',
 		'T_RETURN'=>'return',
 		'T_AS'=>'in',
