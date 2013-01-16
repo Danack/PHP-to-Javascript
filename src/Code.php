@@ -1,6 +1,33 @@
 <?php
 
 
+$testArray = array(
+	"lol" => 'wut'
+);
+
+foreach($testArray as $key => $object){
+	echo "$key";
+}
+
+
+$test = 1;
+
+echo "Shamoan $test";
+
+//function	testArray($noteDescription){
+//
+//	$contentData = array('text' => $noteDescription);
+//
+//
+//
+//	//foreach($contentData as $key => $value){
+//	//	echo "key $key value $value".NL;
+//	//}
+//}
+
+
+
+/*
 $content = new Content(1234, 'image');
 
 
@@ -20,5 +47,10 @@ function testFunction3(){
 	$testVar++;
 	echo "testVar = ".$testVar."\r\n";
 }
+
+*/
+
+
+
 
 ?>

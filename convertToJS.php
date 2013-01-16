@@ -8,7 +8,7 @@ require_once("functions.php");
 $exportPath = "export";
 
 $filesToConvert = array(
-	"Content" => 'Content',
+	//"Content" => 'Content',
 	'Code' => FALSE,
 );
 

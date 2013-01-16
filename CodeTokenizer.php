@@ -1,13 +1,12 @@
 <?php
 
 
-class ProcessingFinishedException extends Exception{};
+//class ProcessingFinishedException extends Exception{};
 
 
 class CodeTokenizer{
 
 	var $sourceCode;
-
 
 	/** @var array holds tokens of the php file being converted */
 	private $_tokens;
@@ -102,11 +101,30 @@ class CodeTokenizer{
 	 * @param array $_needles
 	 * @return string
 	 */
-	private function parseUntil ($_needles, $_schema=array(), $includeMatch = false) {
+	private function parseUntil ($_needles, $_schema=array(), $includeMatch = false, $breakOutVariables = TRUE) {
 		$name = $value = $js = $tmp = '';
+
+		$previousToken = FALSE;
+
+
 		while (true) {
 			$this->next ($name, $value);
+
+			$backToString = FALSE;
+
+			if($breakOutVariables == TRUE &&
+				$name == 'T_VARIABLE' &&
+				$previousToken == 'T_ENCAPSED_AND_WHITESPACE'){
+				$tmp = $tmp.'" + ';
+			}
+			if($breakOutVariables == TRUE &&
+				($name == 'T_ENCAPSED_AND_WHITESPACE' || $name == 'T_STRING' || $name == '"' || $name == "'" ) &&
+				$previousToken == 'T_VARIABLE' ){
+				$tmp = $tmp.'+ "';
+			}
+
 			$this->parseToken($name, $value, $tmp, $_schema);
+
 			if (in_array($name, (array)$_needles)) {
 				if ($includeMatch === true) {
 					return $tmp;
@@ -114,6 +132,7 @@ class CodeTokenizer{
 					return $js;
 				}
 			}
+			$previousToken = $name;
 			$js = $tmp;
 		}
 	}
@@ -140,9 +159,6 @@ class CodeTokenizer{
 			else if($name == '}'){
 				$this->decrementBracketCounter();
 			}
-
-
-
 		}
 		else if($name == 'T_STRING' && defined($value)){
 			$js .= constant($value);
@@ -169,6 +185,9 @@ class CodeTokenizer{
 		$this->next ($name, $value, 2);
 		return "function $value()";
 	}
+
+
+
 
 	/**
 	 * define function
@@ -199,6 +218,10 @@ class CodeTokenizer{
 	 * @return string
 	 */
 	private function T_ECHO($value) {
+
+		//TODO - this is broken;
+		// e.g. echo "value is $value";
+
 		return 'document.write('.trim($this->parseUntil(';')).');';
 	}
 
@@ -210,7 +233,7 @@ class CodeTokenizer{
 	 */
 	private function T_ARRAY($value) {
 		$_convert = array('('=>'{',	')'=>'}',);
-		$js = $this->parseUntil(array(';'), $_convert, true);
+		$js = $this->parseUntil(array(';'), $_convert, true, FALSE);
 		if (strpos($js, ':') === false) {
 			$this->tmp = -1;
 			$js = preg_replace_callback ('/([{, \t\n])(\'.*\')(|.*:(.*))([,} \t\n])/Uis', array($this, 'cb_T_ARRAY'), $js);
@@ -259,6 +282,8 @@ class CodeTokenizer{
 			$jsTmp = $js;
 		}
 	}
+
+
 
 	/**
 	 * declare a public class var
@@ -390,11 +415,13 @@ class CodeTokenizer{
 	/** @var array these tokens stays the same */
 	private $_keep = array(
 		'=', ',', '}', '{', ';', '(', ')', '*', '/', '+', '-', '>', '<', '[', ']',
+
+		"\"", "'",
 	);
 
 	/** @var array these tokens keeps their value */
 	private $_keepValue = array (
-		'T_CONSTANT_ENCAPSED_STRING', 'T_STRING', 'T_COMMENT', 'T_ML_COMMENT', 'T_DOC_COMMENT', 'T_LNUMBER',
+		'T_CONSTANT_ENCAPSED_STRING', 'T_STRING', 'T_COMMENT', 'T_ML_COMMENT', 'T_DOC_COMMENT', 'T_LNUMBER', 'T_ENCAPSED_AND_WHITESPACE',
 		'T_WHITESPACE',
 	);
 

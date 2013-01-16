@@ -6,8 +6,7 @@ if(defined('NL') == FALSE){
 
 
 require_once('CodeTokenizer.php');
-
-
+require_once('CodeConverter.php');
 
 
 class CodeAnalysis{
@@ -233,7 +232,9 @@ class CodeAnalysis{
 		$code .= "?>";
 
 
-		$codeTokenizer = new CodeTokenizer($code, $this->isClassScope);
+		//$codeTokenizer = new CodeTokenizer($code, $this->isClassScope);
+		$codeTokenizer = new CodeConverter($code, $this->isClassScope);
+
 
 		return $codeTokenizer->toJavascript();
 	}
