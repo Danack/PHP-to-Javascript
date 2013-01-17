@@ -1,8 +1,11 @@
 <?php
 
 require_once('TokenStream.php');
+
+require_once('CodeScope.php');
 require_once('ConverterStateMachine.php');
 require_once('ConverterStates.php');
+
 
 
 
@@ -46,7 +49,7 @@ class CodeConverter{
 			while($reprocess == TRUE);
 		}
 
-		return implode('', $this->stateMachine->getJSArray());
+		return $this->stateMachine->finalize();
 	}
 }
 

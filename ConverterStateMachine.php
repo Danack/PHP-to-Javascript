@@ -1,6 +1,21 @@
 <?php
 
 
+define('DECLARATION_TYPE_STATIC', 0x1);
+define('DECLARATION_TYPE_PRIVATE', 0x2);
+define('DECLARATION_TYPE_PUBLIC', 0x4);
+define('DECLARATION_TYPE_CLASS', 0x8);
+
+
+define('METHOD_MARKER_MAGIC_STRING', "/* METHODS HERE */");
+
+//Objective corporation
+
+//Brand screen
+
+//Bullet proof - ux engineer
+
+
 /** @var array these token keys will be converted to their values */
 $_convert = array (
 	'T_IS_EQUAL'=>'==',
@@ -90,19 +105,9 @@ class	ConverterStateMachine{
 	public $states = array();
 
 	/**
-	 * @var string
-	 */
-	public $currentMethodName;
-
-	/**
-	 * @var string[]
-	 */
-	public $scopedVariables = array();
-
-	/**
 	 * @var bool Are we inside static var or function?
 	 */
-	public $staticVariable = FALSE;
+	public $variableFlags = FALSE;
 
 	/**
 	 * @var TokenStream
@@ -111,14 +116,24 @@ class	ConverterStateMachine{
 
 	public $pendingSymbols = array();
 
+	/** @var CodeScope */
+	public $currentScope = NULL;
 
-	/** @var int counts the number of brackets so that we can tell when we exit a function block */
-	public $bracketCounter = 0;
+	/** @var CodeScope[] */
+	public $scopesStack = array();
+
+
+	public $constructorInfoArray = array();
+
+	public $constructorStartIndex = 0;
+	public $methodsStartIndex = 0;
 
 	function	__construct($tokenStream, $defaultState, $isClassScope){
 
 		$this->tokenStream = $tokenStream;
 		$this->isClassScope = $isClassScope;
+
+		$this->pushScope(CODE_SCOPE_GLOBAL, 'GLOBAL');
 
 		$this->states[CONVERTER_STATE_DEFAULT] = new CodeConverterState_Default($this);
 		$this->states[CONVERTER_STATE_ECHO] = new CodeConverterState_Echo($this);
@@ -130,7 +145,16 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_FOREACH] = new CodeConverterState_T_FOREACH($this);
 		$this->states[CONVERTER_STATE_PUBLIC] = new CodeConverterState_T_PUBLIC($this);
 		$this->states[CONVERTER_STATE_VARIABLE] = new CodeConverterState_T_VARIABLE($this);
+
+		$this->states[CONVERTER_STATE_VARIABLE_GLOBAL] = new CodeConverterState_T_VARIABLE_GLOBAL($this);
+		$this->states[CONVERTER_STATE_VARIABLE_FUNCTION] = new CodeConverterState_T_VARIABLE_FUNCTION($this);
+		$this->states[CONVERTER_STATE_VARIABLE_CLASS] = new CodeConverterState_T_VARIABLE_CLASS($this);
+
 		$this->states[CONVERTER_STATE_STATIC] = new CodeConverterState_T_STATIC($this);
+		$this->states[CONVERTER_STATE_STRING] = new CodeConverterState_T_STRING($this);
+
+		$this->states[CONVERTER_STATE_T_PUBLIC] = new CodeConverterState_T_PUBLIC($this);
+		$this->states[CONVERTER_STATE_T_PRIVATE] = new CodeConverterState_T_PRIVATE($this);
 
 		$this->currentState = $defaultState;
 	}
@@ -139,75 +163,44 @@ class	ConverterStateMachine{
 		$this->tokenStream->skipTokens($skipCount);
 	}
 
-
-	function	addScopedVariable($variableName){
-		if($this->currentMethodName == FALSE){
-			throw new Exception("Trying to addScopedVariable [$variableName] but current method name is FALSE");
-		}
-
-		$this->scopedVariables[$variableName] =  $this->currentMethodName.".$variableName";
+	function	addScopedVariable($variableName, $variableFlags){
+		$this->currentScope->addScopedVariable($variableName, $variableFlags);
 	}
 
-	function	getScopedVariable($variableName){
+//	function	getScopedVariableName($variableName){
+//		return $this->currentScope->getScopedVariable($variableName);
+//	}
 
-		$cVar = cvar($variableName);
+	function	getVariableNameForScope($scopeType, $variableName, $isClassVariable){
 
-		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
-			return $this->scopedVariables[$cVar];
+		if($this->currentScope->type == $scopeType){
+			return $this->currentScope->getScopedVariable($variableName, $isClassVariable);
 		}
+
+		foreach($this->scopesStack as $scope){
+			if($scope->type == $scopeType){
+				return $scope->getScopedVariable($variableName, $isClassVariable);
+			}
+		}
+
+
 
 		return $variableName;
 	}
 
-	//Used for generating static vars in javascript.
-	function	beginParsingMethod($value){
-		$this->currentMethodName = $value;
-
-		if($this->bracketCounter != 0){
-			throw new Exception("bracketCounter is not zero - how can this be.");
-		}
-
-		$this->bracketCounter = 0;
-
-		$this->scopedVariables = array();
-	}
-
-	function	endParsingMethod(){
-		$this->currentMethodName = FALSE;
-		$this->bracketCounter = 0;
-
-		$this->scopedVariables = array();
-	}
-
-	function	incrementBracketCounter(){
-		if($this->currentMethodName != FALSE){
-			$this->bracketCounter++;
-		}
-	}
-
-	function	decrementBracketCounter(){
-		if($this->currentMethodName != FALSE){
-			$this->bracketCounter--;
-
-			if($this->bracketCounter <= 0){
-				$this->endParsingMethod();
-			}
-		}
-	}
-
-
-	function	resetStateVariables(){
-		//$this->currentMethodName = FALSE; this ought to be reset somewhere
-//		$this->scopedVariables = array();
-		//$this->staticVariable = FALSE; HMM
-	}
-
-//	function	endParsingMethod(){
-//		$this->scopedVariables = array();
-//	}
 
 	function	getJSArray(){
 		return $this->jsArray;
+	}
+
+	function getJS($startIndex, $endIndex){
+		$return = '';
+
+		for ($x=$startIndex ; $x<$endIndex ; $x++){
+			$return .= $this->jsArray[$x];
+		}
+
+		return $return;
 	}
 
 	public function addJS($jsString){
@@ -215,25 +208,15 @@ class	ConverterStateMachine{
 	}
 
 	function	changeToState($newState){
-
-		$oldState = $this->currentState;
-
-		if($newState != CONVERTER_STATE_DEFAULT &&
-			$this->currentState != CONVERTER_STATE_DEFAULT){
-			echo "Mild astonishment! Current state ".$this->currentState." new state $newState - neither is 'CONVERTER_STATE_DEFAULT'".NL;
-		}
-
 		if(array_key_exists($newState, $this->states) == FALSE){
 			throw new Exception("Unknown state [$newState], cannot changeState to it.");
 		}
 
 		$this->currentState = $newState;
+	}
 
-		$this->resetStateVariables();
-
-		if($oldState == CONVERTER_STATE_VARIABLE){
-			$this->staticVariable = FALSE;
-		}
+	function	clearVariableFlags(){
+		$this->variableFlags = FALSE;
 	}
 
 	function	processToken($name, $value, $parsedToken){
@@ -247,14 +230,27 @@ class	ConverterStateMachine{
 
 	function parseToken ($name, $value) {
 
-		$returnValue =
-
 		$returnValue = $this->getPendingInsert($name);
 
-		if($name == "T_VARIABLE"){
-			$returnValue .= $this->getScopedVariable($value);
+		if($name == "{"){
+			$this->currentScope->pushBracket();
 		}
-		else if (in_array($name, array_keys($GLOBALS['_convert']))) {
+
+		if($name == "}"){
+			$scopeEnded = $this->currentScope->popBracket();
+
+			if ($scopeEnded == TRUE){
+				$this->popCurrentScope();
+			}
+		}
+
+		if($name == "T_VARIABLE"){
+			//throw new Exception("This shouldn't happen.");
+			//$returnValue .= $this->getScopedVariableName($value);
+			$returnValue .= $value;
+		}
+		else
+			if (in_array($name, array_keys($GLOBALS['_convert']))) {
 			$returnValue .= (!empty($GLOBALS['_convert'][$name])) ? $GLOBALS['_convert'][$name] : $name;
 			//keep key
 		}
@@ -292,6 +288,102 @@ class	ConverterStateMachine{
 	function	setPendingSymbol($symbol, $insert){
 		$this->pendingSymbols[] = array($symbol, $insert);
 	}
+
+	function	getScopeType(){
+		return $this->currentScope->type;
+	}
+
+	function	getScopeName(){
+		return $this->currentScope->getName();
+	}
+
+	function	pushScope($type, $name){
+		if($this->currentScope != NULL){
+			array_push($this->scopesStack, $this->currentScope);
+		}
+
+//		if($type == CODE_SCOPE_FUNCTION){
+//			if($this->currentScope->type == CODE_SCOPE_CLASS){
+//				$this->markMethodsStart();
+//			}
+//		}
+
+
+		$this->currentScope = new CodeScope($type, $name, $this->currentScope);
+
+		if($type == CODE_SCOPE_CLASS){
+			$this->methodsStartIndex = 0;
+		}
+	}
+
+	function	popCurrentScope(){
+		//Do something with $this->currentScope before destroying it?
+
+		$constructorEndIndex = 0;
+
+		if($this->constructorStartIndex != 0){
+			$constructorEndIndex = count($this->jsArray);;
+		}
+
+
+		$this->currentScope = array_pop($this->scopesStack);
+
+		if($this->currentScope->type == CODE_SCOPE_CLASS && $constructorEndIndex != 0){
+			$this->constructorInfoArray[] = array(
+				$this->currentScope->name,
+				$this->constructorStartIndex,
+				$constructorEndIndex
+			);
+			$this->constructorStartIndex = 0;
+		}
+	}
+
+
+
+	function	finalize(){
+		$code =  implode('', $this->getJSArray());
+
+		foreach($this->constructorInfoArray as $constructorInfo){
+			$className = $constructorInfo[0];
+			$startIndex = $constructorInfo[1];
+			$endIndex = $constructorInfo[2];
+
+			//echo "Replace constructor ".$className." ".$startIndex." ".$endIndex.NL;
+
+			$search = $className."()";
+			$constructor = $this->getJS($startIndex, $endIndex);
+
+			$firstBracketPosition = strpos($constructor, '{');
+
+			$constructorDeclaration = substr($constructor, 0, $firstBracketPosition);
+
+			$constructorBody = substr($constructor, $firstBracketPosition + 1);
+
+			$code = str_replace($search, $className.$constructorDeclaration, $code);
+
+			$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
+		}
+
+		return $code;
+	}
+
+	function	markConstructorStart(){
+		$this->constructorStartIndex = count($this->jsArray);
+
+		//echo "constructorStartIndex ".$this->constructorStartIndex.NL;
+	}
+
+	function	markMethodsStart(){
+
+		if($this->methodsStartIndex == 0){
+			$this->methodsStartIndex = count($this->jsArray);
+			$this->addJS(NL.METHOD_MARKER_MAGIC_STRING.NL);
+
+
+		}
+	}
+
+
 
 }
 

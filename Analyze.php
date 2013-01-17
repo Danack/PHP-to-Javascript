@@ -5,7 +5,6 @@ if(defined('NL') == FALSE){
 }
 
 
-require_once('CodeTokenizer.php');
 require_once('CodeConverter.php');
 
 
@@ -52,6 +51,7 @@ class CodeAnalysis{
 
 		if($className == FALSE){
 			$this->isClassScope = FALSE;
+			require_once($srcFilename);
 		}
 		else{
 			$this->isClassScope = TRUE;
@@ -226,7 +226,7 @@ class CodeAnalysis{
 
 		//+1 and -1 as we skip the outside {} for the function.
 		for($x=$startLine + 1 ; $x<$endLine - 1 ; $x++){
-			$code .= $this->fileLines[$x].NL;
+			$code .= $this->fileLines[$x];
 		}
 
 		$code .= "?>";

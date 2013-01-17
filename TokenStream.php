@@ -47,12 +47,19 @@ class TokenStream{
 		$this->current++;
 	}
 
+
+	function	getCurrentIndex(){
+		return $this->current;
+	}
+
+
 	/**
 	 * find and return first name matching argument
 	 *
 	 * @param mixed $_tokenNames
 	 * @return string
 	 */
+	/*
 	private function findFirst($_needles){
 
 		$name = $value = '';
@@ -63,7 +70,7 @@ class TokenStream{
 				return $name;
 			}
 		}
-	}
+	}*/
 }
 
 

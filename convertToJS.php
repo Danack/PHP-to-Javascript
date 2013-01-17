@@ -1,20 +1,19 @@
 <?php
 
-//require_once("PHP2JS.php");
-
 require_once("Analyze.php");
 require_once("functions.php");
 
 $exportPath = "export";
 
+
 $filesToConvert = array(
-	//"Content" => 'Content',
-	'Code' => FALSE,
+	//'Code' => FALSE,
+	"Content" => FALSE, //'Content',
+	//"Picture" => 'Picture',
 );
 
 
 try{
-
 	foreach($filesToConvert as $fileToConvert => $classToExtract){
 
 		$srcFilename = "src/".$fileToConvert.".php";
