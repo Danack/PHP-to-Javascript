@@ -1,6 +1,9 @@
 <?php
 
 require_once('TokenStream.php');
+require_once('ConverterStateMachine.php');
+require_once('ConverterStates.php');
+
 
 
 class CodeConverter{
@@ -17,7 +20,7 @@ class CodeConverter{
 
 	function	__construct($code, $isClassScope){
 		$this->tokenStream = new TokenStream($code);
-		$this->stateMachine = new ConverterStateMachine(CONVERTER_STATE_DEFAULT, $isClassScope);
+		$this->stateMachine = new ConverterStateMachine($this->tokenStream, CONVERTER_STATE_DEFAULT, $isClassScope);
 	}
 
 	function	toJavascript(){
@@ -27,13 +30,23 @@ class CodeConverter{
 		while($this->tokenStream->moreTokens() == TRUE){
 			$this->tokenStream->next($name, $value);
 
+			$count = 0;
+
 			do{
-				$reprocess = $this->stateMachine->processToken($name, $value);
+				$parsedToken = $this->stateMachine->parseToken($name, $value);
+
+				$reprocess = $this->stateMachine->processToken($name, $value, $parsedToken);
+
+				if($count > 5){
+					throw new Exception("Stuck converting same token.");
+				}
+
+				$count++;
 			}
 			while($reprocess == TRUE);
 		}
 
-		return implode("\n", $this->stateMachine->getJSArray());
+		return implode('', $this->stateMachine->getJSArray());
 	}
 }
 

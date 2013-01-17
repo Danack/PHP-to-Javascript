@@ -1,54 +1,26 @@
 <?php
 
+function test1($param1){
 
-$testArray = array(
-	"lol" => 'wut'
-);
+	static $var1 = 0;
+	$var2 = "Hello";
 
-foreach($testArray as $key => $object){
-	echo "$key";
+	echo $var2." ".$var1;
+
+	$var1++;
 }
 
+$var1 = 'test';
 
-$test = 1;
+alert($var1);
 
-echo "Shamoan $test";
+function test2($param1){
 
-//function	testArray($noteDescription){
-//
-//	$contentData = array('text' => $noteDescription);
-//
-//
-//
-//	//foreach($contentData as $key => $value){
-//	//	echo "key $key value $value".NL;
-//	//}
-//}
+	$var1 = "Hello";
 
-
-
-/*
-$content = new Content(1234, 'image');
-
-
-function	testFunction(){
-	echo "Shamoan";
+	echo $var1;
 }
 
-function testFunction2(){
-	static $testVar = 0;
-	echo "testVar = ".$testVar."\r\n";
-	$testVar++;
-}
-
-
-function testFunction3(){
-	$testVar = 0;
-	$testVar++;
-	echo "testVar = ".$testVar."\r\n";
-}
-
-*/
 
 
 
