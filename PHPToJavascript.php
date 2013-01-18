@@ -1,15 +1,23 @@
 <?php
 
-require_once('TokenStream.php');
+if(defined('NL') == FALSE){
+	define('NL', "\r\n");
+}
 
+//Control output of the state-machine trace
+define("PHPToJavascript_TRACE", FALSE);
+
+
+require_once('TokenStream.php');
 require_once('CodeScope.php');
 require_once('ConverterStateMachine.php');
 require_once('ConverterStates.php');
 
 
+class PHPToJavascript{
 
-
-class CodeConverter{
+	/** @var string */
+	var $srcFilename;
 
 	/**
 	 * @var TokenStream
@@ -21,7 +29,17 @@ class CodeConverter{
 	 */
 	public $stateMachine;
 
-	function	__construct($code){
+	function	__construct($srcFilename){
+
+		$this->srcFilename = $srcFilename;
+		$fileLines = file($this->srcFilename);
+
+		$code = "";
+
+		foreach($fileLines as $fileLine){
+			$code .= $fileLine;
+		}
+
 		$this->tokenStream = new TokenStream($code);
 		$this->stateMachine = new ConverterStateMachine($this->tokenStream, CONVERTER_STATE_DEFAULT);
 	}
@@ -52,6 +70,8 @@ class CodeConverter{
 		return $this->stateMachine->finalize();
 	}
 }
+
+
 
 
 ?>

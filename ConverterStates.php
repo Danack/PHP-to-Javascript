@@ -32,6 +32,9 @@ define('CONVERTER_STATE_STRING', 		'CONVERTER_STATE_STRING');
 define('CONVERTER_STATE_T_PUBLIC', 		'CONVERTER_STATE_T_PUBLIC');
 define('CONVERTER_STATE_T_PRIVATE', 'CONVERTER_STATE_T_PRIVATE');
 
+define('CONVERTER_STATE_DEFINE', 'CONVERTER_STATE_DEFINE');
+
+
 
 
 abstract class CodeConverterState{
@@ -64,6 +67,8 @@ abstract class CodeConverterState{
 }
 
 
+
+
 class CodeConverterState_Default extends CodeConverterState {
 
 	/**
@@ -84,10 +89,22 @@ class CodeConverterState_Default extends CodeConverterState {
 	);
 
 	function	processToken($name, $value, $parsedToken){
+
+		if($name == 'T_STRING'){
+			if($value == 'define'){
+				$this->changeToState(CONVERTER_STATE_DEFINE);
+				return TRUE;
+			}
+		}
+
+
 		if(array_key_exists($name, $this->tokenStateChangeList) == TRUE){
 			$this->changeToState($this->tokenStateChangeList[$name]);
 			return TRUE;
 		}
+
+
+
 
 		$js = $parsedToken;
 		$this->stateMachine->addJS($js);
@@ -305,7 +322,7 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 
 		if($name == 'T_OBJECT_OPERATOR'){
 			//This is skipped as private class variables are converted from
-			//$this->var to var - for the joy of Javascript scoping.
+			// "$this->varName" to "varName" - for the joy of Javascript scoping.
 			return;
 		}
 
@@ -348,7 +365,6 @@ class CodeConverterState_T_VARIABLE_CLASS extends CodeConverterState {
 			$this->stateMachine->addJS($this->stateMachine->currentScope->getName().".");
 		}
 
-
 		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
 		$this->stateMachine->addJS($variableName);
 
@@ -371,9 +387,6 @@ class CodeConverterState_T_STATIC extends CodeConverterState{
 class CodeConverterState_T_PUBLIC extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
-
-		//echo "CodeConverterState_T_PUBLIC ".NL;
-
 		$this->stateMachine->variableFlags |= DECLARATION_TYPE_PUBLIC;
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
@@ -383,7 +396,6 @@ class CodeConverterState_T_PUBLIC extends CodeConverterState{
 class CodeConverterState_T_PRIVATE extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
-		//echo "CodeConverterState_T_PRIVATE".NL;
 		$this->stateMachine->variableFlags |= DECLARATION_TYPE_PRIVATE;
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
@@ -395,11 +407,11 @@ class CodeConverterState_T_PRIVATE extends CodeConverterState{
 class CodeConverterState_T_STRING extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
-		if($value == 'define'){
-			$this->stateMachine->addJS("// ".$value);
-		}
-		else if(defined($value)){
-			$this->stateMachine->addJS(constant($value));
+
+		$defineValue = $this->stateMachine->getDefine($value);
+
+		if($defineValue !== FALSE){
+			$this->stateMachine->addJS("'".$defineValue."'");
 		}
 		else{
 			$this->stateMachine->addJS($value);
@@ -409,25 +421,31 @@ class CodeConverterState_T_STRING extends CodeConverterState{
 }
 
 
+class CodeConverterState_define extends CodeConverterState{
 
+	var $defineName;
 
-//
-//class CodeConverterState_Skip extends CodeConverterState{
-//
-//	private $tokensToSkip = 0;
-//
-//	public function		enterState($extraParams = array()){
-//		$this->tokensToSkip = $extraParams['tokensToShip'];
-//	}
-//
-//	function	processToken($name, $value, $parsedToken){
-//		$this->tokensToSkip--;
-//
-//		if($this->tokensToSkip <= 0){
-//			$this->changeToState(CONVERTER_STATE_DEFAULT);
-//		}
-//	}
-//}
+	public function		enterState($extraParams = array()){
+		parent::enterState($extraParams);
+		$this->defineName = FALSE;
+		$this->stateMachine->addJS("// ");
+	}
+
+	function	processToken($name, $value, $parsedToken){
+
+		$this->stateMachine->addJS($parsedToken); //Maybe should be parsedToken
+
+		if($name == 'T_CONSTANT_ENCAPSED_STRING'){
+			if($this->defineName == FALSE){
+				$this->defineName = $value;
+			}
+			else{
+				$this->stateMachine->addDefine($this->defineName, $value);
+				$this->changeToState(CONVERTER_STATE_DEFAULT);
+			}
+		}
+	}
+}
 
 
 

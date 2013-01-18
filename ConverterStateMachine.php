@@ -1,20 +1,11 @@
 <?php
 
-
 define('DECLARATION_TYPE_STATIC', 0x1);
 define('DECLARATION_TYPE_PRIVATE', 0x2);
 define('DECLARATION_TYPE_PUBLIC', 0x4);
 define('DECLARATION_TYPE_CLASS', 0x8);
 
-
 define('METHOD_MARKER_MAGIC_STRING', "/* METHODS HERE */");
-
-//Objective corporation
-
-//Brand screen
-
-//Bullet proof - ux engineer
-
 
 /** @var array these token keys will be converted to their values */
 $_convert = array (
@@ -80,6 +71,23 @@ $_keepValue = array (
 );
 
 
+function	unencapseString($string){
+
+	if($string[0] == '"' ||
+		$string[0] == "'"){
+		$string = substr($string, 1);
+	}
+
+	$stringLength = strlen($string);
+
+	if ($string[$stringLength - 1] == '"' ||
+		$string[$stringLength - 1] == "'"){
+		$string = substr($string, 0, -1);
+	}
+
+	return $string;
+}
+
 
 
 class	ConverterStateMachine{
@@ -88,11 +96,6 @@ class	ConverterStateMachine{
 	 * @var CodeConverterState
 	 */
 	public $currentState;
-
-	/**
-	 * @var bool Are we inside a class? Has implications for
-	 */
-	public $isClassScope;
 
 	/**
 	 * @var string[]
@@ -128,10 +131,11 @@ class	ConverterStateMachine{
 	public $constructorStartIndex = 0;
 	public $methodsStartIndex = 0;
 
-	function	__construct($tokenStream, $defaultState, $isClassScope){
+	public $defines = array();
+
+	function	__construct($tokenStream, $defaultState){
 
 		$this->tokenStream = $tokenStream;
-		$this->isClassScope = $isClassScope;
 
 		$this->pushScope(CODE_SCOPE_GLOBAL, 'GLOBAL');
 
@@ -156,20 +160,15 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_T_PUBLIC] = new CodeConverterState_T_PUBLIC($this);
 		$this->states[CONVERTER_STATE_T_PRIVATE] = new CodeConverterState_T_PRIVATE($this);
 
-		$this->currentState = $defaultState;
-	}
+		$this->states[CONVERTER_STATE_DEFINE] = new CodeConverterState_define($this);
 
-	function	skipTokens($skipCount){
-		$this->tokenStream->skipTokens($skipCount);
+
+		$this->currentState = $defaultState;
 	}
 
 	function	addScopedVariable($variableName, $variableFlags){
 		$this->currentScope->addScopedVariable($variableName, $variableFlags);
 	}
-
-//	function	getScopedVariableName($variableName){
-//		return $this->currentScope->getScopedVariable($variableName);
-//	}
 
 	function	getVariableNameForScope($scopeType, $variableName, $isClassVariable){
 
@@ -182,8 +181,6 @@ class	ConverterStateMachine{
 				return $scope->getScopedVariable($variableName, $isClassVariable);
 			}
 		}
-
-
 
 		return $variableName;
 	}
@@ -213,6 +210,7 @@ class	ConverterStateMachine{
 		}
 
 		$this->currentState = $newState;
+		$this->states[$this->currentState]->enterState();
 	}
 
 	function	clearVariableFlags(){
@@ -220,7 +218,9 @@ class	ConverterStateMachine{
 	}
 
 	function	processToken($name, $value, $parsedToken){
-		echo "SM ".get_class($this->getState())." token [$name] => [$value]  ".NL;
+		if(PHPToJavascript_TRACE == TRUE){
+			echo "SM ".get_class($this->getState())." token [$name] => [$value]  ".NL;
+		}
 		return $this->getState()->processToken($name, $value, $parsedToken);
 	}
 
@@ -245,14 +245,15 @@ class	ConverterStateMachine{
 		}
 
 		if($name == "T_VARIABLE"){
-			//throw new Exception("This shouldn't happen.");
-			//$returnValue .= $this->getScopedVariableName($value);
 			$returnValue .= $value;
 		}
-		else
-			if (in_array($name, array_keys($GLOBALS['_convert']))) {
-			$returnValue .= (!empty($GLOBALS['_convert'][$name])) ? $GLOBALS['_convert'][$name] : $name;
-			//keep key
+		else if (in_array($name, array_keys($GLOBALS['_convert']))) {
+			if(empty($GLOBALS['_convert'][$name]) == TRUE){
+				$returnValue .= $name;		//keep key
+			}
+			else{
+				$returnValue .= $GLOBALS['_convert'][$name];
+			}
 		}
 		else if (in_array($name, $GLOBALS['_keep'])) {	//keep value
 			$returnValue .= $name;
@@ -302,13 +303,6 @@ class	ConverterStateMachine{
 			array_push($this->scopesStack, $this->currentScope);
 		}
 
-//		if($type == CODE_SCOPE_FUNCTION){
-//			if($this->currentScope->type == CODE_SCOPE_CLASS){
-//				$this->markMethodsStart();
-//			}
-//		}
-
-
 		$this->currentScope = new CodeScope($type, $name, $this->currentScope);
 
 		if($type == CODE_SCOPE_CLASS){
@@ -325,7 +319,6 @@ class	ConverterStateMachine{
 			$constructorEndIndex = count($this->jsArray);;
 		}
 
-
 		$this->currentScope = array_pop($this->scopesStack);
 
 		if($this->currentScope->type == CODE_SCOPE_CLASS && $constructorEndIndex != 0){
@@ -339,7 +332,6 @@ class	ConverterStateMachine{
 	}
 
 
-
 	function	finalize(){
 		$code =  implode('', $this->getJSArray());
 
@@ -347,8 +339,6 @@ class	ConverterStateMachine{
 			$className = $constructorInfo[0];
 			$startIndex = $constructorInfo[1];
 			$endIndex = $constructorInfo[2];
-
-			//echo "Replace constructor ".$className." ".$startIndex." ".$endIndex.NL;
 
 			$search = $className."()";
 			$constructor = $this->getJS($startIndex, $endIndex);
@@ -369,8 +359,6 @@ class	ConverterStateMachine{
 
 	function	markConstructorStart(){
 		$this->constructorStartIndex = count($this->jsArray);
-
-		//echo "constructorStartIndex ".$this->constructorStartIndex.NL;
 	}
 
 	function	markMethodsStart(){
@@ -378,12 +366,25 @@ class	ConverterStateMachine{
 		if($this->methodsStartIndex == 0){
 			$this->methodsStartIndex = count($this->jsArray);
 			$this->addJS(NL.METHOD_MARKER_MAGIC_STRING.NL);
-
-
 		}
 	}
 
 
+	function	addDefine($name, $value){
+
+		$name = unencapseString($name);
+		$value = unencapseString($value);
+
+		$this->defines[$name] = $value;
+	}
+
+	function	getDefine($name){
+		if(array_key_exists($name, $this->defines) == TRUE){
+			return $this->defines[$name];
+		}
+
+		return FALSE;
+	}
 
 }
 

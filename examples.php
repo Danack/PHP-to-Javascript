@@ -1,5 +1,34 @@
 <?php
 
+require_once("PHPToJavascript.php");
+
+$exportPath = "export";
+
+$filesToConvert = array(
+	'Code',
+	"Content",
+);
+
+
+try{
+	foreach($filesToConvert as $fileToConvert){
+
+		$srcFilename = "src/".$fileToConvert.".php";
+
+		$phpToJavascript = new PHPToJavascript($srcFilename);
+
+		$jsOutput = $phpToJavascript->toJavascript();
+
+		$outputFilename = "export/".$fileToConvert.".js";
+
+		generateFile($outputFilename, $srcFilename, $jsOutput);
+	}
+}
+catch(Exception $e){
+	echo "Exception caught: $e";
+}
+
+
 function ensureDirectoryExists($filePath) {
 
 	$pathSegments = array();
@@ -22,7 +51,7 @@ function ensureDirectoryExists($filePath) {
 
 	foreach ($pathSegments as $segment) {
 		if (file_exists($segment) === FALSE) {
-//echo "Had to create directory $segment";
+			//echo "Had to create directory $segment";
 			$directoryCreated = mkdir($segment);
 
 			if ($directoryCreated == FALSE) {

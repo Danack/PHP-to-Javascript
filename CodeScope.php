@@ -94,12 +94,4 @@ class CodeScope{
 	}
 }
 
-//class_static
-//class private
-//class_standard
-//
-//function static
-//function_standard
-
-
 ?>

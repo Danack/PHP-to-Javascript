@@ -1,9 +1,7 @@
 <?php
 
 
-
-
-class Content /** hmm */{
+class Content /** Who puts a comment here? */{
 
 	var $contentID;
 	var $text;
@@ -20,13 +18,15 @@ class Content /** hmm */{
 		$this->id = 12345;
 	}
 
-	function	getThumbnailURL($shamoan){
+	function	getThumbnailURL($extra){
 		$output = "/proxy/";
 		$output .= $this->contentID;
 		$output .= "/thumbnail/";
 		$output .= $this->text;
 		$output .= "/";
 		$output .= $this->id;
+		$output .= "/";
+		$output .= $extra;
 
 		static $contentCount = 0;
 

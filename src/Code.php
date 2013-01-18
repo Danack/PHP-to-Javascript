@@ -1,15 +1,22 @@
 <?php
 
-define('FILE_TYPE_IMAGE', 'SHOMOAN');
+define('DATABASE_TYPE', 'MySQL');
+
+define("CHARACTER_TYPE", 'UTF8');
+
+echo "Database type is ".DATABASE_TYPE;
+
+define('FILE_TYPE_IMAGE', 'Is an image');
 
 function test1($param1){
 
 	static $var1 = 0;
+
+	$var1++;
+
 	$var2 = "Hello";
 
 	echo $var2." ".$var1." ".FILE_TYPE_IMAGE;
-
-	$var1++;
 }
 
 $var1 = 'test';
@@ -17,10 +24,8 @@ $var1 = 'test';
 echo $var1;
 
 function test2($param1){
-
 	$var1 = "Hello";
-
-	echo $var1;
+	echo $var1 . $param1;
 }
 
 
@@ -40,13 +45,13 @@ class Test{
 		echo "FILE_TYPE_IMAGE is ".FILE_TYPE_IMAGE;
 	}
 
-	function	getThumbnailURL($shamoan){
+	function	getThumbnailURL($var1){
 		$output = "/proxy/";
 		$output .= $this->contentID;
 		$output .= "/thumbnail/";
 		$output .= $this->text;
 
-		$output .= $shamoan;
+		$output .= $var1;
 
 		return urlencode($output);
 	}
