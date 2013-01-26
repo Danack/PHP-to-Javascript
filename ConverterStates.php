@@ -25,6 +25,8 @@ define('CONVERTER_STATE_VARIABLE',  'CONVERTER_STATE_VARIABLE');
 define('CONVERTER_STATE_VARIABLE_GLOBAL',  'CONVERTER_STATE_VARIABLE_GLOBAL');
 define('CONVERTER_STATE_VARIABLE_FUNCTION',  'CONVERTER_STATE_VARIABLE_FUNCTION');
 define('CONVERTER_STATE_VARIABLE_CLASS',  'CONVERTER_STATE_VARIABLE_CLASS');
+define('CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER',  'CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER');
+
 
 
 define('CONVERTER_STATE_STATIC', 	'CONVERTER_STATE_STATIC');
@@ -38,6 +40,11 @@ define('CONVERTER_STATE_T_EXTENDS', 'CONVERTER_STATE_T_EXTENDS');
 
 
 define('CONVERTER_STATE_T_NEW', 'CONVERTER_STATE_T_NEW');
+define('CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING', 'CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING');
+define('CONVERTER_STATE_EQUALS', 'CONVERTER_STATE_EQUALS');
+
+define('CONVERTER_STATE_CLOSE_PARENS', 'CONVERTER_STATE_CLOSE_PARENS');
+
 
 
 
@@ -92,7 +99,12 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_PRIVATE'		=> CONVERTER_STATE_T_PRIVATE,
 
 		'T_EXTENDS'		=> CONVERTER_STATE_T_EXTENDS,
-		'T_NEW'			=> CONVERTER_STATE_T_NEW
+		'T_NEW'			=> CONVERTER_STATE_T_NEW,
+		'T_CONSTANT_ENCAPSED_STRING' => CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING,
+		'='				=> CONVERTER_STATE_EQUALS,
+
+		')' 			=> CONVERTER_STATE_CLOSE_PARENS,
+
 
 	);
 
@@ -111,11 +123,17 @@ class CodeConverterState_Default extends CodeConverterState {
 			return TRUE;
 		}
 
-
-
-
 		$js = $parsedToken;
 		$this->stateMachine->addJS($js);
+
+		if($name == '{'){
+			if($this->stateMachine->currentScope->startOfFunction() == TRUE){
+				//$this->stateMachine->addJS("\nstart of funciton \n");
+				$this->stateMachine->addDefaultsForVariables();
+			}
+		}
+
+
 		return FALSE;
 	}
 }
@@ -139,23 +157,40 @@ class CodeConverterState_Echo extends CodeConverterState {
 class CodeConverterState_ARRAY extends CodeConverterState {
 
 	private  		$arraySymbolRemap = array('('=>'{',	')'=>'}',);
+	var				$stateChunk = '';
+
+	public function		enterState($extraParams = array()){
+		parent::enterState($extraParams);
+		$this->stateChunk = '';
+	}
+
+
 
 	function	processToken($name, $value, $parsedToken){		//until ;
 
+		if($name == ')'){//This code needs refactoring - as $_keep is not safe, as parens are stateful.
+			$parsedToken = ')';
+		}
+
 		if(array_key_exists($parsedToken, $this->arraySymbolRemap) == TRUE){
-			 $parsedToken = $this->arraySymbolRemap[$parsedToken];//change name to other value
+			$parsedToken = $this->arraySymbolRemap[$parsedToken];//change name to other value
 		}
 
 		//TODO - this needs to go through the scope for a variable name
 		$parsedToken = str_replace("$", "", $parsedToken);
 
-		$this->stateChunk .= $parsedToken;
+		if($name == "T_CONSTANT_ENCAPSED_STRING"){
+			$this->stateChunk .= $value;
+		}
+		else{
+			$this->stateChunk .= $parsedToken;
+		}
 
 		if($name == ';'){
 			$js = $this->stateChunk;
 
 			if (strpos($js, ':') === FALSE) {
-				//$this->tmp = -1;
+
 				$js = preg_replace_callback ('/([{, \t\n])(\'.*\')(|.*:(.*))([,} \t\n])/Uis', 'cb_T_ARRAY', $js);
 			}
 
@@ -197,7 +232,7 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 				$this->stateMachine->markConstructorStart();
 			}
 
-			$this->stateMachine->pushScope(CODE_SCOPE_FUNCTION, $value);
+			$this->stateMachine->pushScope(CODE_SCOPE_FUNCTION_PARAMETERS, $value);
 			$this->stateMachine->clearVariableFlags();
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
 		}
@@ -290,7 +325,9 @@ class CodeConverterState_T_VARIABLE extends CodeConverterState {
 			return TRUE;
 		}
 
-		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION){
+		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION ||
+			$this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+			//TODO - Double-check CODE_SCOPE_FUNCTION_PARAMETERS is correct
 			$this->changeToState(CONVERTER_STATE_VARIABLE_FUNCTION);
 			return TRUE;
 		}
@@ -301,6 +338,10 @@ class CodeConverterState_T_VARIABLE extends CodeConverterState {
 		}
 	}
 }
+
+
+
+
 
 class CodeConverterState_T_VARIABLE_GLOBAL extends CodeConverterState {
 
@@ -325,7 +366,6 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 	}
 
 	function    processToken($name, $value, $parsedToken) {
-
 		if($value == '$this'){
 			$this->isClassVariable = TRUE;
 			return;
@@ -338,9 +378,14 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 		}
 
 		$variableName = cVar($value);
+
+//		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+//			$this->stateMachine->currentScope->addParameterName($variableName);
+//		}
+
 		if($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC){
 			$scopeName = $this->stateMachine->getScopeName();
-			$this->stateMachine->addJS("if (typeof ".$scopeName.".$variableName == 'undefined') ");
+			$this->stateMachine->addJS("if (typeof ".$scopeName.".$variableName == 'undefined')\n ");
 		}
 
 		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
@@ -359,6 +404,25 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
 }
+
+
+class CodeConverterState_T_VARIABLE_PARAMETER extends CodeConverterState {
+
+	function    processToken($name, $value, $parsedToken) {
+		$variableName = cVar($value);
+
+		$this->stateMachine->currentScope->addParameterName($variableName);
+		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
+		//$scopedVariableName = $this->stateMachine->getVariableNameForScope(CODE_SCOPE_FUNCTION_PARAMETERS, $variableName, FALSE);
+		$scopedVariableName = $variableName;
+		$this->stateMachine->addJS($scopedVariableName);
+		//$this->stateMachine->clearVariableFlags();
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}
+
+
+
 
 class CodeConverterState_T_VARIABLE_CLASS extends CodeConverterState {
 
@@ -390,7 +454,13 @@ class CodeConverterState_T_VARIABLE_CLASS extends CodeConverterState {
 class CodeConverterState_T_STATIC extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
-		$this->stateMachine->variableFlags |= DECLARATION_TYPE_STATIC;
+
+		if($this->stateMachine->variableFlags & DECLARATION_TYPE_NEW){
+			$this->stateMachine->addJS($this->stateMachine->getClassName());
+		}
+		else{
+			$this->stateMachine->variableFlags |= DECLARATION_TYPE_STATIC;
+		}
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
 }
@@ -449,7 +519,6 @@ class CodeConverterState_T_STRING extends CodeConverterState{
 			$this->stateMachine->addJS($value);
 		}
 
-
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
 }
@@ -489,6 +558,53 @@ class CodeConverterState_T_NEW  extends CodeConverterState{
 	function	processToken($name, $value, $parsedToken){
 		$this->stateMachine->addJS('new');
 		$this->stateMachine->addVariableFlags(DECLARATION_TYPE_NEW);
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}
+
+
+class CodeConverterState_T_CONSTANT_ENCAPSED_STRING extends CodeConverterState{
+	function	processToken($name, $value, $parsedToken){
+
+		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+			$this->stateMachine->addJS( "/*". $value ."*/");
+			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
+		}
+		else{
+			$this->stateMachine->addJS($value);
+		}
+
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}
+
+class CodeConverterState_Equals extends CodeConverterState{
+
+	function	processToken($name, $value, $parsedToken){
+		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+			//Don't add an equals - default parameters are set inside the JS function
+		}
+		else{
+			$this->stateMachine->addJS($name);
+		}
+
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}
+
+
+class CodeConverterState_CLOSE_PARENS extends CodeConverterState{
+
+	function	processToken($name, $value, $parsedToken){
+		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+			$this->stateMachine->pushScope(
+				CODE_SCOPE_FUNCTION,
+				$this->stateMachine->currentScope->getName()
+			);
+		}
+
+		$this->stateMachine->addJS(')');
+
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
 }

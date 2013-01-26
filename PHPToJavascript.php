@@ -5,8 +5,8 @@ if(defined('NL') == FALSE){
 }
 
 //Control output of the state-machine trace
-define("PHPToJavascript_TRACE", TRUE);
-//define("PHPToJavascript_TRACE", FALSE);
+//define("PHPToJavascript_TRACE", TRUE);
+define("PHPToJavascript_TRACE", FALSE);
 
 
 require_once('TokenStream.php');

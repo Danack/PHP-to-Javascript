@@ -54,8 +54,10 @@ $_convert = array (
 
 /** @var array these tokens stays the same */
 $_keep = array(
-	'=', ',', '}', '{',
-	';', '(', ')', '*',
+	//'=',
+	',', '}', '{',
+	';', '(', //')',
+	'*',
 	'/', '+', '-', '>',
 	'<', '[', ']', "\"",
 	"'",
@@ -63,7 +65,7 @@ $_keep = array(
 
 /** @var array these tokens keeps their value */
 $_keepValue = array (
-	'T_CONSTANT_ENCAPSED_STRING',
+	//'T_CONSTANT_ENCAPSED_STRING',
 	'T_STRING', 'T_COMMENT',
 	'T_ML_COMMENT',
 	'T_DOC_COMMENT',
@@ -156,6 +158,8 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_VARIABLE_FUNCTION] = new CodeConverterState_T_VARIABLE_FUNCTION($this);
 		$this->states[CONVERTER_STATE_VARIABLE_CLASS] = new CodeConverterState_T_VARIABLE_CLASS($this);
 
+		$this->states[CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER] = new CodeConverterState_T_VARIABLE_PARAMETER($this);
+
 		$this->states[CONVERTER_STATE_STATIC] = new CodeConverterState_T_STATIC($this);
 		$this->states[CONVERTER_STATE_STRING] = new CodeConverterState_T_STRING($this);
 
@@ -167,6 +171,12 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_T_EXTENDS] = new CodeConverterState_T_EXTENDS($this);
 		$this->states[CONVERTER_STATE_T_NEW] = new CodeConverterState_T_NEW($this);
 
+		$this->states[CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING] = new CodeConverterState_T_CONSTANT_ENCAPSED_STRING($this);
+		$this->states[CONVERTER_STATE_EQUALS] = new CodeConverterState_Equals($this);
+
+		$this->states[CONVERTER_STATE_CLOSE_PARENS] = new CodeConverterState_CLOSE_PARENS($this);
+
+
 		$this->currentState = $defaultState;
 	}
 
@@ -175,7 +185,6 @@ class	ConverterStateMachine{
 	}
 
 	function	getVariableNameForScope($scopeType, $variableName, $isClassVariable){
-
 		if($this->currentScope->type == $scopeType){
 			return $this->currentScope->getScopedVariable($variableName, $isClassVariable);
 		}
@@ -183,7 +192,7 @@ class	ConverterStateMachine{
 		$scope = $this->findScopeType($scopeType);
 		if($scope != NULL){
 			$return = $scope->getScopedVariable($variableName, $isClassVariable);
-			echo "variableName $variableName isClassVariable $isClassVariable return $return \n";
+			//echo "variableName $variableName isClassVariable $isClassVariable return $return \n";
 			return $return;
 		}
 
@@ -252,15 +261,25 @@ class	ConverterStateMachine{
 		$returnValue = $this->getPendingInsert($name);
 
 		if($name == "{"){
-			$this->currentScope->pushBracket();
+			$this->pushBracket();
 		}
 
 		if($name == "}"){
 			$scopeEnded = $this->currentScope->popBracket();
 
+
+
 			if ($scopeEnded == TRUE){
-				$this->popCurrentScope();
+				$poppedScopeType = $this->currentScope->type;
+
+				$this->popCurrentScope();	//It was the last bracket for a function.
+
+				if($poppedScopeType == CODE_SCOPE_FUNCTION){
+					$this->popCurrentScope();//Also pop the function paramters scope.
+				}
 			}
+
+
 		}
 
 		if($name == "T_VARIABLE"){
@@ -383,16 +402,13 @@ class	ConverterStateMachine{
 	}
 
 	function	markMethodsStart(){
-
 		if($this->methodsStartIndex == 0){
 			$this->methodsStartIndex = count($this->jsArray);
 			$this->addJS(NL.METHOD_MARKER_MAGIC_STRING.NL);
 		}
 	}
 
-
 	function	addDefine($name, $value){
-
 		$name = unencapseString($name);
 		$value = unencapseString($value);
 
@@ -414,6 +430,29 @@ class	ConverterStateMachine{
 		}
 
 		throw new Exception("Trying to get class but no class scope found.");
+	}
+
+
+	function	pushBracket(){
+		$this->currentScope->pushBracket();
+	}
+
+	function	addDefaultsForVariables(){
+		$functionParametersScope = $this->findScopeType(CODE_SCOPE_FUNCTION_PARAMETERS);
+		if($functionParametersScope == NULL){
+			throw new Exception("We're inside a function but we can't find the CODE_SCOPE_FUNCTION_PARAMETERS - that shouldn't be possible.");
+		}
+
+		$variablesWithDefaultParameters = $functionParametersScope->getVariablesWithDefaultParameters();
+
+		foreach($variablesWithDefaultParameters as $variable => $default){
+			$jsString = "\n";
+			$jsString .= "\t\tif(typeof $variable === \"undefined\"){\n";
+			$jsString .= "\t\t\t$variable = $default;\n";
+			$jsString .= "\t\t}\n";
+
+			$this->addJS($jsString);
+		}
 	}
 }
 

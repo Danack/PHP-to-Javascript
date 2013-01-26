@@ -2,6 +2,7 @@
 
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
+define('CODE_SCOPE_FUNCTION_PARAMETERS', 'CODE_SCOPE_FUNCTION_PARAMETERS');
 define('CODE_SCOPE_CLASS', 'CODE_SCOPE_CLASS');
 
 
@@ -13,6 +14,8 @@ class CodeScope{
 	var $type;
 
 	var $name;
+
+	var $defaultValues = array();
 
 	/** @var CodeScope */
 	var $parentScope;
@@ -48,7 +51,6 @@ class CodeScope{
 	}
 
 	function	addScopedVariable($variableName, $variableFlag){
-
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == FALSE){
@@ -56,15 +58,29 @@ class CodeScope{
 		}
 	}
 
-	function	getScopedVariable($variableName, $isClassVariable){
+	function	setDefaultValueForPreviousVariable($value){
+		$allKeys = array_keys($this->scopedVariables);
+		$variableName = $allKeys[count($allKeys) - 1];
 
+		$this->defaultValues[$variableName] = $value;
+	}
+
+	function	getVariablesWithDefaultParameters(){
+		return $this->defaultValues;
+	}
+
+
+	function	getVariablesWithDefault(){
+		return $this->defaultValues;
+	}
+
+	function	getScopedVariable($variableName, $isClassVariable){
 
 		$cVar = cvar($variableName);
 
 		if($cVar == 'testFunction'){
 			echo "scopeType = ".$this->type." isClassVariable ".$isClassVariable ."\n";
 		}
-
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
 
@@ -105,6 +121,17 @@ class CodeScope{
 
 		return $variableName;
 	}
+
+
+	function	startOfFunction(){
+		if($this->type == CODE_SCOPE_FUNCTION){//If we're in a function
+			if($this->bracketCount == 1){//And we're past the first opening bracket
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
 }
 
 ?>
