@@ -5,6 +5,8 @@ define('DECLARATION_TYPE_PRIVATE', 0x2);
 define('DECLARATION_TYPE_PUBLIC', 0x4);
 define('DECLARATION_TYPE_CLASS', 0x8);
 
+define('DECLARATION_TYPE_NEW', 0x10);
+
 define('METHOD_MARKER_MAGIC_STRING', "/* METHODS HERE */");
 
 /** @var array these token keys will be converted to their values */
@@ -34,7 +36,7 @@ $_convert = array (
 	'T_SR_EQUAL'=>'>>=',
 	'T_START_HEREDOC'=>'<<<',
 	'T_XOR_EQUAL'=>'^=',
-	'T_NEW'=>'new',
+	//'T_NEW'=>'new',
 	'T_ELSE'=>'else',
 	'.'=>' + ',
 	'T_IF'=>'if',
@@ -162,6 +164,8 @@ class	ConverterStateMachine{
 
 		$this->states[CONVERTER_STATE_DEFINE] = new CodeConverterState_define($this);
 
+		$this->states[CONVERTER_STATE_T_EXTENDS] = new CodeConverterState_T_EXTENDS($this);
+		$this->states[CONVERTER_STATE_T_NEW] = new CodeConverterState_T_NEW($this);
 
 		$this->currentState = $defaultState;
 	}
@@ -176,13 +180,24 @@ class	ConverterStateMachine{
 			return $this->currentScope->getScopedVariable($variableName, $isClassVariable);
 		}
 
-		foreach($this->scopesStack as $scope){
-			if($scope->type == $scopeType){
-				return $scope->getScopedVariable($variableName, $isClassVariable);
-			}
+		$scope = $this->findScopeType($scopeType);
+		if($scope != NULL){
+			$return = $scope->getScopedVariable($variableName, $isClassVariable);
+			echo "variableName $variableName isClassVariable $isClassVariable return $return \n";
+			return $return;
 		}
 
 		return $variableName;
+	}
+
+	function	findScopeType($type){
+		foreach($this->scopesStack as $scope){
+			if($scope->type == $type){
+				return $scope;
+			}
+		}
+
+		return NULL;
 	}
 
 
@@ -215,6 +230,10 @@ class	ConverterStateMachine{
 
 	function	clearVariableFlags(){
 		$this->variableFlags = FALSE;
+	}
+
+	function	addVariableFlags($variableFlag){
+		$this->variableFlags |= DECLARATION_TYPE_NEW;
 	}
 
 	function	processToken($name, $value, $parsedToken){
@@ -354,6 +373,8 @@ class	ConverterStateMachine{
 			$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
 		}
 
+		$code = str_replace(METHOD_MARKER_MAGIC_STRING, '', $code);
+
 		return $code;
 	}
 
@@ -386,7 +407,18 @@ class	ConverterStateMachine{
 		return FALSE;
 	}
 
+	function	getClassName(){
+		$scope = $this->findScopeType(CODE_SCOPE_CLASS);
+		if($scope != NULL){
+			return $scope->name;
+		}
+
+		throw new Exception("Trying to get class but no class scope found.");
+	}
 }
+
+
+
 
 
 

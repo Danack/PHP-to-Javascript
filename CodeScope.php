@@ -58,7 +58,13 @@ class CodeScope{
 
 	function	getScopedVariable($variableName, $isClassVariable){
 
+
 		$cVar = cvar($variableName);
+
+		if($cVar == 'testFunction'){
+			echo "scopeType = ".$this->type." isClassVariable ".$isClassVariable ."\n";
+		}
+
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
 
@@ -68,16 +74,19 @@ class CodeScope{
 				if($variableFlag & DECLARATION_TYPE_PRIVATE){
 					return 	$variableName;
 				}
+				if($variableFlag & DECLARATION_TYPE_STATIC){
+					return 	$variableName;
+				}
 				if($variableFlag & DECLARATION_TYPE_PUBLIC){
 					return 	'this.'.$variableName;
-				}
-				if($variableFlag & DECLARATION_TYPE_STATIC){
-					return 	$this->name.".".$variableName;
 				}
 			}
 			else{
 				if($variableFlag & DECLARATION_TYPE_STATIC){
 					return 	$this->name.".".$variableName;
+				}
+				else if($isClassVariable == TRUE){
+					return 	'this.'.$variableName;
 				}
 
 				return $variableName;
@@ -89,6 +98,10 @@ class CodeScope{
 			return $this->parentScope->getScopedVariable($variableName, $isClassVariable);
 		}
 
+		if($isClassVariable == TRUE){
+			//Either a function or property set below where it is defined.
+			return 	'this.'.$variableName;
+		}
 
 		return $variableName;
 	}

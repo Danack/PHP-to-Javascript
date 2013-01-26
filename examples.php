@@ -5,29 +5,21 @@ require_once("PHPToJavascript.php");
 $exportPath = "export";
 
 $filesToConvert = array(
-	'Code',
-	"Content",
+	//'src/Code.php' => 'export/Code.js',
+	//"src/Content.php",
+	'src/StaticTest.php' => 'export/StaticTest.js',
 );
 
-
 try{
-	foreach($filesToConvert as $fileToConvert){
-
-		$srcFilename = "src/".$fileToConvert.".php";
-
-		$phpToJavascript = new PHPToJavascript($srcFilename);
-
+	foreach($filesToConvert as $inputFilename => $outputFilename){
+		$phpToJavascript = new PHPToJavascript($inputFilename);
 		$jsOutput = $phpToJavascript->toJavascript();
-
-		$outputFilename = "export/".$fileToConvert.".js";
-
-		generateFile($outputFilename, $srcFilename, $jsOutput);
+		generateFile($outputFilename, $inputFilename, $jsOutput);
 	}
 }
 catch(Exception $e){
 	echo "Exception caught: $e";
 }
-
 
 function ensureDirectoryExists($filePath) {
 
@@ -62,28 +54,6 @@ function ensureDirectoryExists($filePath) {
 }
 
 
-function     generateFile($outputFilename, $originalFilename, $jsOutput) {
 
-	$outputDirectory = pathinfo($outputFilename, PATHINFO_DIRNAME);
-
-	ensureDirectoryExists($outputDirectory);
-
-	$fileHandle = fopen($outputFilename, "w");
-
-	if ($fileHandle == FALSE) {
-		throw new Exception("Failed to open file [$outputFilename] for writing.");
-	}
-
-	fwrite($fileHandle, "//Auto-generated file by PHP-To-Javascript at ".date(DATE_RFC822).NL);
-	fwrite($fileHandle, "//\n");
-	fwrite($fileHandle, "//DO NOT EDIT - all changes will be lost.\n");
-	fwrite($fileHandle, "//\n");
-	fwrite($fileHandle, "//Please edit the file " . $originalFilename . " and then reconvert to make any changes\n");
-	fwrite($fileHandle, "\n");
-
-	fwrite($fileHandle, $jsOutput);
-
-	fclose($fileHandle);
-}
 
 ?>

@@ -34,6 +34,10 @@ define('CONVERTER_STATE_T_PRIVATE', 'CONVERTER_STATE_T_PRIVATE');
 
 define('CONVERTER_STATE_DEFINE', 'CONVERTER_STATE_DEFINE');
 
+define('CONVERTER_STATE_T_EXTENDS', 'CONVERTER_STATE_T_EXTENDS');
+
+
+define('CONVERTER_STATE_T_NEW', 'CONVERTER_STATE_T_NEW');
 
 
 
@@ -75,17 +79,21 @@ class CodeConverterState_Default extends CodeConverterState {
 	 * @var array List of tokens that will trigger a change to the appropriate state.
 	 */
 	public $tokenStateChangeList = array(
-		'T_ECHO' 		=>	CONVERTER_STATE_ECHO,
-		'T_ARRAY'		=>	CONVERTER_STATE_ARRAY,
-		'T_CLASS'		=>	CONVERTER_STATE_CLASS,
-		'T_FUNCTION'	=>	CONVERTER_STATE_FUNCTION,
-		'T_FOREACH'		=>	CONVERTER_STATE_FOREACH,
-		'T_PUBLIC'		=>	NULL, 	//CONVERTER_STATE_PUBLIC,
-		'T_VARIABLE'	=>	CONVERTER_STATE_VARIABLE,
-		'T_STATIC'		=>	CONVERTER_STATE_STATIC,
-		'T_STRING'		=>  CONVERTER_STATE_STRING,
+		'T_ECHO' 		=> CONVERTER_STATE_ECHO,
+		'T_ARRAY'		=> CONVERTER_STATE_ARRAY,
+		'T_CLASS'		=> CONVERTER_STATE_CLASS,
+		'T_FUNCTION'	=> CONVERTER_STATE_FUNCTION,
+		'T_FOREACH'		=> CONVERTER_STATE_FOREACH,
+		'T_PUBLIC'		=> CONVERTER_STATE_PUBLIC,
+		'T_VARIABLE'	=> CONVERTER_STATE_VARIABLE,
+		'T_STATIC'		=> CONVERTER_STATE_STATIC,
+		'T_STRING'		=> CONVERTER_STATE_STRING,
 		'T_VAR' 		=> CONVERTER_STATE_T_PUBLIC,
 		'T_PRIVATE'		=> CONVERTER_STATE_T_PRIVATE,
+
+		'T_EXTENDS'		=> CONVERTER_STATE_T_EXTENDS,
+		'T_NEW'			=> CONVERTER_STATE_T_NEW
+
 	);
 
 	function	processToken($name, $value, $parsedToken){
@@ -138,6 +146,9 @@ class CodeConverterState_ARRAY extends CodeConverterState {
 			 $parsedToken = $this->arraySymbolRemap[$parsedToken];//change name to other value
 		}
 
+		//TODO - this needs to go through the scope for a variable name
+		$parsedToken = str_replace("$", "", $parsedToken);
+
 		$this->stateChunk .= $parsedToken;
 
 		if($name == ';'){
@@ -187,7 +198,7 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 			}
 
 			$this->stateMachine->pushScope(CODE_SCOPE_FUNCTION, $value);
-
+			$this->stateMachine->clearVariableFlags();
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
 		}
 	}
@@ -343,7 +354,7 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 
 		$this->stateMachine->addJS($scopedVariableName);
 
-		 $this->isClassVariable = FALSE;
+		$this->isClassVariable = FALSE;
 		$this->stateMachine->clearVariableFlags();
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
@@ -358,11 +369,13 @@ class CodeConverterState_T_VARIABLE_CLASS extends CodeConverterState {
 		if($this->stateMachine->variableFlags & DECLARATION_TYPE_PRIVATE){
 			$this->stateMachine->addJS("var ");
 		}
+		else if($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC){
+			//$this->stateMachine->addJS($this->stateMachine->currentScope->getName().".");
+			$this->stateMachine->addJS("var ");
+		}
 		else if($this->stateMachine->variableFlags & DECLARATION_TYPE_PUBLIC){
 			$this->stateMachine->addJS("this.");
-		}
-		else if($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC){
-			$this->stateMachine->addJS($this->stateMachine->currentScope->getName().".");
+			//$this->stateMachine->addJS($this->stateMachine->currentScope->getName().".");
 		}
 
 		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
@@ -402,20 +415,41 @@ class CodeConverterState_T_PRIVATE extends CodeConverterState{
 }
 
 
+class CodeConverterState_T_EXTENDS  extends CodeConverterState{
+
+	function	processToken($name, $value, $parsedToken){
+		if($name == T_STRING){
+			echo "Need to grab variables/functions from [$value]";
+		}
+
+		if($name == '{'){
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
+			return TRUE;
+		}
+	}
+}
+
 
 
 class CodeConverterState_T_STRING extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
 
+
 		$defineValue = $this->stateMachine->getDefine($value);
 
 		if($defineValue !== FALSE){
 			$this->stateMachine->addJS("'".$defineValue."'");
 		}
+		else if(strcmp('static', $value) == 0 ||
+				strcmp('self', $value) == 0){
+			$this->stateMachine->addJS($this->stateMachine->getClassName());
+		}
 		else{
 			$this->stateMachine->addJS($value);
 		}
+
+
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
 }
@@ -447,6 +481,17 @@ class CodeConverterState_define extends CodeConverterState{
 	}
 }
 
+
+
+
+class CodeConverterState_T_NEW  extends CodeConverterState{
+
+	function	processToken($name, $value, $parsedToken){
+		$this->stateMachine->addJS('new');
+		$this->stateMachine->addVariableFlags(DECLARATION_TYPE_NEW);
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}
 
 
 ?>
