@@ -8,11 +8,13 @@ error_reporting(E_ALL);
 //sleep(1);
 
 $filesToConvert = array(
+
+	//'src/ClassVariables.php' => 'export/ClassVariables.js',
 	//'src/Code.php' => 'export/Code.js',
 	//"src/Content.php",
 	//'src/StaticTest.php' => 'export/StaticTest.js',
-	'src/Content.php' => 'export/Content.js',
-	//'src/ContentImage.php' => 'export/ContentImage.js',
+	//'src/Content.php' => 'export/Content.js',
+	'src/ContentImage.php' => 'export/ContentImage.js',
 );
 
 try{

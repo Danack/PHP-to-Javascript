@@ -1,67 +1,20 @@
 <?php
 
-$count = 0;
 
-$count++;
-
-echo "$count";
-
-
-class ContentImage {
+class ContentImage extends Content{
 
 	var		$contentID;
 	var		$imageID;
 	var		$name;
 	var		$storageType;
 
-	function	test($name){
-		$this->name = $name;
-	}
-
-
-	function greetWorld($greeting = "Hello there world!"){
-		static $count = 0;
-
-		$count++;
-
-		echo $greeting.$count;
-	}
-
-	function	toJSONDEbug(){
-		$params = array(
-			'contentID' =>		$this->contentID,
-			'imageID' => 		$this->imageID ,
-			'name'  => 			$this->name,
-			'storageType' =>	$this->storageType,
-		);
-
-		return json_encode($params);
-	}
-
-
-
-
-	static function factoryDebug($contentWithJoin){
-		$instance = new self(
-			$contentWithJoin['image.name'],
-			$contentWithJoin['image.storageType']
-		);
-
-		$instance->setID(
-			$contentWithJoin['image.contentID'],
-			$contentWithJoin['image.imageID']
-		);
-
-		return $instance;
-	}
-
-
 	function	toJSON(){
 		$params = array(
-			'contentID' =>		$this->contentID,
-			'imageID' => 		$this->imageID ,
-			'name'  => 			$this->name,
-			'storageType' =>	$this->storageType,
+			'contentID'		=>	$this->contentID,
+			'imageID'		=> 	$this->imageID,
+			'name'			=> 	$this->name,
+			'storageType'	=>	$this->storageType,
+			'type'			=>	'ContentImage'
 		);
 
 		return json_encode($params);
@@ -114,10 +67,10 @@ class ContentImage {
 
 		$ID = "image_".$this->imageID;
 
-		$output = "<a href='".$proxyURL."' target='_blank' class='clickableLink content contentImage' id='$ID' >";
+		$output = "<a href='".$proxyURL."' target='_blank' class='clickableLink content' id='$ID' >";
 
 		$output .= "<table class='contentImageWrapper' width='128px' height='128px' border='0' cellspacing='0' cellpadding='0px'><tr><td valign='middle'>";
-		$output .= "<img src='".$thumbURL."' alt='An image' class='content contentImageThumbnail' />";
+		$output .= "<img src='".$thumbURL."' alt='An image' class='contentImageThumbnail' />";
 
 		$output .= "</td></tr></table>";
 		$output .= "</a>";
@@ -155,11 +108,12 @@ class ContentImage {
 
 		return PATH_TO_ROOT."var/cache/images/".$version."/imageContent_".$this->contentID.".".$fileExtension;
 	}
+
+	function	getPreview(){
+		$output = "<img src='/proxy/" + $this->contentID + "/512/" + $this->name + "' />";
+		return $output;
+	}
 }
-
-
-
-
 
 
 

@@ -73,12 +73,15 @@ abstract class CodeScope{
 
 	function	pushBracket(){
 		$this->bracketCount += 1;
+
+		xdebug_break();
+		echo "bracket count = ".$this->bracketCount."\n";
 	}
 
 	function	popBracket(){
 		$this->bracketCount -= 1;
 
-		//echo "Pop bracket ".$this->bracketCount."\n";
+		echo "bracket count = ".$this->bracketCount."\n";
 
 		if($this->bracketCount <= 0){
 			return TRUE;
@@ -122,6 +125,7 @@ abstract class CodeScope{
 	function	startOfFunction(){
 		return FALSE;
 	}
+
 }
 
 
@@ -189,8 +193,6 @@ class FunctionParameterScope extends CodeScope{
 
 	function	getScopedVariableForScope($variableName, $isClassVariable){
 
-
-
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
@@ -207,7 +209,7 @@ class FunctionParameterScope extends CodeScope{
 			return $variableName;
 		}
 
-		return $variableName;
+		return NULL;
 	}
 }
 
@@ -226,7 +228,6 @@ class FunctionScope extends CodeScope{
 
 	function	getScopedVariableForScope($variableName, $isClassVariable){
 		$cVar = cvar($variableName);
-
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
 

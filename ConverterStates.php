@@ -53,6 +53,9 @@ define('CONVERTER_STATE_ABSTRACT_FUNCTION', 'CONVERTER_STATE_ABSTRACT_FUNCTION')
 define('CONVERTER_STATE_INTERFACE', 'CONVERTER_STATE_INTERFACE');
 
 
+define('CONVERTER_STATE_END_OF_CLASS', 'CONVERTER_STATE_END_OF_CLASS');
+
+
 
 
 
@@ -140,6 +143,14 @@ class CodeConverterState_Default extends CodeConverterState {
 				$this->stateMachine->addDefaultsForVariables();
 			}
 		}
+
+
+//		if($name == '{'){
+//			if($this->stateMachine->currentScope->endOfClass() == TRUE){
+//				$this->stateMachine->addClassBindingMagic();
+//			}
+//		}
+
 
 		return FALSE;
 	}
@@ -588,7 +599,6 @@ class CodeConverterState_T_STRING extends CodeConverterState{
 	function	processToken($name, $value, $parsedToken){
 
 		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
-//			xdebug_break();
 //			echo "misunderstood.";
 		}
 
@@ -750,8 +760,6 @@ class CodeConverterState_T_ABSTRACT extends CodeConverterState{
 
 class CodeConverterState_T_ABSTRACT_REMOVE extends CodeConverterState{
 
-
-
 	public function		enterState($extraParams = array()){
 		parent::enterState($extraParams);
 		$this->first = TRUE;
@@ -759,13 +767,40 @@ class CodeConverterState_T_ABSTRACT_REMOVE extends CodeConverterState{
 		$this->stateMachine->addJS("//");
 	}
 
-		function	processToken($name, $value, $parsedToken){
-			$this->stateMachine->addJS('//'.$value);
+	function	processToken($name, $value, $parsedToken){
+		$this->stateMachine->addJS('//'.$value);
 
-			if($name == ';'){
-				$this->changeToState(CONVERTER_STATE_DEFAULT);
-			}
+		if($name == ';'){
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
 		}
 	}
+}
+
+class CodeConverterState_EndOfClass extends CodeConverterState{
+
+	var $previousScope = NULL;
+
+	public function		enterState($extraParams = array()){
+		parent::enterState($extraParams);
+		$this->previousScope = $extraParams['previousScope'];
+	}
+
+	function	processToken($name, $value, $parsedToken){
+		if($name == '}'){
+
+			xdebug_break();
+
+			$this->stateMachine->addJS('}'."\n\n");
+			$className = $this->previousScope->name;
+			$this->stateMachine->addJS("$className = new $className(/*Constuctor for static methods+vars*/);"."\n\n");
+		}
+		else{
+			throw new Exception( "Only token } should be getting here.");
+		}
+
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}
+
 
 ?>

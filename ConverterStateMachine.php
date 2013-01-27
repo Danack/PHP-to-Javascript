@@ -185,8 +185,16 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_ABSTRACT] = new CodeConverterState_T_ABSTRACT($this);
 		$this->states[CONVERTER_STATE_ABSTRACT_FUNCTION] = new CodeConverterState_T_ABSTRACT_REMOVE($this);
 
+		$this->states[CONVERTER_STATE_END_OF_CLASS] = new CodeConverterState_EndOfClass($this);
+
 		$this->currentState = $defaultState;
 	}
+
+	function	addClassBindingMagic(){
+
+		$this->addJS("Doobery");
+	}
+
 
 	function	addScopedVariable($variableName, $variableFlags){
 		$this->currentScope->addScopedVariable($variableName, $variableFlags);
@@ -236,13 +244,13 @@ class	ConverterStateMachine{
 		$this->jsArray[] = $jsString;
 	}
 
-	function	changeToState($newState){
+	function	changeToState($newState, $extraParams = array()){
 		if(array_key_exists($newState, $this->states) == FALSE){
 			throw new Exception("Unknown state [$newState], cannot changeState to it.");
 		}
 
 		$this->currentState = $newState;
-		$this->states[$this->currentState]->enterState();
+		$this->states[$this->currentState]->enterState($extraParams);
 	}
 
 	function	clearVariableFlags(){
@@ -264,15 +272,13 @@ class	ConverterStateMachine{
 		return $this->states[$this->currentState];
 	}
 
-	function parseToken ($name, $value) {
-
-		$returnValue = $this->getPendingInsert($name);
-
+	function	accountForBrackets($name){
 		if($name == "{"){
 			$this->pushBracket();
 		}
 
 		if($name == "}"){
+
 			$scopeEnded = $this->currentScope->popBracket();
 
 			if ($scopeEnded == TRUE){
@@ -284,6 +290,15 @@ class	ConverterStateMachine{
 					$this->popCurrentScope();//Also pop the function paramters scope.
 				}
 			}
+		}
+	}
+
+	function parseToken ($name, $value, $count) {
+
+		$returnValue = $this->getPendingInsert($name);
+
+		if($count == 0){
+			$this->accountForBrackets($name);
 		}
 
 		if($name == "T_VARIABLE"){
@@ -372,6 +387,8 @@ class	ConverterStateMachine{
 			}
 		}
 
+		echo "pushScope(type $type, name $name) \n";
+
 		$this->currentScope = $newScope;
 
 		if($type == CODE_SCOPE_CLASS){
@@ -388,10 +405,20 @@ class	ConverterStateMachine{
 			$constructorEndIndex = count($this->jsArray);;
 		}
 
+		$previousScope = $this->currentScope;
+
+		xdebug_break();
+
+		echo "Popped scope ".$previousScope->name."\n";
+
 		$this->currentScope = array_pop($this->scopesStack);
 
+		if($previousScope instanceof ClassScope){
+			$this->changeToState(CONVERTER_STATE_END_OF_CLASS, array('previousScope' => $previousScope));
+		}
+
 		if(($this->currentScope instanceof ClassScope) &&
-			$constructorEndIndex != 0){
+			$constructorEndIndex != 0){ //We're back in the class scope.
 			$this->constructorInfoArray[] = array(
 				$this->currentScope->name,
 				$this->constructorStartIndex,
@@ -420,8 +447,7 @@ class	ConverterStateMachine{
 			$constructorBody = substr($constructor, $firstBracketPosition + 1);
 
 			$code = str_replace($search, $className.$constructorDeclaration, $code);
-
-			//$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
+			$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
 		}
 
 		$code = str_replace(METHOD_MARKER_MAGIC_STRING, '', $code);
