@@ -485,8 +485,6 @@ class	ConverterStateMachine{
 			$jsString .= "\t\t}\n";
 
 			$this->addJS($jsString);
-
-			echo "Should have added default init [".$jsString."]\n";
 		}
 	}
 }
