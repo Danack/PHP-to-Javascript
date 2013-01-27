@@ -28,7 +28,6 @@ define('CONVERTER_STATE_VARIABLE_CLASS',  'CONVERTER_STATE_VARIABLE_CLASS');
 define('CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER',  'CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER');
 
 
-
 define('CONVERTER_STATE_STATIC', 	'CONVERTER_STATE_STATIC');
 define('CONVERTER_STATE_STRING', 		'CONVERTER_STATE_STRING');
 define('CONVERTER_STATE_T_PUBLIC', 		'CONVERTER_STATE_T_PUBLIC');
@@ -44,6 +43,15 @@ define('CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING', 'CONVERTER_STATE_T_CONSTANT
 define('CONVERTER_STATE_EQUALS', 'CONVERTER_STATE_EQUALS');
 
 define('CONVERTER_STATE_CLOSE_PARENS', 'CONVERTER_STATE_CLOSE_PARENS');
+
+
+define('CONVERTER_STATE_IMPLEMENTS_INTERFACE', 'CONVERTER_STATE_IMPLEMENTS_INTERFACE');
+define('CONVERTER_STATE_REQUIRE', 'CONVERTER_STATE_REQUIRE');
+define('CONVERTER_STATE_ABSTRACT', 'CONVERTER_STATE_ABSTRACT');
+define('CONVERTER_STATE_ABSTRACT_FUNCTION', 'CONVERTER_STATE_ABSTRACT_FUNCTION');
+
+define('CONVERTER_STATE_INTERFACE', 'CONVERTER_STATE_INTERFACE');
+
 
 
 
@@ -101,15 +109,17 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_EXTENDS'		=> CONVERTER_STATE_T_EXTENDS,
 		'T_NEW'			=> CONVERTER_STATE_T_NEW,
 		'T_CONSTANT_ENCAPSED_STRING' => CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING,
-		'='				=> CONVERTER_STATE_EQUALS,
+		'='					=> CONVERTER_STATE_EQUALS,
+		')' 				=> CONVERTER_STATE_CLOSE_PARENS,
+		'T_REQUIRE_ONCE'	=> CONVERTER_STATE_REQUIRE,
+		'T_IMPLEMENTS' 		=>	CONVERTER_STATE_IMPLEMENTS_INTERFACE,
 
-		')' 			=> CONVERTER_STATE_CLOSE_PARENS,
+		'T_ABSTRACT' 		=>	CONVERTER_STATE_ABSTRACT,
 
-
+		'T_INTERFACE'		=> CONVERTER_STATE_INTERFACE,
 	);
 
 	function	processToken($name, $value, $parsedToken){
-
 		if($name == 'T_STRING'){
 			if($value == 'define'){
 				$this->changeToState(CONVERTER_STATE_DEFINE);
@@ -127,10 +137,10 @@ class CodeConverterState_Default extends CodeConverterState {
 
 		if($name == '{'){
 			if($this->stateMachine->currentScope->startOfFunction() == TRUE){
+				xdebug_break();
 				$this->stateMachine->addDefaultsForVariables();
 			}
 		}
-
 
 		return FALSE;
 	}
@@ -515,11 +525,73 @@ class CodeConverterState_T_EXTENDS  extends CodeConverterState{
 	}
 }
 
+class CodeConverterState_T_IMPLEMENTS_INTERFACE  extends CodeConverterState{
+
+	public $first = FALSE;
+
+	public function		enterState($extraParams = array()){
+		parent::enterState($extraParams);
+		$this->first = TRUE;
+	}
+
+	function	processToken($name, $value, $parsedToken){
+		if($this->first == TRUE){
+			$this->first = FALSE;
+			$this->stateMachine->addJS("/*");
+		}
+
+		if($name == 'T_STRING' || $name == 'T_WHITESPACE'){
+			$this->stateMachine->addJS($value);
+		}
+
+		if($name == '{'){
+			$this->stateMachine->addJS("*/");
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
+			return TRUE;
+		}
+	}
+}
+
+
+class CodeConverterState_T_INTERFACE  extends CodeConverterState{
+
+	public $first = FALSE;
+
+	public function		enterState($extraParams = array()){
+		parent::enterState($extraParams);
+		$this->first = TRUE;
+	}
+
+	function	processToken($name, $value, $parsedToken){
+		if($this->first == TRUE){
+			$this->first = FALSE;
+			$this->stateMachine->addJS("/*");
+		}
+
+		if($name == 'T_STRING' || $name == 'T_WHITESPACE'){
+			$this->stateMachine->addJS($value);
+		}
+		else{
+			$this->stateMachine->addJS($name);
+		}
+
+		if($name == '}'){
+			$this->stateMachine->addJS("}*/");
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
+		}
+	}
+}
+
 
 
 class CodeConverterState_T_STRING extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
+
+		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
+			xdebug_break();
+			echo "misunderstood.";
+		}
 
 
 		$defineValue = $this->stateMachine->getDefine($value);
@@ -530,6 +602,10 @@ class CodeConverterState_T_STRING extends CodeConverterState{
 		else if(strcmp('static', $value) == 0 ||
 				strcmp('self', $value) == 0){
 			$this->stateMachine->addJS($this->stateMachine->getClassName());
+		}
+		else if($this->stateMachine->currentScope instanceof FunctionParameterScope){
+			$this->stateMachine->addJS( "/*". $value ."*/");
+			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
 		}
 		else{
 			$this->stateMachine->addJS($value);
@@ -579,6 +655,7 @@ class CodeConverterState_T_NEW  extends CodeConverterState{
 }
 
 
+
 class CodeConverterState_T_CONSTANT_ENCAPSED_STRING extends CodeConverterState{
 	function	processToken($name, $value, $parsedToken){
 		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
@@ -624,5 +701,72 @@ class CodeConverterState_CLOSE_PARENS extends CodeConverterState{
 	}
 }
 
+
+/*class CodeConverterState_IMPLEMENTS_INTERFACE extends CodeConverterState{
+
+	function	processToken($name, $value, $parsedToken){
+//		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
+//			$this->stateMachine->pushScope(
+//				CODE_SCOPE_FUNCTION,
+//				$this->stateMachine->currentScope->getName()
+//			);
+//		}
+//
+//		$this->stateMachine->addJS(')');
+
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}*/
+
+class CodeConverterState_REQUIRE extends CodeConverterState{
+
+	function	processToken($name, $value, $parsedToken){
+		$this->stateMachine->addJS('//'.$value);
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}
+
+
+
+class CodeConverterState_T_ABSTRACT extends CodeConverterState{
+
+	function	processToken($name, $value, $parsedToken){
+
+		if($this->stateMachine->currentScope instanceof GlobalScope){
+			//Do nothing - abstract classes don't affect JS code generation.
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
+		}
+
+		if($this->stateMachine->currentScope instanceof ClassScope){
+			//Abstract functions inside a class are commented out
+			$this->changeToState(CONVERTER_STATE_ABSTRACT_FUNCTION);
+			return TRUE;
+		}
+
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+	}
+}
+
+
+
+class CodeConverterState_T_ABSTRACT_REMOVE extends CodeConverterState{
+
+
+
+	public function		enterState($extraParams = array()){
+		parent::enterState($extraParams);
+		$this->first = TRUE;
+
+		$this->stateMachine->addJS("//");
+	}
+
+		function	processToken($name, $value, $parsedToken){
+			$this->stateMachine->addJS('//'.$value);
+
+			if($name == ';'){
+				$this->changeToState(CONVERTER_STATE_DEFAULT);
+			}
+		}
+	}
 
 ?>

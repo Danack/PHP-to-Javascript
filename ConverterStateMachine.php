@@ -38,7 +38,7 @@ $_convert = array (
 	'T_XOR_EQUAL'=>'^=',
 	//'T_NEW'=>'new',
 	'T_ELSE'=>'else',
-	'.'=>' + ',
+	'.'=>' + "" + ',
 	'T_IF'=>'if',
 	'T_RETURN'=>'return',
 	'T_AS'=>'in',
@@ -56,7 +56,8 @@ $_convert = array (
 $_keep = array(
 	//'=',
 	',', '}', '{',
-	';', '(', //')',
+	';',
+	'(', //')',
 	'*',
 	'/', '+', '-', '>',
 	'<', '[', ']', "\"",
@@ -176,6 +177,13 @@ class	ConverterStateMachine{
 
 		$this->states[CONVERTER_STATE_CLOSE_PARENS] = new CodeConverterState_CLOSE_PARENS($this);
 
+		$this->states[CONVERTER_STATE_IMPLEMENTS_INTERFACE] = new CodeConverterState_T_IMPLEMENTS_INTERFACE($this);
+		$this->states[CONVERTER_STATE_INTERFACE] = new CodeConverterState_T_INTERFACE($this);
+
+
+		$this->states[CONVERTER_STATE_REQUIRE] = new CodeConverterState_REQUIRE($this);
+		$this->states[CONVERTER_STATE_ABSTRACT] = new CodeConverterState_T_ABSTRACT($this);
+		$this->states[CONVERTER_STATE_ABSTRACT_FUNCTION] = new CodeConverterState_T_ABSTRACT_REMOVE($this);
 
 		$this->currentState = $defaultState;
 	}
@@ -267,8 +275,6 @@ class	ConverterStateMachine{
 		if($name == "}"){
 			$scopeEnded = $this->currentScope->popBracket();
 
-
-
 			if ($scopeEnded == TRUE){
 				$poppedScope = $this->currentScope;
 
@@ -278,8 +284,6 @@ class	ConverterStateMachine{
 					$this->popCurrentScope();//Also pop the function paramters scope.
 				}
 			}
-
-
 		}
 
 		if($name == "T_VARIABLE"){
@@ -481,6 +485,8 @@ class	ConverterStateMachine{
 			$jsString .= "\t\t}\n";
 
 			$this->addJS($jsString);
+
+			echo "Should have added default init [".$jsString."]\n";
 		}
 	}
 }

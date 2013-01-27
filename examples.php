@@ -4,16 +4,15 @@ require_once("PHPToJavascript.php");
 
 $exportPath = "export";
 
-
 error_reporting(E_ALL);
-
-sleep(1);
+//sleep(1);
 
 $filesToConvert = array(
 	//'src/Code.php' => 'export/Code.js',
 	//"src/Content.php",
 	//'src/StaticTest.php' => 'export/StaticTest.js',
-	'src/ContentImage.php' => 'export/ContentImage.js',
+	'src/Content.php' => 'export/Content.js',
+	//'src/ContentImage.php' => 'export/ContentImage.js',
 );
 
 try{
@@ -27,10 +26,6 @@ catch(Exception $e){
 	echo "Exception caught: $e";
 }
 
-
-function debugger(){
-
-}
 
 function ensureDirectoryExists($filePath) {
 

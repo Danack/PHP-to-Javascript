@@ -6,6 +6,19 @@ define('CODE_SCOPE_FUNCTION_PARAMETERS', 'CODE_SCOPE_FUNCTION_PARAMETERS');
 define('CODE_SCOPE_CLASS', 'CODE_SCOPE_CLASS');
 
 
+function	convertPHPValueToJSValue($value){
+
+	if($value == 'FALSE'){
+		return 'false';
+	}
+
+	if($value == 'TRUE'){
+		return 'true';
+	}
+
+	return $value;
+}
+
 
 abstract class CodeScope{
 
@@ -59,13 +72,20 @@ abstract class CodeScope{
 	}
 
 	function	pushBracket(){
+
+		xdebug_break();
 		$this->bracketCount += 1;
+		echo "Push bracket ".$this->bracketCount."\n";
 	}
 
 	function	popBracket(){
+
+		xdebug_break();
 		$this->bracketCount -= 1;
 
-		if($this->bracketCount == 0){
+		echo "Pop bracket ".$this->bracketCount."\n";
+
+		if($this->bracketCount <= 0){
 			return TRUE;
 		}
 
@@ -93,16 +113,16 @@ abstract class CodeScope{
 
 		$variableName = $allKeys[count($allKeys) - 1];
 
-		$this->defaultValues[$variableName] = $value;
+		$this->defaultValues[$variableName] = convertPHPValueToJSValue($value);
 	}
 
 	function	getVariablesWithDefaultParameters(){
 		return $this->defaultValues;
 	}
 
-	function	getVariablesWithDefault(){
-		return $this->defaultValues;
-	}
+//	function	getVariablesWithDefault(){
+//		return $this->defaultValues;
+//	}
 
 	function	startOfFunction(){
 		return FALSE;
