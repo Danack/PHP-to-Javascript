@@ -117,7 +117,6 @@ class CodeConverterState_Default extends CodeConverterState {
 			}
 		}
 
-
 		if(array_key_exists($name, $this->tokenStateChangeList) == TRUE){
 			$this->changeToState($this->tokenStateChangeList[$name]);
 			return TRUE;
@@ -128,7 +127,6 @@ class CodeConverterState_Default extends CodeConverterState {
 
 		if($name == '{'){
 			if($this->stateMachine->currentScope->startOfFunction() == TRUE){
-				//$this->stateMachine->addJS("\nstart of funciton \n");
 				$this->stateMachine->addDefaultsForVariables();
 			}
 		}
@@ -218,7 +216,7 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 	function	processToken($name, $value, $parsedToken){
 
 		if($name == "T_STRING"){
-			if($this->stateMachine->currentScope->type == CODE_SCOPE_CLASS){
+			if($this->stateMachine->currentScope instanceof ClassScope){
 
 				$this->stateMachine->markMethodsStart();
 
@@ -320,19 +318,23 @@ class CodeConverterState_T_VARIABLE extends CodeConverterState {
 
 	function	processToken($name, $value, $parsedToken){
 
-		if($this->stateMachine->currentScope->type == CODE_SCOPE_GLOBAL){
+		if($this->stateMachine->currentScope instanceof GlobalScope){
 			$this->changeToState(CONVERTER_STATE_VARIABLE_GLOBAL);
 			return TRUE;
 		}
 
-		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION ||
-			$this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
-			//TODO - Double-check CODE_SCOPE_FUNCTION_PARAMETERS is correct
+		if($this->stateMachine->currentScope instanceof FunctionScope){
+			//TODO - Double-check FunctionParameterScope is meant to be the same as FunctionScope
 			$this->changeToState(CONVERTER_STATE_VARIABLE_FUNCTION);
 			return TRUE;
 		}
 
-		if($this->stateMachine->currentScope->type == CODE_SCOPE_CLASS){
+		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
+			$this->changeToState(CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER);
+			return TRUE;
+		}
+
+		if($this->stateMachine->currentScope instanceof ClassScope){
 			$this->changeToState(CONVERTER_STATE_VARIABLE_CLASS);
 			return TRUE;
 		}
@@ -347,6 +349,8 @@ class CodeConverterState_T_VARIABLE_GLOBAL extends CodeConverterState {
 
 	function    processToken($name, $value, $parsedToken) {
 		$variableName = cVar($value);
+
+
 		$this->stateMachine->addScopedVariable($variableName, 0);
 		$this->stateMachine->addJS($variableName);
 
@@ -366,6 +370,7 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 	}
 
 	function    processToken($name, $value, $parsedToken) {
+
 		if($value == '$this'){
 			$this->isClassVariable = TRUE;
 			return;
@@ -377,9 +382,11 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 			return;
 		}
 
+//
+
 		$variableName = cVar($value);
 
-//		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+//		if($this->stateMachine->currentScope == CODE_SCOPE_FUNCTION_PARAMETERS){
 //			$this->stateMachine->currentScope->addParameterName($variableName);
 //		}
 
@@ -388,14 +395,18 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 			$this->stateMachine->addJS("if (typeof ".$scopeName.".$variableName == 'undefined')\n ");
 		}
 
-		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
+		if($this->isClassVariable == FALSE){ //Don't add class variables to the function scope
+			$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
+		}
 
-		if($this->isClassVariable == TRUE){
-			$scopedVariableName = $this->stateMachine->getVariableNameForScope(CODE_SCOPE_CLASS, $variableName, $this->isClassVariable);
-		}
-		else{
-			$scopedVariableName = $this->stateMachine->getVariableNameForScope(CODE_SCOPE_FUNCTION, $variableName, $this->isClassVariable);
-		}
+		$scopedVariableName = $this->stateMachine->getVariableNameForScope(/*CODE_SCOPE_FUNCTION,*/ $variableName, $this->isClassVariable);
+
+//		if($this->isClassVariable == TRUE){
+//			$scopedVariableName = $this->stateMachine->getVariableNameForScope(/*CODE_SCOPE_CLASS,*/ $variableName, $this->isClassVariable);
+//		}
+//		else{
+//			$scopedVariableName = $this->stateMachine->getVariableNameForScope(/*CODE_SCOPE_FUNCTION,*/ $variableName, $this->isClassVariable);
+//		}
 
 		$this->stateMachine->addJS($scopedVariableName);
 
@@ -409,13 +420,17 @@ class CodeConverterState_T_VARIABLE_FUNCTION extends CodeConverterState {
 class CodeConverterState_T_VARIABLE_PARAMETER extends CodeConverterState {
 
 	function    processToken($name, $value, $parsedToken) {
+
+	//
 		$variableName = cVar($value);
 
-		$this->stateMachine->currentScope->addParameterName($variableName);
+		//$this->stateMachine->currentScope->addParameterName($variableName);
+
+//
 		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
 		//$scopedVariableName = $this->stateMachine->getVariableNameForScope(CODE_SCOPE_FUNCTION_PARAMETERS, $variableName, FALSE);
-		$scopedVariableName = $variableName;
-		$this->stateMachine->addJS($scopedVariableName);
+		//$scopedVariableName = $variableName;
+		$this->stateMachine->addJS($variableName);
 		//$this->stateMachine->clearVariableFlags();
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
@@ -427,6 +442,7 @@ class CodeConverterState_T_VARIABLE_PARAMETER extends CodeConverterState {
 class CodeConverterState_T_VARIABLE_CLASS extends CodeConverterState {
 
 	function    processToken($name, $value, $parsedToken) {
+
 
 		$variableName = cVar($value);
 
@@ -565,8 +581,7 @@ class CodeConverterState_T_NEW  extends CodeConverterState{
 
 class CodeConverterState_T_CONSTANT_ENCAPSED_STRING extends CodeConverterState{
 	function	processToken($name, $value, $parsedToken){
-
-		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
 			$this->stateMachine->addJS( "/*". $value ."*/");
 			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
 		}
@@ -581,7 +596,7 @@ class CodeConverterState_T_CONSTANT_ENCAPSED_STRING extends CodeConverterState{
 class CodeConverterState_Equals extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
-		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
 			//Don't add an equals - default parameters are set inside the JS function
 		}
 		else{
@@ -596,7 +611,7 @@ class CodeConverterState_Equals extends CodeConverterState{
 class CodeConverterState_CLOSE_PARENS extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
-		if($this->stateMachine->currentScope->type == CODE_SCOPE_FUNCTION_PARAMETERS){
+		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
 			$this->stateMachine->pushScope(
 				CODE_SCOPE_FUNCTION,
 				$this->stateMachine->currentScope->getName()

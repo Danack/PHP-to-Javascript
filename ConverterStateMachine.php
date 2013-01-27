@@ -184,24 +184,24 @@ class	ConverterStateMachine{
 		$this->currentScope->addScopedVariable($variableName, $variableFlags);
 	}
 
-	function	getVariableNameForScope($scopeType, $variableName, $isClassVariable){
-		if($this->currentScope->type == $scopeType){
+	function	getVariableNameForScope(/*$scopeType,*/ $variableName, $isClassVariable){
+		//if($this->currentScope->type == $scopeType){
 			return $this->currentScope->getScopedVariable($variableName, $isClassVariable);
-		}
+		//}
 
-		$scope = $this->findScopeType($scopeType);
-		if($scope != NULL){
-			$return = $scope->getScopedVariable($variableName, $isClassVariable);
-			//echo "variableName $variableName isClassVariable $isClassVariable return $return \n";
-			return $return;
-		}
+//		$scope = $this->findScopeType($scopeType);
+//		if($scope != NULL){
+//			$return = $scope->getScopedVariable($variableName, $isClassVariable);
+//			//echo "variableName $variableName isClassVariable $isClassVariable return $return \n";
+//			return $return;
+//		}
 
-		return $variableName;
+		//return $variableName;
 	}
 
 	function	findScopeType($type){
 		foreach($this->scopesStack as $scope){
-			if($scope->type == $type){
+			if($scope->getType() == $type){
 				return $scope;
 			}
 		}
@@ -270,11 +270,11 @@ class	ConverterStateMachine{
 
 
 			if ($scopeEnded == TRUE){
-				$poppedScopeType = $this->currentScope->type;
+				$poppedScope = $this->currentScope;
 
 				$this->popCurrentScope();	//It was the last bracket for a function.
 
-				if($poppedScopeType == CODE_SCOPE_FUNCTION){
+				if($poppedScope instanceof FunctionScope){
 					$this->popCurrentScope();//Also pop the function paramters scope.
 				}
 			}
@@ -341,7 +341,34 @@ class	ConverterStateMachine{
 			array_push($this->scopesStack, $this->currentScope);
 		}
 
-		$this->currentScope = new CodeScope($type, $name, $this->currentScope);
+		switch($type){
+			case(CODE_SCOPE_GLOBAL):{
+				$newScope = new GlobalScope($name, $this->currentScope);
+				break;
+			}
+
+			case(CODE_SCOPE_CLASS):{
+				$newScope = new ClassScope($name, $this->currentScope);
+				break;
+			}
+
+			case(CODE_SCOPE_FUNCTION_PARAMETERS):{
+				$newScope = new FunctionParameterScope($name, $this->currentScope);
+				break;
+			}
+
+			case(CODE_SCOPE_FUNCTION):{
+				$newScope = new FunctionScope($name, $this->currentScope);
+				break;
+			}
+
+			default:{
+				throw new Exception("Unknown scope type [".$type."]");
+				break;
+			}
+		}
+
+		$this->currentScope = $newScope;
 
 		if($type == CODE_SCOPE_CLASS){
 			$this->methodsStartIndex = 0;
@@ -359,7 +386,8 @@ class	ConverterStateMachine{
 
 		$this->currentScope = array_pop($this->scopesStack);
 
-		if($this->currentScope->type == CODE_SCOPE_CLASS && $constructorEndIndex != 0){
+		if(($this->currentScope instanceof ClassScope) &&
+			$constructorEndIndex != 0){
 			$this->constructorInfoArray[] = array(
 				$this->currentScope->name,
 				$this->constructorStartIndex,
@@ -389,7 +417,7 @@ class	ConverterStateMachine{
 
 			$code = str_replace($search, $className.$constructorDeclaration, $code);
 
-			$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
+			//$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
 		}
 
 		$code = str_replace(METHOD_MARKER_MAGIC_STRING, '', $code);
@@ -439,6 +467,7 @@ class	ConverterStateMachine{
 
 	function	addDefaultsForVariables(){
 		$functionParametersScope = $this->findScopeType(CODE_SCOPE_FUNCTION_PARAMETERS);
+
 		if($functionParametersScope == NULL){
 			throw new Exception("We're inside a function but we can't find the CODE_SCOPE_FUNCTION_PARAMETERS - that shouldn't be possible.");
 		}
