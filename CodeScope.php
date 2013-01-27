@@ -72,18 +72,13 @@ abstract class CodeScope{
 	}
 
 	function	pushBracket(){
-
-		xdebug_break();
 		$this->bracketCount += 1;
-		echo "Push bracket ".$this->bracketCount."\n";
 	}
 
 	function	popBracket(){
-
-		xdebug_break();
 		$this->bracketCount -= 1;
 
-		echo "Pop bracket ".$this->bracketCount."\n";
+		//echo "Pop bracket ".$this->bracketCount."\n";
 
 		if($this->bracketCount <= 0){
 			return TRUE;

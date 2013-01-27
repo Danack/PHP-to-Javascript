@@ -137,7 +137,6 @@ class CodeConverterState_Default extends CodeConverterState {
 
 		if($name == '{'){
 			if($this->stateMachine->currentScope->startOfFunction() == TRUE){
-				xdebug_break();
 				$this->stateMachine->addDefaultsForVariables();
 			}
 		}
@@ -589,8 +588,8 @@ class CodeConverterState_T_STRING extends CodeConverterState{
 	function	processToken($name, $value, $parsedToken){
 
 		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
-			xdebug_break();
-			echo "misunderstood.";
+//			xdebug_break();
+//			echo "misunderstood.";
 		}
 
 
