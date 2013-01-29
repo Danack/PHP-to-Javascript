@@ -8,6 +8,7 @@ define('DECLARATION_TYPE_CLASS', 0x8);
 define('DECLARATION_TYPE_NEW', 0x10);
 
 define('METHOD_MARKER_MAGIC_STRING', "/* METHODS HERE */");
+define('PUBLIC_FUNCTION_MARKER_MAGIC_STRING', 'PUBLIC METHOD HERE');
 
 /** @var array these token keys will be converted to their values */
 $_convert = array (
@@ -122,6 +123,11 @@ class	ConverterStateMachine{
 	 */
 	public $tokenStream;
 
+	/**
+	 * @var CodeScope
+	 */
+	public $rootScope = NULL;
+
 	public $pendingSymbols = array();
 
 	/** @var CodeScope */
@@ -131,10 +137,10 @@ class	ConverterStateMachine{
 	public $scopesStack = array();
 
 
-	public $constructorInfoArray = array();
+	//public $constructorInfoArray = array();
 
-	public $constructorStartIndex = 0;
-	public $methodsStartIndex = 0;
+	//public $constructorStartIndex = 0;
+	//public $methodsStartIndex = 0;
 
 	public $defines = array();
 
@@ -149,7 +155,6 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_ARRAY] = new CodeConverterState_ARRAY($this);
 		$this->states[CONVERTER_STATE_CLASS] = new CodeConverterState_CLASS($this);
 		$this->states[CONVERTER_STATE_FUNCTION] = new CodeConverterState_FUNCTION($this);
-		//$this->states[CONVERTER_STATE_FUNCTION_NAME] = new CodeConverterState_FUNCTION_NAME($this);
 
 		$this->states[CONVERTER_STATE_FOREACH] = new CodeConverterState_T_FOREACH($this);
 		$this->states[CONVERTER_STATE_PUBLIC] = new CodeConverterState_T_PUBLIC($this);
@@ -190,11 +195,6 @@ class	ConverterStateMachine{
 		$this->currentState = $defaultState;
 	}
 
-	function	addClassBindingMagic(){
-
-		$this->addJS("Doobery");
-	}
-
 
 	function	addScopedVariable($variableName, $variableFlags){
 		$this->currentScope->addScopedVariable($variableName, $variableFlags);
@@ -226,22 +226,31 @@ class	ConverterStateMachine{
 	}
 
 
-	function	getJSArray(){
-		return $this->jsArray;
+//	function	getJSArray(){
+//		return $this->jsArray;
+//	}
+
+	function	getJS(){
+		return $this->rootScope->getJS();
 	}
 
-	function getJS($startIndex, $endIndex){
-		$return = '';
-
-		for ($x=$startIndex ; $x<$endIndex ; $x++){
-			$return .= $this->jsArray[$x];
-		}
-
-		return $return;
-	}
+//	function getJS_dead($startIndex = 0, $endIndex = FALSE){
+//		$return = '';
+//
+//		if($endIndex == FALSE){
+//			$endIndex = count(
+//		}
+//
+//		for ($x=$startIndex ; $x<$endIndex ; $x++){
+//			$return .= $this->jsArray[$x];
+//		}
+//
+//		return $return;
+//	}
 
 	public function addJS($jsString){
-		$this->jsArray[] = $jsString;
+//		$this->jsArray[] = $jsString;
+		$this->currentScope->addJS($jsString);
 	}
 
 	function	changeToState($newState, $extraParams = array()){
@@ -254,6 +263,8 @@ class	ConverterStateMachine{
 	}
 
 	function	clearVariableFlags(){
+
+		echo "clearVariableFlags";
 		$this->variableFlags = FALSE;
 	}
 
@@ -272,15 +283,19 @@ class	ConverterStateMachine{
 		return $this->states[$this->currentState];
 	}
 
-	function	accountForBrackets($name){
-		if($name == "{"){
-			$this->pushBracket();
-		}
+function accountForOpenBrackets($name){
+	if($name == "{"){
+		$this->pushBracket();
+	}
+}
 
-		if($name == "}"){
 
-			$scopeEnded = $this->currentScope->popBracket();
+function accountForCloseBrackets($name){
+	if($name == "}"){
 
+		$scopeEnded = $this->currentScope->popBracket();
+
+		if(($this->currentScope instanceof GlobalScope) == FALSE){
 			if ($scopeEnded == TRUE){
 				$poppedScope = $this->currentScope;
 
@@ -292,14 +307,22 @@ class	ConverterStateMachine{
 			}
 		}
 	}
+}
+
+/*
+	function	accountForBrackets($name){
+		if($name == "{"){
+			$this->pushBracket();
+		}
+	}*/
 
 	function parseToken ($name, $value, $count) {
 
 		$returnValue = $this->getPendingInsert($name);
 
-		if($count == 0){
-			$this->accountForBrackets($name);
-		}
+//		if($count == 0){
+//			$this->accountForBrackets($name);
+//		}
 
 		if($name == "T_VARIABLE"){
 			$returnValue .= $value;
@@ -355,10 +378,12 @@ class	ConverterStateMachine{
 		return $this->currentScope->getName();
 	}
 
-	function	pushScope($type, $name){
+	function	pushScope($type, $name, $variableFlag = 0){
 		if($this->currentScope != NULL){
 			array_push($this->scopesStack, $this->currentScope);
 		}
+
+		//echo "Making new scope $type\n";
 
 		switch($type){
 			case(CODE_SCOPE_GLOBAL):{
@@ -372,7 +397,7 @@ class	ConverterStateMachine{
 			}
 
 			case(CODE_SCOPE_FUNCTION_PARAMETERS):{
-				$newScope = new FunctionParameterScope($name, $this->currentScope);
+				$newScope = new FunctionParameterScope($name, $this->currentScope, $variableFlag);
 				break;
 			}
 
@@ -387,7 +412,14 @@ class	ConverterStateMachine{
 			}
 		}
 
-		echo "pushScope(type $type, name $name) \n";
+		//echo "pushScope(type $type, name $name) \n";
+
+		if($this->currentScope == NULL){
+			$this->rootScope = $newScope;
+		}
+		else{
+			$this->currentScope->addChild($newScope);
+		}
 
 		$this->currentScope = $newScope;
 
@@ -399,17 +431,16 @@ class	ConverterStateMachine{
 	function	popCurrentScope(){
 		//Do something with $this->currentScope before destroying it?
 
-		$constructorEndIndex = 0;
+	//	$constructorEndIndex = 0;
 
-		if($this->constructorStartIndex != 0){
-			$constructorEndIndex = count($this->jsArray);;
-		}
+//		if($this->constructorStartIndex != 0){
+//			//TODO - this shouldn't be needed - class scope has acccess to the child function scopes
+//			$constructorEndIndex = count($this->jsArray);;
+//		}
 
 		$previousScope = $this->currentScope;
 
-		xdebug_break();
-
-		echo "Popped scope ".$previousScope->name."\n";
+		//echo "Popped scope ".$previousScope->name."\n";
 
 		$this->currentScope = array_pop($this->scopesStack);
 
@@ -417,53 +448,64 @@ class	ConverterStateMachine{
 			$this->changeToState(CONVERTER_STATE_END_OF_CLASS, array('previousScope' => $previousScope));
 		}
 
-		if(($this->currentScope instanceof ClassScope) &&
-			$constructorEndIndex != 0){ //We're back in the class scope.
-			$this->constructorInfoArray[] = array(
-				$this->currentScope->name,
-				$this->constructorStartIndex,
-				$constructorEndIndex
-			);
-			$this->constructorStartIndex = 0;
+		if($previousScope instanceof GlobalScope){
+			echo "We have left the global scope?";
 		}
+
+//		if(($this->currentScope instanceof ClassScope) &&
+//			$constructorEndIndex != 0){ //We're back in the class scope.
+//			$this->constructorInfoArray[] = array(
+//				$this->currentScope->name,
+//				$this->constructorStartIndex,
+//				$constructorEndIndex
+//			);
+//			$this->constructorStartIndex = 0;
+//		}
 	}
 
 
 	function	finalize(){
-		$code =  implode('', $this->getJSArray());
+		//$code =  implode('', $this->getJSArray());
 
-		foreach($this->constructorInfoArray as $constructorInfo){
-			$className = $constructorInfo[0];
-			$startIndex = $constructorInfo[1];
-			$endIndex = $constructorInfo[2];
+		$code = $this->getJS();
 
-			$search = $className."()";
-			$constructor = $this->getJS($startIndex, $endIndex);
+		//echo "Need to move constructor magic code to class scope";
 
-			$firstBracketPosition = strpos($constructor, '{');
+//		foreach($this->constructorInfoArray as $constructorInfo){
+//			$className = $constructorInfo[0];
+//			$startIndex = $constructorInfo[1];
+//			$endIndex = $constructorInfo[2];
+//
+//			$search = $className."()";
+//			$constructor = $this->getJS($startIndex, $endIndex);
+//
+//			$firstBracketPosition = strpos($constructor, '{');
+//
+//			$constructorDeclaration = substr($constructor, 0, $firstBracketPosition);
+//
+//			$constructorBody = substr($constructor, $firstBracketPosition + 1);
+//
+//			$code = str_replace($search, $className.$constructorDeclaration, $code);
+//			$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
+//		}
 
-			$constructorDeclaration = substr($constructor, 0, $firstBracketPosition);
-
-			$constructorBody = substr($constructor, $firstBracketPosition + 1);
-
-			$code = str_replace($search, $className.$constructorDeclaration, $code);
-			$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
-		}
-
-		$code = str_replace(METHOD_MARKER_MAGIC_STRING, '', $code);
+		//$code = str_replace(METHOD_MARKER_MAGIC_STRING, '', $code);
 
 		return $code;
 	}
 
 	function	markConstructorStart(){
-		$this->constructorStartIndex = count($this->jsArray);
+		//TODO - shouldn't be needed - class scopes know where they start.
+//		$this->constructorStartIndex = count($this->jsArray);
 	}
 
 	function	markMethodsStart(){
-		if($this->methodsStartIndex == 0){
-			$this->methodsStartIndex = count($this->jsArray);
-			$this->addJS(NL.METHOD_MARKER_MAGIC_STRING.NL);
-		}
+
+		//TODO - shouldn't be needed - Function scopes know where they are.
+//		if($this->methodsStartIndex == 0){
+//			$this->methodsStartIndex = count($this->jsArray);
+//			$this->addJS(NL.METHOD_MARKER_MAGIC_STRING.NL);
+//		}
 	}
 
 	function	addDefine($name, $value){

@@ -6,6 +6,31 @@ define('CODE_SCOPE_FUNCTION_PARAMETERS', 'CODE_SCOPE_FUNCTION_PARAMETERS');
 define('CODE_SCOPE_CLASS', 'CODE_SCOPE_CLASS');
 
 
+define("CONSTRUCTOR_POSITION_MARKER", "/*CONSTRUCTOR GOES HERE*/");
+
+function trimConstructor($constructor){
+
+	$constructorInfo = array();
+
+	$firstBracketPosition = strpos($constructor, '(');
+	$closeBracketPosition = strpos($constructor, ')', $firstBracketPosition + 1);
+
+	$firstParensPosition = strpos($constructor, '{');
+	$lastParensPosition = strrpos($constructor, '}');
+
+	if($firstParensPosition === FALSE ||
+		$lastParensPosition === FALSE){
+		echo "Could not figure out brackets [".$constructor."]";
+		exit(0);
+	}
+
+	$constructorInfo['parameters'] = substr($constructor, $firstBracketPosition + 1, $closeBracketPosition - ($firstBracketPosition + 1) );
+
+	$constructorInfo['body'] = substr($constructor, $firstParensPosition + 1, $lastParensPosition - ($firstParensPosition + 1) );
+
+	return $constructorInfo;
+}
+
 function	convertPHPValueToJSValue($value){
 
 	if($value == 'FALSE'){
@@ -32,6 +57,67 @@ abstract class CodeScope{
 
 	/** @var CodeScope */
 	var $parentScope;
+
+	var $childScopes = array();
+
+	function addChild($scope){
+		//$this->childScopes[] = $scope;
+		$this->jsElements[] = $scope;
+	}
+
+	var $jsElements = array();
+
+	function	addJS($jsString){
+		$this->jsElements[] = $jsString;
+	}
+
+
+	function	getJS(){
+		return $this->getJSRaw();
+	}
+
+	function	markMethodsStart(){
+		//echo "HUH";
+		throw new Exception("This should only be called on ClassScope");
+	}
+
+	function	getJSRaw(){
+		//$js = "\n//Beginning of scope ".get_class($this)." ".$this->getName()."\n";
+
+		$js = "";
+
+		foreach($this->jsElements as $jsElement){
+			if($jsElement instanceof CodeScope){
+				$js .= $jsElement->getJS();
+			}
+			else if(is_string($jsElement)){
+				$js .= $jsElement;
+			}
+			else{
+				throw new Exception("Unknown type in this->jsElements of type [".get_class($jsElement)."]");
+			}
+		}
+
+		//$js .= "\n//End of scope ".get_class($this)." ".$this->getName()."\n";
+
+		$js .= "\n";
+		$js .= "\n";
+
+		foreach($this->jsElements as $jsElement){
+			if($jsElement instanceof CodeScope){
+				$js .= $jsElement->getDelayedJS($this->getName());
+				$js .= "\n";
+			}
+		}
+
+
+		return $js;
+	}
+
+	function	getDelayedJS($parentScopeName){
+		return "";
+	}
+
 
 	/**
 	 * @var string[]
@@ -73,15 +159,13 @@ abstract class CodeScope{
 
 	function	pushBracket(){
 		$this->bracketCount += 1;
-
-		xdebug_break();
-		echo "bracket count = ".$this->bracketCount."\n";
+		//echo "bracket count ".$this->name ." = ".$this->bracketCount."\n";
 	}
 
 	function	popBracket(){
 		$this->bracketCount -= 1;
 
-		echo "bracket count = ".$this->bracketCount."\n";
+		//echo "bracket count  ".$this->name." = " .$this->bracketCount."\n";
 
 		if($this->bracketCount <= 0){
 			return TRUE;
@@ -151,8 +235,47 @@ class GlobalScope extends CodeScope{
 
 class ClassScope extends CodeScope{
 
+	var		$methodsStartIndex = FALSE;
+
 	function getType(){
 		return CODE_SCOPE_CLASS;
+	}
+
+
+	function	getJS(){
+		$jsRaw = $this->getJSRaw();
+
+		$constructor = FALSE;
+
+		foreach($this->jsElements as $jsElement){
+			if($jsElement instanceof CodeScope){
+				if($jsElement->getName() == '__construct'){
+					$constructor = $jsElement->getJSRaw();
+					break;
+				}
+			}
+		}
+
+		if($constructor !== FALSE){
+			$constructorInfo = trimConstructor($constructor);
+			$jsRaw = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, $constructorInfo['parameters'], $jsRaw);
+			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, $constructorInfo['body'], $jsRaw);
+		}
+
+		return $jsRaw;
+	}
+
+	function	markMethodsStart(){
+
+		//echo "WUT - ".$this->methodsStartIndex."\n";
+
+		if($this->methodsStartIndex === FALSE){
+			$this->methodsStartIndex = count($this->jsElements);
+		//	echo "really";
+
+
+			$this->addJS(CONSTRUCTOR_POSITION_MARKER);
+		}
 	}
 
 	function	getScopedVariableForScope($variableName, $isClassVariable){
@@ -187,16 +310,55 @@ class ClassScope extends CodeScope{
 
 class FunctionParameterScope extends CodeScope{
 
+	var $variableFlag = 0;
+
+	function	__construct($name, $parentScope, $variableFlag){
+		parent::__construct($name, $parentScope);
+		$this->variableFlag = $variableFlag;
+	}
+
+	function	getDelayedJS($parentScopeName){
+
+		if($this->getName() == "__construct"){
+			//constructor gets included in ClassScope
+			return "";
+		}
+
+		if(($this->variableFlag & DECLARATION_TYPE_PRIVATE) == 0){
+			$jsRaw = $this->getJSRaw();
+
+			if(($this->variableFlag & DECLARATION_TYPE_STATIC)){
+				$jsRaw = str_replace(PUBLIC_FUNCTION_MARKER_MAGIC_STRING, $parentScopeName.".", $jsRaw);
+			}
+			else{
+				$jsRaw = str_replace(PUBLIC_FUNCTION_MARKER_MAGIC_STRING, $parentScopeName.".prototype.", $jsRaw);
+			}
+			return $jsRaw;
+		}
+	}
+
+	function	getJS(){
+
+		if($this->getName() == "__construct"){
+			//constructor gets included in ClassScope
+			return "";
+		}
+
+		if(($this->variableFlag & DECLARATION_TYPE_PRIVATE) != 0){
+			return $this->getJSRaw();
+		}
+	}
+
+
+
 	function getType(){
 		return CODE_SCOPE_FUNCTION_PARAMETERS;
 	}
 
 	function	getScopedVariableForScope($variableName, $isClassVariable){
-
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
-
 			$variableFlag = $this->scopedVariables[$cVar];
 
 			if($variableFlag & DECLARATION_TYPE_STATIC){

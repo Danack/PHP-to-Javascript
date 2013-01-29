@@ -13,6 +13,7 @@ function cb_T_ARRAY($_matches) {
 	}
 }
 
+define('CONSTRUCTOR_PARAMETERS_POSITION', "/*Constructor parameters here*/");
 
 define('CONVERTER_STATE_DEFAULT', 	'CONVERTER_STATE_DEFAULT');
 define('CONVERTER_STATE_ECHO', 		'CONVERTER_STATE_ECHO');
@@ -224,9 +225,12 @@ class CodeConverterState_CLASS extends CodeConverterState {
 
 	function	processToken($name, $value, $parsedToken){
 		if($name == "T_STRING"){
-			$this->stateMachine->addJS("function $value()");
-			$this->changeToState(CONVERTER_STATE_DEFAULT);
 			$this->stateMachine->pushScope(CODE_SCOPE_CLASS, $value);
+
+
+
+			$this->stateMachine->addJS("function $value(".CONSTRUCTOR_PARAMETERS_POSITION.")");
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
 		}
 	}
 }
@@ -236,21 +240,40 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 	function	processToken($name, $value, $parsedToken){
 
 		if($name == "T_STRING"){
-			if($this->stateMachine->currentScope instanceof ClassScope){
 
-				$this->stateMachine->markMethodsStart();
+			$previousScope = $this->stateMachine->currentScope;
 
-				$this->stateMachine->addJS("this.$value = function");
+			$this->stateMachine->pushScope(CODE_SCOPE_FUNCTION_PARAMETERS, $value, $this->stateMachine->variableFlags);
+
+			if($previousScope instanceof ClassScope){
+				//$this->stateMachine->markMethodsStart();
+				//echo "Gaah";
+				$previousScope->markMethodsStart();
+
+				if($this->stateMachine->variableFlags & DECLARATION_TYPE_PRIVATE){
+					$this->stateMachine->addJS("function $value ");
+				}
+				else{
+					$this->stateMachine->addJS(PUBLIC_FUNCTION_MARKER_MAGIC_STRING."$value = function ");
+				}
+
+				//$this->stateMachine->addJS("this.$value = function");
 			}
 			else{
-				$this->stateMachine->addJS("function $value ");
+				//if($this->stateMachine->variableFlags & DECLARATION_TYPE_PRIVATE){
+					$this->stateMachine->addJS("function $value ");
+//				}
+//				else{
+//					$this->stateMachine->addJS(PUBLIC_FUNCTION_MARKER_MAGIC_STRING."$value = function ");
+//				}
 			}
 
+			/*
 			if($value == "__construct"){
 				$this->stateMachine->markConstructorStart();
 			}
+			*/
 
-			$this->stateMachine->pushScope(CODE_SCOPE_FUNCTION_PARAMETERS, $value);
 			$this->stateMachine->clearVariableFlags();
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
 		}
@@ -787,16 +810,13 @@ class CodeConverterState_EndOfClass extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
 		if($name == '}'){
-
-			xdebug_break();
-
 			$this->stateMachine->addJS('}'."\n\n");
 			$className = $this->previousScope->name;
-			$this->stateMachine->addJS("$className = new $className(/*Constuctor for static methods+vars*/);"."\n\n");
+//			$this->stateMachine->addJS("$className = new $className(/*Constuctor for static methods+vars*/);"."\n\n");
 		}
-		else{
-			throw new Exception( "Only token } should be getting here.");
-		}
+//		else{
+//			throw new Exception( "Only token } should be getting here.");
+//		}
 
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}

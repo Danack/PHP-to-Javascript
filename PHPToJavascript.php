@@ -57,7 +57,17 @@ class PHPToJavascript{
 			do{
 				$parsedToken = $this->stateMachine->parseToken($name, $value, $count);
 
+				if($count == 0){
+					$this->stateMachine->accountForOpenBrackets($name);
+				}
+
 				$reprocess = $this->stateMachine->processToken($name, $value, $parsedToken);
+
+				if($count == 0){
+
+
+					$this->stateMachine->accountForCloseBrackets($name);
+				}
 
 				if($count > 5){
 					throw new Exception("Stuck converting same token.");

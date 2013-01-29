@@ -13,7 +13,7 @@ $filesToConvert = array(
 	//'src/Code.php' => 'export/Code.js',
 	//"src/Content.php",
 	//'src/StaticTest.php' => 'export/StaticTest.js',
-	//'src/Content.php' => 'export/Content.js',
+	'src/Content.php' => 'export/Content.js',
 	'src/ContentImage.php' => 'export/ContentImage.js',
 );
 
