@@ -1,4 +1,5 @@
 {
 	"name": "base-reality/php-to-javascript",
-	"description": "A PHP to Javascript converter for automatically converting PHP source code (including Classes) into Javascript."
+	"description": "A PHP to Javascript converter for automatically converting PHP source code (including Classes) into Javascript.",
+	"license": "CC-BY-NC-SA-3.0"
 }
