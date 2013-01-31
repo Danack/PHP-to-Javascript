@@ -8,7 +8,6 @@ if(defined('NL') == FALSE){
 define("PHPToJavascript_TRACE", TRUE);
 //define("PHPToJavascript_TRACE", FALSE);
 
-
 require_once('TokenStream.php');
 require_once('CodeScope.php');
 require_once('ConverterStateMachine.php');
