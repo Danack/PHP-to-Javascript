@@ -480,6 +480,31 @@ function accountForCloseBrackets($name){
 		'T_ENCAPSED_AND_WHITESPACE',
 		'T_WHITESPACE',
 	);
+
+	function     generateFile($outputFilename, $originalFilename, $jsOutput) {
+
+		$outputDirectory = pathinfo($outputFilename, PATHINFO_DIRNAME);
+
+		ensureDirectoryExists($outputDirectory);
+
+		$fileHandle = fopen($outputFilename, "w");
+
+		if ($fileHandle == FALSE) {
+			throw new Exception("Failed to open file [$outputFilename] for writing.");
+		}
+
+		fwrite($fileHandle, "//Auto-generated file by PHP-To-Javascript at ".date(DATE_RFC822).NL);
+		fwrite($fileHandle, "//\n");
+		fwrite($fileHandle, "//DO NOT EDIT - all changes will be lost.\n");
+		fwrite($fileHandle, "//\n");
+		fwrite($fileHandle, "//Please edit the file " . $originalFilename . " and then reconvert to make any changes\n");
+		fwrite($fileHandle, "\n");
+
+		fwrite($fileHandle, $jsOutput);
+
+		fclose($fileHandle);
+	}
+
 }
 
 
