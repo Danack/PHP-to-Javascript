@@ -2,7 +2,7 @@
 
 class StaticTest {
 
-	static var $staticClassVar = 0;
+	public static $staticClassVar = 0;
 
 	var $instanceVar = 0;
 

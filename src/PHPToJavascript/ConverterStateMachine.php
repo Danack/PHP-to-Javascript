@@ -1,80 +1,10 @@
 <?php
 
-define('DECLARATION_TYPE_STATIC', 0x1);
-define('DECLARATION_TYPE_PRIVATE', 0x2);
-define('DECLARATION_TYPE_PUBLIC', 0x4);
-define('DECLARATION_TYPE_CLASS', 0x8);
+namespace PHPToJavascript;
 
-define('DECLARATION_TYPE_NEW', 0x10);
 
-define('METHOD_MARKER_MAGIC_STRING', "/* METHODS HERE */");
-define('PUBLIC_FUNCTION_MARKER_MAGIC_STRING', 'PUBLIC METHOD HERE');
 
-/** @var array these token keys will be converted to their values */
-$_convert = array (
-	'T_IS_EQUAL'=>'==',
-	'T_IS_GREATER_OR_EQUAL'=>'>=',
-	'T_IS_SMALLER_OR_EQUAL'=>'<=',
-	'T_IS_IDENTICAL'=>'===',
-	'T_IS_NOT_EQUAL'=>'!=',
-	'T_IS_NOT_IDENTICAL'=>'!==',
-	'T_IS_SMALLER_OR_EQUA'=>'<=',
-	'T_BOOLEAN_AND'=>'&&',
-	'T_BOOLEAN_OR'=>'||',
-	'T_CONCAT_EQUAL'=>'+= ',
-	'T_DIV_EQUAL'=>'/=',
-	'T_DOUBLE_COLON'=>'.',
-	'T_INC'=>'++',
-	'T_MINUS_EQUAL'=>'-=',
-	'T_MOD_EQUAL'=>'%=',
-	'T_MUL_EQUAL'=>'*=',
-	'T_OBJECT_OPERATOR'=>'.',
-	'T_OR_EQUAL'=>'|=',
-	'T_PLUS_EQUAL'=>'+=',
-	'T_SL'=>'<<',
-	'T_SL_EQUAL'=>'<<=',
-	'T_SR'=>'>>',
-	'T_SR_EQUAL'=>'>>=',
-	'T_START_HEREDOC'=>'<<<',
-	'T_XOR_EQUAL'=>'^=',
-	//'T_NEW'=>'new',
-	'T_ELSE'=>'else',
-	'.'=>' + "" + ',
-	'T_IF'=>'if',
-	'T_RETURN'=>'return',
-	'T_AS'=>'in',
-	'T_WHILE'=>'while',
-	'T_LOGICAL_AND' => 'AND',
-	'T_LOGICAL_OR' => 'OR',
-	'T_LOGICAL_XOR' => 'XOR',
-	'T_EVAL' => 'eval',
-	'T_ELSEIF' => 'else if',
-	'T_BREAK' => 'break',
-	'T_DOUBLE_ARROW' => ':',
-);
 
-/** @var array these tokens stays the same */
-$_keep = array(
-	//'=',
-	',', '}', '{',
-	';',
-	'(', //')',
-	'*',
-	'/', '+', '-', '>',
-	'<', '[', ']', "\"",
-	"'",
-);
-
-/** @var array these tokens keeps their value */
-$_keepValue = array (
-	//'T_CONSTANT_ENCAPSED_STRING',
-	'T_STRING', 'T_COMMENT',
-	'T_ML_COMMENT',
-	'T_DOC_COMMENT',
-	'T_LNUMBER',
-	'T_ENCAPSED_AND_WHITESPACE',
-	'T_WHITESPACE',
-);
 
 
 function	unencapseString($string){
@@ -156,39 +86,39 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_CLASS] = new CodeConverterState_CLASS($this);
 		$this->states[CONVERTER_STATE_FUNCTION] = new CodeConverterState_FUNCTION($this);
 
-		$this->states[CONVERTER_STATE_FOREACH] = new CodeConverterState_T_FOREACH($this);
-		$this->states[CONVERTER_STATE_PUBLIC] = new CodeConverterState_T_PUBLIC($this);
-		$this->states[CONVERTER_STATE_VARIABLE] = new CodeConverterState_T_VARIABLE($this);
+		$this->states[CONVERTER_STATE_FOREACH] = new CodeConverterState_TFOREACH($this);
+		$this->states[CONVERTER_STATE_PUBLIC] = new CodeConverterState_TPUBLIC($this);
+		$this->states[CONVERTER_STATE_VARIABLE] = new CodeConverterState_TVARIABLE($this);
 
-		$this->states[CONVERTER_STATE_VARIABLE_GLOBAL] = new CodeConverterState_T_VARIABLE_GLOBAL($this);
-		$this->states[CONVERTER_STATE_VARIABLE_FUNCTION] = new CodeConverterState_T_VARIABLE_FUNCTION($this);
-		$this->states[CONVERTER_STATE_VARIABLE_CLASS] = new CodeConverterState_T_VARIABLE_CLASS($this);
+		$this->states[CONVERTER_STATE_VARIABLE_GLOBAL] = new CodeConverterState_TVARIABLEGLOBAL($this);
+		$this->states[CONVERTER_STATE_VARIABLE_FUNCTION] = new CodeConverterState_TVARIABLEFUNCTION($this);
+		$this->states[CONVERTER_STATE_VARIABLE_CLASS] = new CodeConverterState_TVARIABLECLASS($this);
 
-		$this->states[CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER] = new CodeConverterState_T_VARIABLE_PARAMETER($this);
+		$this->states[CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER] = new CodeConverterState_TVARIABLEPARAMETER($this);
 
-		$this->states[CONVERTER_STATE_STATIC] = new CodeConverterState_T_STATIC($this);
-		$this->states[CONVERTER_STATE_STRING] = new CodeConverterState_T_STRING($this);
+		$this->states[CONVERTER_STATE_STATIC] = new CodeConverterState_TSTATIC($this);
+		$this->states[CONVERTER_STATE_STRING] = new CodeConverterState_TSTRING($this);
 
-		$this->states[CONVERTER_STATE_T_PUBLIC] = new CodeConverterState_T_PUBLIC($this);
-		$this->states[CONVERTER_STATE_T_PRIVATE] = new CodeConverterState_T_PRIVATE($this);
+		$this->states[CONVERTER_STATE_T_PUBLIC] = new CodeConverterState_TPUBLIC($this);
+		$this->states[CONVERTER_STATE_T_PRIVATE] = new CodeConverterState_TPRIVATE($this);
 
 		$this->states[CONVERTER_STATE_DEFINE] = new CodeConverterState_define($this);
 
-		$this->states[CONVERTER_STATE_T_EXTENDS] = new CodeConverterState_T_EXTENDS($this);
-		$this->states[CONVERTER_STATE_T_NEW] = new CodeConverterState_T_NEW($this);
+		$this->states[CONVERTER_STATE_T_EXTENDS] = new CodeConverterState_TEXTENDS($this);
+		$this->states[CONVERTER_STATE_T_NEW] = new CodeConverterState_TNEW($this);
 
-		$this->states[CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING] = new CodeConverterState_T_CONSTANT_ENCAPSED_STRING($this);
+		$this->states[CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING] = new CodeConverterState_TCONSTANTENCAPSEDSTRING($this);
 		$this->states[CONVERTER_STATE_EQUALS] = new CodeConverterState_Equals($this);
 
-		$this->states[CONVERTER_STATE_CLOSE_PARENS] = new CodeConverterState_CLOSE_PARENS($this);
+		$this->states[CONVERTER_STATE_CLOSE_PARENS] = new CodeConverterState_CLOSEPARENS($this);
 
-		$this->states[CONVERTER_STATE_IMPLEMENTS_INTERFACE] = new CodeConverterState_T_IMPLEMENTS_INTERFACE($this);
-		$this->states[CONVERTER_STATE_INTERFACE] = new CodeConverterState_T_INTERFACE($this);
+		$this->states[CONVERTER_STATE_IMPLEMENTS_INTERFACE] = new CodeConverterState_TIMPLEMENTSINTERFACE($this);
+		$this->states[CONVERTER_STATE_INTERFACE] = new CodeConverterState_TINTERFACE($this);
 
 
 		$this->states[CONVERTER_STATE_REQUIRE] = new CodeConverterState_REQUIRE($this);
-		$this->states[CONVERTER_STATE_ABSTRACT] = new CodeConverterState_T_ABSTRACT($this);
-		$this->states[CONVERTER_STATE_ABSTRACT_FUNCTION] = new CodeConverterState_T_ABSTRACT_REMOVE($this);
+		$this->states[CONVERTER_STATE_ABSTRACT] = new CodeConverterState_TABSTRACT($this);
+		$this->states[CONVERTER_STATE_ABSTRACT_FUNCTION] = new CodeConverterState_TABSTRACTREMOVE($this);
 
 		$this->states[CONVERTER_STATE_END_OF_CLASS] = new CodeConverterState_EndOfClass($this);
 
@@ -263,13 +193,11 @@ class	ConverterStateMachine{
 	}
 
 	function	clearVariableFlags(){
-
-		echo "clearVariableFlags";
 		$this->variableFlags = FALSE;
 	}
 
 	function	addVariableFlags($variableFlag){
-		$this->variableFlags |= DECLARATION_TYPE_NEW;
+		$this->variableFlags |= $variableFlag;
 	}
 
 	function	processToken($name, $value, $parsedToken){
@@ -309,39 +237,28 @@ function accountForCloseBrackets($name){
 	}
 }
 
-/*
-	function	accountForBrackets($name){
-		if($name == "{"){
-			$this->pushBracket();
-		}
-	}*/
-
 	function parseToken ($name, $value, $count) {
 
 		$returnValue = $this->getPendingInsert($name);
 
-//		if($count == 0){
-//			$this->accountForBrackets($name);
-//		}
-
 		if($name == "T_VARIABLE"){
 			$returnValue .= $value;
 		}
-		else if (in_array($name, array_keys($GLOBALS['_convert']))) {
-			if(empty($GLOBALS['_convert'][$name]) == TRUE){
+		else if (in_array($name, array_keys(self::$_convert))) {
+			if(empty(self::$_convert[$name]) == TRUE){
 				$returnValue .= $name;		//keep key
 			}
 			else{
-				$returnValue .= $GLOBALS['_convert'][$name];
+				$returnValue .= self::$_convert[$name];
 			}
 		}
-		else if (in_array($name, $GLOBALS['_keep'])) {	//keep value
+		else if (in_array($name, self::$_keep)) {	//keep value
 			$returnValue .= $name;
 		}
 		else if($name == 'T_STRING' && defined($value)){
 			$returnValue .= constant($value);
 		}
-		else if (in_array($name, $GLOBALS['_keepValue'])) {
+		else if (in_array($name, self::$_keepValue)) {
 			$returnValue .= $value;
 		}
 
@@ -383,8 +300,6 @@ function accountForCloseBrackets($name){
 			array_push($this->scopesStack, $this->currentScope);
 		}
 
-		//echo "Making new scope $type\n";
-
 		switch($type){
 			case(CODE_SCOPE_GLOBAL):{
 				$newScope = new GlobalScope($name, $this->currentScope);
@@ -412,8 +327,6 @@ function accountForCloseBrackets($name){
 			}
 		}
 
-		//echo "pushScope(type $type, name $name) \n";
-
 		if($this->currentScope == NULL){
 			$this->rootScope = $newScope;
 		}
@@ -431,13 +344,6 @@ function accountForCloseBrackets($name){
 	function	popCurrentScope(){
 		//Do something with $this->currentScope before destroying it?
 
-	//	$constructorEndIndex = 0;
-
-//		if($this->constructorStartIndex != 0){
-//			//TODO - this shouldn't be needed - class scope has acccess to the child function scopes
-//			$constructorEndIndex = count($this->jsArray);;
-//		}
-
 		$previousScope = $this->currentScope;
 
 		//echo "Popped scope ".$previousScope->name."\n";
@@ -451,61 +357,12 @@ function accountForCloseBrackets($name){
 		if($previousScope instanceof GlobalScope){
 			echo "We have left the global scope?";
 		}
-
-//		if(($this->currentScope instanceof ClassScope) &&
-//			$constructorEndIndex != 0){ //We're back in the class scope.
-//			$this->constructorInfoArray[] = array(
-//				$this->currentScope->name,
-//				$this->constructorStartIndex,
-//				$constructorEndIndex
-//			);
-//			$this->constructorStartIndex = 0;
-//		}
 	}
 
 
 	function	finalize(){
-		//$code =  implode('', $this->getJSArray());
-
 		$code = $this->getJS();
-
-		//echo "Need to move constructor magic code to class scope";
-
-//		foreach($this->constructorInfoArray as $constructorInfo){
-//			$className = $constructorInfo[0];
-//			$startIndex = $constructorInfo[1];
-//			$endIndex = $constructorInfo[2];
-//
-//			$search = $className."()";
-//			$constructor = $this->getJS($startIndex, $endIndex);
-//
-//			$firstBracketPosition = strpos($constructor, '{');
-//
-//			$constructorDeclaration = substr($constructor, 0, $firstBracketPosition);
-//
-//			$constructorBody = substr($constructor, $firstBracketPosition + 1);
-//
-//			$code = str_replace($search, $className.$constructorDeclaration, $code);
-//			$code = str_replace(METHOD_MARKER_MAGIC_STRING, $constructorBody, $code);
-//		}
-
-		//$code = str_replace(METHOD_MARKER_MAGIC_STRING, '', $code);
-
 		return $code;
-	}
-
-	function	markConstructorStart(){
-		//TODO - shouldn't be needed - class scopes know where they start.
-//		$this->constructorStartIndex = count($this->jsArray);
-	}
-
-	function	markMethodsStart(){
-
-		//TODO - shouldn't be needed - Function scopes know where they are.
-//		if($this->methodsStartIndex == 0){
-//			$this->methodsStartIndex = count($this->jsArray);
-//			$this->addJS(NL.METHOD_MARKER_MAGIC_STRING.NL);
-//		}
 	}
 
 	function	addDefine($name, $value){
@@ -555,6 +412,74 @@ function accountForCloseBrackets($name){
 			$this->addJS($jsString);
 		}
 	}
+
+
+
+		/** @var array these token keys will be converted to their values */
+	public static $_convert = array (
+		'T_IS_EQUAL'=>'==',
+		'T_IS_GREATER_OR_EQUAL'=>'>=',
+		'T_IS_SMALLER_OR_EQUAL'=>'<=',
+		'T_IS_IDENTICAL'=>'===',
+		'T_IS_NOT_EQUAL'=>'!=',
+		'T_IS_NOT_IDENTICAL'=>'!==',
+		'T_IS_SMALLER_OR_EQUA'=>'<=',
+		'T_BOOLEAN_AND'=>'&&',
+		'T_BOOLEAN_OR'=>'||',
+		'T_CONCAT_EQUAL'=>'+= ',
+		'T_DIV_EQUAL'=>'/=',
+		'T_DOUBLE_COLON'=>'.',
+		'T_INC'=>'++',
+		'T_MINUS_EQUAL'=>'-=',
+		'T_MOD_EQUAL'=>'%=',
+		'T_MUL_EQUAL'=>'*=',
+		'T_OBJECT_OPERATOR'=>'.',
+		'T_OR_EQUAL'=>'|=',
+		'T_PLUS_EQUAL'=>'+=',
+		'T_SL'=>'<<',
+		'T_SL_EQUAL'=>'<<=',
+		'T_SR'=>'>>',
+		'T_SR_EQUAL'=>'>>=',
+		'T_START_HEREDOC'=>'<<<',
+		'T_XOR_EQUAL'=>'^=',
+			//'T_NEW'=>'new',
+		'T_ELSE'=>'else',
+		'.'=>' + "" + ',
+		'T_IF'=>'if',
+		'T_RETURN'=>'return',
+		'T_AS'=>'in',
+		'T_WHILE'=>'while',
+		'T_LOGICAL_AND' => 'AND',
+		'T_LOGICAL_OR' => 'OR',
+		'T_LOGICAL_XOR' => 'XOR',
+		'T_EVAL' => 'eval',
+		'T_ELSEIF' => 'else if',
+		'T_BREAK' => 'break',
+		'T_DOUBLE_ARROW' => ':',
+	);
+
+	/** @var array these tokens stays the same */
+	public static $_keep = array(
+			//'=',
+		',', '}', '{',
+		';',
+		'(', //')',
+		'*',
+		'/', '+', '-', '>',
+		'<', '[', ']', "\"",
+		"'",
+	);
+
+	/** @var array these tokens keeps their value */
+	public static $_keepValue = array (
+			//'T_CONSTANT_ENCAPSED_STRING',
+		'T_STRING', 'T_COMMENT',
+		'T_ML_COMMENT',
+		'T_DOC_COMMENT',
+		'T_LNUMBER',
+		'T_ENCAPSED_AND_WHITESPACE',
+		'T_WHITESPACE',
+	);
 }
 
 

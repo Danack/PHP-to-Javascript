@@ -1,5 +1,5 @@
 <?php
-
+namespace PHPToJavascript;
 
 class TokenStream{
 
