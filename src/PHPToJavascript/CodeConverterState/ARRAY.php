@@ -41,7 +41,16 @@ class CodeConverterState_ARRAY extends CodeConverterState {
 
 			if (strpos($js, ':') === FALSE) {
 
-				$js = preg_replace_callback ('/([{, \t\n])(\'.*\')(|.*:(.*))([,} \t\n])/Uis', 'cb_T_ARRAY', $js);
+				$arrayFunction = function($_matches) {
+					$this->tmp++;
+					if (strpos($_matches[0], ':') === FALSE) {
+						return ($_matches[1].$this->tmp.':'.$_matches[2].$_matches[3].$_matches[4].$_matches[5]);
+					} else {
+						return $_matches[0];
+					}
+				};
+
+				$js = preg_replace_callback ('/([{, \t\n])(\'.*\')(|.*:(.*))([,} \t\n])/Uis', $arrayFunction, $js);
 			}
 
 			$this->stateMachine->addJS($js);

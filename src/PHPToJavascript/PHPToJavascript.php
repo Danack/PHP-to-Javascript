@@ -39,14 +39,7 @@ function cVar($var) {
 	return  str_replace('$', '', $var);
 }
 
-function cb_T_ARRAY($_matches) {
-	$this->tmp++;
-	if (strpos($_matches[0], ':') === FALSE) {
-		return ($_matches[1].$this->tmp.':'.$_matches[2].$_matches[3].$_matches[4].$_matches[5]);
-	} else {
-		return $_matches[0];
-	}
-}
+
 
 define('CONSTRUCTOR_PARAMETERS_POSITION', "/*Constructor parameters here*/");
 
