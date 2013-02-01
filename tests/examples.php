@@ -5,17 +5,12 @@ require_once("SplClassLoader.php");
 $loader = new SplClassLoader('PHPToJavascript', '../src');
 $loader->register();
 
-
 $exportPath = "export";
 
 error_reporting(E_ALL);
 
 $filesToConvert = array(
-
-	//'src/ClassVariables.php' => 'export/ClassVariables.js',
-	//'src/Code.php' => 'export/Code.js',
-	//"src/Content.php",
-	//'src/StaticTest.php' => 'export/StaticTest.js',
+	'src/StaticTest.php' => 'export/StaticTest.js',
 	'Content.php' => '../export/Content.js',
 	'ContentImage.php' => '../export/ContentImage.js',
 );
@@ -26,7 +21,6 @@ foreach($filesToConvert as $inputFilename => $outputFilename){
 	$jsOutput = $phpToJavascript->toJavascript();
 	generateFile($outputFilename, $inputFilename, $jsOutput);
 }
-
 
 
 function ensureDirectoryExists($filePath) {

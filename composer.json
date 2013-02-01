@@ -4,8 +4,7 @@
 	"license": "CC-BY-NC-SA-3.0",
 	"autoload": {
 		"psr-0": {
-			"PHPToJavascript": "src/",
-			"": "src/"
+			"PHPToJavascript": "src/"
 		}
 	},
 	"authors": [
