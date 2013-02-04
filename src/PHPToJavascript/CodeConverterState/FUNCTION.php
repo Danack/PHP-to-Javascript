@@ -26,23 +26,10 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 				else{
 					$this->stateMachine->addJS(PUBLIC_FUNCTION_MARKER_MAGIC_STRING."$value = function ");
 				}
-
-				//$this->stateMachine->addJS("this.$value = function");
 			}
 			else{
-				//if($this->stateMachine->variableFlags & DECLARATION_TYPE_PRIVATE){
 				$this->stateMachine->addJS("function $value ");
-//				}
-//				else{
-//					$this->stateMachine->addJS(PUBLIC_FUNCTION_MARKER_MAGIC_STRING."$value = function ");
-//				}
 			}
-
-			/*
-			if($value == "__construct"){
-				$this->stateMachine->markConstructorStart();
-			}
-			*/
 
 			$this->stateMachine->clearVariableFlags();
 			$this->changeToState(CONVERTER_STATE_DEFAULT);

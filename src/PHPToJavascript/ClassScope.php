@@ -30,25 +30,23 @@ class ClassScope extends CodeScope{
 			$jsRaw = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, $constructorInfo['parameters'], $jsRaw);
 			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, $constructorInfo['body'], $jsRaw);
 		}
+		else{
+			//There is no constructor - just remove the magic strings
+			$jsRaw = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, '', $jsRaw);
+			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, '', $jsRaw);
+		}
 
 		return $jsRaw;
 	}
 
 	function	markMethodsStart(){
-
-		//echo "WUT - ".$this->methodsStartIndex."\n";
-
 		if($this->methodsStartIndex === FALSE){
 			$this->methodsStartIndex = count($this->jsElements);
-			//	echo "really";
-
-
 			$this->addJS(CONSTRUCTOR_POSITION_MARKER);
 		}
 	}
 
 	function	getScopedVariableForScope($variableName, $isClassVariable){
-
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){

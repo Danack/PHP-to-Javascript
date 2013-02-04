@@ -13,6 +13,7 @@ $filesToConvert = array(
 	'StaticTest.php' => 'StaticTest.js',
 	'Content.php' => 'Content.js',
 	'ContentImage.php' => 'ContentImage.js',
+	'PublicPrivate.php' => 'PublicPrivate.js',
 );
 
 

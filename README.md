@@ -47,6 +47,8 @@ TODO
 
 * Add more tests, setup some automated tester.
 
+* Figure out what to do about Javascript reserved keywords. Probably out to detect them and either warn or give an error on detection.  testObject.delete();
+
 * Figure out how to set flags for what should be done with echo. e.g. should it be sent to console.log(), alert(), document.write() etc. Think these may need to be flags to be set when PHPToJavascript is run.
 
 Limitations

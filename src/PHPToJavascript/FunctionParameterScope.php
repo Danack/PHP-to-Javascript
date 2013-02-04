@@ -26,6 +26,10 @@ class FunctionParameterScope extends CodeScope{
 			}
 			else{
 				$jsRaw = str_replace(PUBLIC_FUNCTION_MARKER_MAGIC_STRING, $parentScopeName.".prototype.", $jsRaw);
+
+				//Functions declared as prototypes on the class object need to have a semi-colon
+				//to avoid a missing ';' warning in jsLint
+				$jsRaw = trim($jsRaw).";\n\n";
 			}
 			return $jsRaw;
 		}

@@ -39,7 +39,6 @@ abstract class CodeScope{
 	}
 
 	function	markMethodsStart(){
-		//echo "HUH";
 		throw new Exception("This should only be called on ClassScope");
 	}
 
@@ -121,14 +120,10 @@ abstract class CodeScope{
 
 	function	pushBracket(){
 		$this->bracketCount += 1;
-		//echo "bracket count ".$this->name ." = ".$this->bracketCount."\n";
 	}
 
 	function	popBracket(){
 		$this->bracketCount -= 1;
-
-		//echo "bracket count  ".$this->name." = " .$this->bracketCount."\n";
-
 		if($this->bracketCount <= 0){
 			return TRUE;
 		}
@@ -163,10 +158,6 @@ abstract class CodeScope{
 	function	getVariablesWithDefaultParameters(){
 		return $this->defaultValues;
 	}
-
-//	function	getVariablesWithDefault(){
-//		return $this->defaultValues;
-//	}
 
 	function	startOfFunction(){
 		return FALSE;
