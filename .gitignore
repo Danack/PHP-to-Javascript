@@ -3,3 +3,5 @@ export
 
 .idea
 .DS_Store
+
+test/*.js
