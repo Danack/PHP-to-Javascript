@@ -4,4 +4,4 @@ export
 .idea
 .DS_Store
 
-test/*.js
+tests/*.js
