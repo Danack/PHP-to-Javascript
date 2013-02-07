@@ -6,10 +6,14 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
 
+		if($value == 'NULL'){
+			$value = 'null';
+		}
+
+
 		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
 //			echo "misunderstood.";
 		}
-
 
 		$defineValue = $this->stateMachine->getDefine($value);
 
@@ -25,6 +29,8 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
 		}
 		else{
+
+
 			$this->stateMachine->addJS($value);
 		}
 

@@ -222,6 +222,12 @@ function accountForCloseBrackets($name){
 			$returnValue .= $value;
 		}
 
+		xdebug_break();
+
+		if($returnValue == 'NULL'){
+			$returnValue = 'null';
+		}
+
 		return $returnValue;
 	}
 

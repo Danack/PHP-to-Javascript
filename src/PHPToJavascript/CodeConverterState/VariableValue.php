@@ -15,8 +15,15 @@ class CodeConverterState_VariableValue extends CodeConverterState{
 			$name == '=' ||
 			$name == 'T_CONSTANT_ENCAPSED_STRING' ||
 			$name == 'T_LNUMBER' ||
-			$name == 'T_COMMENT'){
+			$name == 'T_COMMENT' ||
+			$name == 'T_STRING'){
+
+			if($value == 'NULL'){
+				$value = 'null';
+			}
+
 			$this->stateMachine->currentScope->addToVariableValue($value);
+
 			return;
 		}
 

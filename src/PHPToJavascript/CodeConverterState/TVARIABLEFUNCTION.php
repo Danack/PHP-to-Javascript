@@ -25,8 +25,6 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 			return;
 		}
 
-//
-
 		$variableName = cVar($value);
 
 //		if($this->stateMachine->currentScope == CODE_SCOPE_FUNCTION_PARAMETERS){

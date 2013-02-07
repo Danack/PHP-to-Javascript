@@ -3,6 +3,8 @@
 
 class BaseRealityEvent{
 
+	public $nullValue = NULL;
+
 	private $privateValue = 12345;
 	public $classValue = 12345;
 
@@ -37,6 +39,11 @@ class BaseRealityEvent{
 
 	public static $decrement =  'basereality.decrement';
 	public static $increment =  'basereality.increment';
+
+	function	testFunction($testVar = NULL){
+		echo "testVar is " + $testVar;
+	}
+
 }
 
 
