@@ -3,10 +3,6 @@
 namespace PHPToJavascript;
 
 
-
-
-
-
 abstract class CodeScope{
 
 	use SafeAccess;
@@ -33,7 +29,6 @@ abstract class CodeScope{
 		$this->jsElements[] = $jsString;
 	}
 
-
 	function	getJS(){
 		return $this->getJSRaw();
 	}
@@ -43,8 +38,6 @@ abstract class CodeScope{
 	}
 
 	function	getJSRaw(){
-		//$js = "\n//Beginning of scope ".get_class($this)." ".$this->getName()."\n";
-
 		$js = "";
 
 		foreach($this->jsElements as $jsElement){
@@ -59,8 +52,6 @@ abstract class CodeScope{
 			}
 		}
 
-		//$js .= "\n//End of scope ".get_class($this)." ".$this->getName()."\n";
-
 		$js .= "\n";
 		$js .= "\n";
 
@@ -69,8 +60,10 @@ abstract class CodeScope{
 				$js .= $jsElement->getDelayedJS($this->getName());
 				$js .= "\n";
 			}
-		}
 
+
+
+		}
 
 		return $js;
 	}
@@ -78,6 +71,7 @@ abstract class CodeScope{
 	function	getDelayedJS($parentScopeName){
 		return "";
 	}
+
 
 
 	/**
@@ -163,6 +157,20 @@ abstract class CodeScope{
 		return FALSE;
 	}
 
+	function addStaticVariable($variableName){
+		throw new Exception("This should only be called on ClassScope");
+		//Yes, I know this is terrible OO-ness.
+	}
+
+	function addPublicVariable($variableName){
+		throw new Exception("This should only be called on ClassScope");
+		//Yes, I know this is terrible OO-ness.
+	}
+
+	function addToVariableValue($value){
+		throw new Exception("This should only be called on ClassScope");
+		//Yes, I know this is terrible OO-ness.
+	}
 }
 
 

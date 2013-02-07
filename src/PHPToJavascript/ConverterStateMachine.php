@@ -4,11 +4,7 @@ namespace PHPToJavascript;
 
 
 
-
-
-
 function	unencapseString($string){
-
 	if($string[0] == '"' ||
 		$string[0] == "'"){
 		$string = substr($string, 1);
@@ -66,12 +62,6 @@ class	ConverterStateMachine{
 	/** @var CodeScope[] */
 	public $scopesStack = array();
 
-
-	//public $constructorInfoArray = array();
-
-	//public $constructorStartIndex = 0;
-	//public $methodsStartIndex = 0;
-
 	public $defines = array();
 
 	function	__construct($tokenStream, $defaultState){
@@ -121,6 +111,7 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_ABSTRACT_FUNCTION] = new CodeConverterState_TABSTRACTREMOVE($this);
 
 		$this->states[CONVERTER_STATE_END_OF_CLASS] = new CodeConverterState_EndOfClass($this);
+		$this->states[CONVERTER_STATE_VARIABLE_VALUE] = new CodeConverterState_VariableValue($this);
 
 		$this->currentState = $defaultState;
 	}
@@ -131,18 +122,7 @@ class	ConverterStateMachine{
 	}
 
 	function	getVariableNameForScope(/*$scopeType,*/ $variableName, $isClassVariable){
-		//if($this->currentScope->type == $scopeType){
-			return $this->currentScope->getScopedVariable($variableName, $isClassVariable);
-		//}
-
-//		$scope = $this->findScopeType($scopeType);
-//		if($scope != NULL){
-//			$return = $scope->getScopedVariable($variableName, $isClassVariable);
-//			//echo "variableName $variableName isClassVariable $isClassVariable return $return \n";
-//			return $return;
-//		}
-
-		//return $variableName;
+		return $this->currentScope->getScopedVariable($variableName, $isClassVariable);
 	}
 
 	function	findScopeType($type){
@@ -155,31 +135,11 @@ class	ConverterStateMachine{
 		return NULL;
 	}
 
-
-//	function	getJSArray(){
-//		return $this->jsArray;
-//	}
-
 	function	getJS(){
 		return $this->rootScope->getJS();
 	}
 
-//	function getJS_dead($startIndex = 0, $endIndex = FALSE){
-//		$return = '';
-//
-//		if($endIndex == FALSE){
-//			$endIndex = count(
-//		}
-//
-//		for ($x=$startIndex ; $x<$endIndex ; $x++){
-//			$return .= $this->jsArray[$x];
-//		}
-//
-//		return $return;
-//	}
-
 	public function addJS($jsString){
-//		$this->jsArray[] = $jsString;
 		$this->currentScope->addJS($jsString);
 	}
 
@@ -267,7 +227,6 @@ function accountForCloseBrackets($name){
 
 
 	function	getPendingInsert($symbolToCheck){
-
 		foreach($this->pendingSymbols as $key => $pendingSymbol){
 
 			$symbol = $pendingSymbol[0];

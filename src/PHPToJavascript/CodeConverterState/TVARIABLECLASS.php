@@ -10,25 +10,27 @@ class CodeConverterState_TVARIABLECLASS extends CodeConverterState {
 
 		$variableName = cVar($value);
 
-		if($this->stateMachine->variableFlags & DECLARATION_TYPE_PRIVATE){
-			$this->stateMachine->addJS("var ");
-		}
-		else if($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC){
-			//$this->stateMachine->addJS($this->stateMachine->currentScope->getName().".");
-			$this->stateMachine->addJS("var ");
+		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
+
+		if($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC){
+			$this->stateMachine->currentScope->addStaticVariable($variableName);
+			$this->changeToState(CONVERTER_STATE_VARIABLE_VALUE);
 		}
 		else if($this->stateMachine->variableFlags & DECLARATION_TYPE_PUBLIC){
-			$this->stateMachine->addJS("this.");
-			//$this->stateMachine->addJS($this->stateMachine->currentScope->getName().".");
+			$this->stateMachine->currentScope->addPublicVariable($variableName);
+			$this->changeToState(CONVERTER_STATE_VARIABLE_VALUE);
 		}
-
-		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
-		$this->stateMachine->addJS($variableName);
-
-		$this->stateMachine->clearVariableFlags();
-		$this->changeToState(CONVERTER_STATE_DEFAULT);
+		else{
+			//All other variables are treated as private
+			$this->stateMachine->addJS("var ");
+			$this->stateMachine->addJS($variableName);
+			$this->stateMachine->clearVariableFlags();
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
+		}
 	}
 }
+
+
 
 
 
