@@ -37,6 +37,10 @@ abstract class CodeScope{
 		throw new Exception("This should only be called on ClassScope");
 	}
 
+	function  hackFunction(){
+		return "";
+	}
+
 	function	getJSRaw(){
 		$js = "";
 
@@ -53,6 +57,7 @@ abstract class CodeScope{
 		}
 
 		$js .= "\n";
+		$js .= $this->hackFunction();
 		$js .= "\n";
 
 		foreach($this->jsElements as $jsElement){
@@ -60,8 +65,6 @@ abstract class CodeScope{
 				$js .= $jsElement->getDelayedJS($this->getName());
 				$js .= "\n";
 			}
-
-
 
 		}
 
@@ -168,6 +171,11 @@ abstract class CodeScope{
 	}
 
 	function addToVariableValue($value){
+		throw new Exception("This should only be called on ClassScope");
+		//Yes, I know this is terrible OO-ness.
+	}
+
+	function addParent($value){
 		throw new Exception("This should only be called on ClassScope");
 		//Yes, I know this is terrible OO-ness.
 	}

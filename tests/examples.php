@@ -10,11 +10,14 @@ $exportPath = "export";
 error_reporting(E_ALL);
 
 $filesToConvert = array(
-	'BaseRealityEvent.php' => 'BaseRealityEvent.js',
-	'StaticTest.php' => 'StaticTest.js',
-	'Content.php' => 'Content.js',
-	'ContentImage.php' => 'ContentImage.js',
-	'PublicPrivate.php' => 'PublicPrivate.js',
+
+	'Inheritance.php' => 'Inheritance.js',
+
+//	'BaseRealityEvent.php' => 'BaseRealityEvent.js',
+//	'StaticTest.php' => 'StaticTest.js',
+//	'Content.php' => 'Content.js',
+//	'ContentImage.php' => 'ContentImage.js',
+//	'PublicPrivate.php' => 'PublicPrivate.js',
 );
 
 

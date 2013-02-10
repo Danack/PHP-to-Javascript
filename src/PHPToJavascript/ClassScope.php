@@ -9,14 +9,52 @@ class ClassScope extends CodeScope{
 	var 	$publicVariables = array();
 	var		$staticVariables = array();
 
+	var 	$parentClasses = array();
+
+
 	var 	$currentVariableForConcattingValue = NULL;
+
+	function addParent($value){
+		$this->parentClasses[] = $value;
+	}
+
 
 	function getType(){
 		return CODE_SCOPE_CLASS;
 	}
 
+	function  hackFunction(){
+
+		$js = "";
+
+		if(count($this->parentClasses) > 0){
+			$js .= "\n\n";
+
+			foreach($this->parentClasses as $parentClass){
+				$childClass = $this->name;
+				//Inheritance pattern taken from
+				//https://developer.mozilla.org/en-US/docs/JavaScript/Introduction_to_Object-Oriented_JavaScript
+
+				$js .= "// inherit $parentClass\n";
+				$js .= "$childClass.prototype = new $parentClass();\n";
+
+				$js .= "// correct the constructor pointer because it points to $parentClass\n";
+				$js .= "$childClass.prototype.constructor = $childClass;\n";
+			}
+
+			$js .= "\n";
+		}
+
+		return $js;
+	}
+
 	function	getJS(){
-		$jsRaw = $this->getJSRaw();
+
+		$jsRaw = "//Start class here \n";
+
+		$jsRaw .= $this->getJSRaw();
+
+
 
 		$constructor = FALSE;
 
@@ -29,16 +67,24 @@ class ClassScope extends CodeScope{
 			}
 		}
 
+		$parentConstructor = "";
+
+		foreach($this->parentClasses as $parentClass){
+			$parentConstructor .= "".$parentClass.".call(this);\n";
+		}
+
 		if($constructor !== FALSE){
 			$constructorInfo = trimConstructor($constructor);
+			$constructorInfo['body'] = $parentConstructor.$constructorInfo['body'];
 			$jsRaw = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, $constructorInfo['parameters'], $jsRaw);
 			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, $constructorInfo['body'], $jsRaw);
 		}
 		else{
 			//There is no constructor - just remove the magic strings
 			$jsRaw = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, '', $jsRaw);
-			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, '', $jsRaw);
+			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, $parentConstructor, $jsRaw);
 		}
+
 
 		return $jsRaw;
 	}
