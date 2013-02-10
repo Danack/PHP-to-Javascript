@@ -23,8 +23,16 @@ class ClassScope extends CodeScope{
 		return CODE_SCOPE_CLASS;
 	}
 
-	function  hackFunction(){
+	function  getEndOfScopeJS(){
+		$js = "";
+		$js .= "\n";
+		$js .= $this->getClassInheritanceJS();
+		$js .= "\n";
+		$js .= $this->getClassVariableInitJS();
+		return $js;
+	}
 
+	function getClassInheritanceJS(){
 		$js = "";
 
 		if(count($this->parentClasses) > 0){
@@ -48,14 +56,37 @@ class ClassScope extends CodeScope{
 		return $js;
 	}
 
+
+	function	getClassVariableInitJS(){
+
+		//$parentScopeName = $this->parentScope->name;
+
+		$js = "";
+
+		foreach($this->publicVariables as $name => $value){
+			if($value === FALSE){
+				$value = 'null';
+			}
+
+			$js .= $this->name.".prototype.".$name." = $value;\n";
+		}
+
+		foreach($this->staticVariables as $name => $value){
+			if($value === FALSE){
+				$value = 'null';
+			}
+
+			$js .= $this->name.".".$name." = $value;\n";
+		}
+
+		return $js;
+	}
+
 	function	getJS(){
 
 		$jsRaw = "//Start class here \n";
 
 		$jsRaw .= $this->getJSRaw();
-
-
-
 		$constructor = FALSE;
 
 		foreach($this->jsElements as $jsElement){
@@ -84,7 +115,6 @@ class ClassScope extends CodeScope{
 			$jsRaw = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, '', $jsRaw);
 			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, $parentConstructor, $jsRaw);
 		}
-
 
 		return $jsRaw;
 	}
@@ -134,27 +164,27 @@ class ClassScope extends CodeScope{
 		$this->currentVariableForConcattingValue = &$this->publicVariables[$variableName];
 	}
 
-	function	getDelayedJS($parentScopeName){
-		$output = "";
-
-		foreach($this->publicVariables as $name => $value){
-			if($value === FALSE){
-				$value = 'null';
-			}
-
-			$output .= $this->name.".prototype.".$name." = $value;\n";
-		}
-
-		foreach($this->staticVariables as $name => $value){
-			if($value === FALSE){
-				$value = 'null';
-			}
-
-			$output .= $this->name.".".$name." = $value;\n";
-		}
-
-		return $output;
-	}
+//	function	getDelayedJS($parentScopeName){
+//		$output = "";
+//
+//		foreach($this->publicVariables as $name => $value){
+//			if($value === FALSE){
+//				$value = 'null';
+//			}
+//
+//			$output .= $this->name.".prototype.".$name." = $value;\n";
+//		}
+//
+//		foreach($this->staticVariables as $name => $value){
+//			if($value === FALSE){
+//				$value = 'null';
+//			}
+//
+//			$output .= $this->name.".".$name." = $value;\n";
+//		}
+//
+//		return $output;
+//	}
 
 	/**
 	 * For class variables that are added to the class scope, but are delayed to be delcared outside

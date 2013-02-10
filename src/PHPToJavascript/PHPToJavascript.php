@@ -10,12 +10,6 @@ if(defined('NL') == FALSE){
 //define("PHPToJavascript_TRACE", TRUE);
 define("PHPToJavascript_TRACE", FALSE);
 
-//require_once('TokenStream.php');
-//require_once('CodeScope.php');
-//require_once('ConverterStateMachine.php');
-//require_once('ConverterStates.php');
-
-
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
 define('CODE_SCOPE_FUNCTION_PARAMETERS', 'CODE_SCOPE_FUNCTION_PARAMETERS');
@@ -255,15 +249,19 @@ class PHPToJavascript{
 			}
 		}
 	}
-
-
-
 }
 
 
-
-
-
+/**
+ * I hate PHPs 'feature' of not throwing an error when you set a variable for a class that doesn't exist.
+ * e.g. I meant to type:
+ * $this->isValidated = true;
+ * but accidentally type
+ * $this->isVlidated = true;
+ *
+ * As you spend an hour trying to find out why isValidated isn't being set. This trait turns all bad
+ * get and set calls on non-existent variables into exceptions.
+ */
 trait SafeAccess {
 	public function __set($name, $value) {
 		throw new Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can set it");

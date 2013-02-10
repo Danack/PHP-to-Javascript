@@ -127,6 +127,8 @@ class	ConverterStateMachine{
 
 	function	findScopeType($type){
 		foreach($this->scopesStack as $scope){
+			//TODO How to convert this bad code into
+			// $scope instanceof $variable - where $variable == classname
 			if($scope->getType() == $type){
 				return $scope;
 			}

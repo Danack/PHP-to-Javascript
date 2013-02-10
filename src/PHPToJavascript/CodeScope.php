@@ -16,14 +16,13 @@ abstract class CodeScope{
 	/** @var CodeScope */
 	var $parentScope;
 
-	var $childScopes = array();
-
-	function addChild($scope){
-		//$this->childScopes[] = $scope;
-		$this->jsElements[] = $scope;
-	}
+	//var $childScopes = array();
 
 	var $jsElements = array();
+
+	function addChild($scope){
+		$this->jsElements[] = $scope;
+	}
 
 	function	addJS($jsString){
 		$this->jsElements[] = $jsString;
@@ -37,11 +36,28 @@ abstract class CodeScope{
 		throw new Exception("This should only be called on ClassScope");
 	}
 
-	function  hackFunction(){
+	/**
+	 * Get the JS code that needs to be moved to after the end of this scope
+	 * @return string
+	 */
+	function  getEndOfScopeJS(){
 		return "";
 	}
 
 	function	getJSRaw(){
+		$js = "";
+		$js .= $this->getJS_InPlace();
+		$js .= "\n";
+		$js .= $this->getEndOfScopeJS();
+		$js .= "\n";
+		$js .= $this->getChildDelayedJS();
+
+		return $js;
+	}
+
+
+	function getJS_InPlace(){
+
 		$js = "";
 
 		foreach($this->jsElements as $jsElement){
@@ -55,17 +71,18 @@ abstract class CodeScope{
 				throw new Exception("Unknown type in this->jsElements of type [".get_class($jsElement)."]");
 			}
 		}
+		return $js;
+	}
 
-		$js .= "\n";
-		$js .= $this->hackFunction();
-		$js .= "\n";
+	function	getChildDelayedJS(){
+
+		$js = "";
 
 		foreach($this->jsElements as $jsElement){
 			if($jsElement instanceof CodeScope){
 				$js .= $jsElement->getDelayedJS($this->getName());
 				$js .= "\n";
 			}
-
 		}
 
 		return $js;

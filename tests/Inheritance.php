@@ -12,7 +12,7 @@ class Adult {
 
 		$this->adultClassVar = 123;
 
-		echo "This is an adult method. \n";
+		echo "This is an adult method. \n" + $this->adultClassVar + " " + self::$adultStaticVar;
 	}
 }
 
@@ -29,7 +29,10 @@ class Child extends Adult {
 
 		$this->childInstanceVar = 123;
 
-		echo "This is a child method. \n";
+		// TODO - Adult static variable needs to be accessed via Adult.adultStaticVar not
+		// Child.adultStaticVar in the generated javascript. Which may be tricky.
+
+		echo "This is a child method. \n" + $this->childInstanceVar + " " + self::$childStaticVar + " " +  + $this->adultClassVar + " " + self::$adultStaticVar;
 	}
 }
 
