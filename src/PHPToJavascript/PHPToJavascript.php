@@ -7,8 +7,8 @@ if(defined('NL') == FALSE){
 }
 
 //Control output of the state-machine trace
-//define("PHPToJavascript_TRACE", TRUE);
-define("PHPToJavascript_TRACE", FALSE);
+define("PHPToJavascript_TRACE", TRUE);
+//define("PHPToJavascript_TRACE", FALSE);
 
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
@@ -79,6 +79,9 @@ define('CONVERTER_STATE_END_OF_CLASS', 'CONVERTER_STATE_END_OF_CLASS');
 
 
 define('CONVERTER_STATE_VARIABLE_VALUE', 'CONVERTER_STATE_VARIABLE_VALUE');
+define('CONVERTER_STATE_OBJECT_OPERATOR', 'CONVERTER_STATE_OBJECT_OPERATOR');
+
+
 
 
 
@@ -174,8 +177,6 @@ class PHPToJavascript{
 				$reprocess = $this->stateMachine->processToken($name, $value, $parsedToken);
 
 				if($count == 0){
-
-
 					$this->stateMachine->accountForCloseBrackets($name);
 				}
 
@@ -186,6 +187,14 @@ class PHPToJavascript{
 				$count++;
 			}
 			while($reprocess == TRUE);
+
+			if($name == 'T_VARIABLE'){
+				if($this->stateMachine->insertToken != FALSE){
+					$this->stateMachine->addJS($this->stateMachine->insertToken);
+					$this->stateMachine->insertToken = FALSE;
+				}
+			}
+
 		}
 
 		return $this->stateMachine->finalize();

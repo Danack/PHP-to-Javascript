@@ -11,7 +11,10 @@ error_reporting(E_ALL);
 
 $filesToConvert = array(
 
+	'JSONSerialization.php' => 'JSONSerialization.js',
 	'SwitchStatement.php' => 'SwitchStatement.js',
+
+
 	'Inheritance.php' => 'Inheritance.js',
 
 	'BaseRealityEvent.php' => 'BaseRealityEvent.js',

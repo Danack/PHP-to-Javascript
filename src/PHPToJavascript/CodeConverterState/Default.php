@@ -31,6 +31,7 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_ABSTRACT' 		=>	CONVERTER_STATE_ABSTRACT,
 
 		'T_INTERFACE'		=> CONVERTER_STATE_INTERFACE,
+		'T_OBJECT_OPERATOR' => CONVERTER_STATE_OBJECT_OPERATOR,
 	);
 
 	function	processToken($name, $value, $parsedToken){

@@ -113,6 +113,8 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_END_OF_CLASS] = new CodeConverterState_EndOfClass($this);
 		$this->states[CONVERTER_STATE_VARIABLE_VALUE] = new CodeConverterState_VariableValue($this);
 
+		$this->states[CONVERTER_STATE_OBJECT_OPERATOR] = new CodeConverterState_TOBJECTOPERATOR($this);
+
 		$this->currentState = $defaultState;
 	}
 
@@ -224,8 +226,6 @@ function accountForCloseBrackets($name){
 			$returnValue .= $value;
 		}
 
-		xdebug_break();
-
 		if($returnValue == 'NULL'){
 			$returnValue = 'null';
 		}
@@ -240,7 +240,8 @@ function accountForCloseBrackets($name){
 			$symbol = $pendingSymbol[0];
 			$insert = $pendingSymbol[1];
 
-			if($symbolToCheck == $symbol){
+			if($symbolToCheck == $symbol /*||
+			   $symbol == '*any*' */) {
 				unset($this->pendingSymbols[$key]);
 				return $insert;
 			}
@@ -249,6 +250,12 @@ function accountForCloseBrackets($name){
 		return '';
  	}
 
+	//TODO - HACK HACK HACK
+	var $insertToken = FALSE;
+
+	function	addSymbolAfterNextToken($symbol){
+		$this->insertToken = $symbol;
+	}
 
 	function	setPendingSymbol($symbol, $insert){
 		$this->pendingSymbols[] = array($symbol, $insert);
