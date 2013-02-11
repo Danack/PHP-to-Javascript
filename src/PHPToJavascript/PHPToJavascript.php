@@ -7,8 +7,8 @@ if(defined('NL') == FALSE){
 }
 
 //Control output of the state-machine trace
-define("PHPToJavascript_TRACE", TRUE);
-//define("PHPToJavascript_TRACE", FALSE);
+//define("PHPToJavascript_TRACE", TRUE);
+define("PHPToJavascript_TRACE", FALSE);
 
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
@@ -181,7 +181,7 @@ class PHPToJavascript{
 				}
 
 				if($count > 5){
-					throw new Exception("Stuck converting same token.");
+					throw new \Exception("Stuck converting same token.");
 				}
 
 				$count++;
@@ -212,7 +212,7 @@ class PHPToJavascript{
 		$fileHandle = fopen($outputFilename, "w");
 
 		if ($fileHandle == FALSE) {
-			throw new Exception("Failed to open file [$outputFilename] for writing.");
+			throw new \Exception("Failed to open file [$outputFilename] for writing.");
 		}
 
 		fwrite($fileHandle, "//Auto-generated file by PHP-To-Javascript at ".date(DATE_RFC822).NL);
@@ -253,7 +253,7 @@ class PHPToJavascript{
 				$directoryCreated = mkdir($segment);
 
 				if ($directoryCreated == FALSE) {
-					throw new Exception("Failed to create directory $filePath");
+					throw new \Exception("Failed to create directory $filePath");
 				}
 			}
 		}
@@ -273,10 +273,10 @@ class PHPToJavascript{
  */
 trait SafeAccess {
 	public function __set($name, $value) {
-		throw new Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can set it");
+		throw new \Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can set it");
 	}
 	public function __get($name) {
-		throw new Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can get it");
+		throw new \Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can get it");
 	}
 }
 

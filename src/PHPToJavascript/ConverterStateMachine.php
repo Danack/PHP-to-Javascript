@@ -149,7 +149,7 @@ class	ConverterStateMachine{
 
 	function	changeToState($newState, $extraParams = array()){
 		if(array_key_exists($newState, $this->states) == FALSE){
-			throw new Exception("Unknown state [$newState], cannot changeState to it.");
+			throw new \Exception("Unknown state [$newState], cannot changeState to it.");
 		}
 
 		$this->currentState = $newState;
@@ -296,7 +296,7 @@ function accountForCloseBrackets($name){
 			}
 
 			default:{
-				throw new Exception("Unknown scope type [".$type."]");
+				throw new \Exception("Unknown scope type [".$type."]");
 				break;
 			}
 		}
@@ -360,7 +360,7 @@ function accountForCloseBrackets($name){
 			return $scope->name;
 		}
 
-		throw new Exception("Trying to get class but no class scope found.");
+		throw new \Exception("Trying to get class but no class scope found.");
 	}
 
 
@@ -372,7 +372,7 @@ function accountForCloseBrackets($name){
 		$functionParametersScope = $this->findScopeType(CODE_SCOPE_FUNCTION_PARAMETERS);
 
 		if($functionParametersScope == NULL){
-			throw new Exception("We're inside a function but we can't find the CODE_SCOPE_FUNCTION_PARAMETERS - that shouldn't be possible.");
+			throw new \Exception("We're inside a function but we can't find the CODE_SCOPE_FUNCTION_PARAMETERS - that shouldn't be possible.");
 		}
 
 		$variablesWithDefaultParameters = $functionParametersScope->getVariablesWithDefaultParameters();
@@ -468,7 +468,7 @@ function accountForCloseBrackets($name){
 		$fileHandle = fopen($outputFilename, "w");
 
 		if ($fileHandle == FALSE) {
-			throw new Exception("Failed to open file [$outputFilename] for writing.");
+			throw new \Exception("Failed to open file [$outputFilename] for writing.");
 		}
 
 		fwrite($fileHandle, "//Auto-generated file by PHP-To-Javascript at ".date(DATE_RFC822).NL);

@@ -18,10 +18,6 @@ class FunctionScope extends CodeScope{
 	function	getScopedVariableForScope($variableName, $isClassVariable){
 		$cVar = cvar($variableName);
 
-		if(strpos($variableName, 'flipflop') !== FALSE){
-			xdebug_break();
-		}
-
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
 

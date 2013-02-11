@@ -27,10 +27,6 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 
 		$variableName = cVar($value);
 
-//		if($this->stateMachine->currentScope == CODE_SCOPE_FUNCTION_PARAMETERS){
-//			$this->stateMachine->currentScope->addParameterName($variableName);
-//		}
-
 		if($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC){
 			$scopeName = $this->stateMachine->getScopeName();
 			$this->stateMachine->addJS("if (typeof ".$scopeName.".$variableName == 'undefined')\n ");
@@ -40,16 +36,16 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 			$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
 		}
 
-		$scopedVariableName = $this->stateMachine->getVariableNameForScope(/*CODE_SCOPE_FUNCTION,*/ $variableName, $this->isClassVariable);
-
-//		if($this->isClassVariable == TRUE){
-//			$scopedVariableName = $this->stateMachine->getVariableNameForScope(/*CODE_SCOPE_CLASS,*/ $variableName, $this->isClassVariable);
-//		}
-//		else{
-//			$scopedVariableName = $this->stateMachine->getVariableNameForScope(/*CODE_SCOPE_FUNCTION,*/ $variableName, $this->isClassVariable);
-//		}
-
-		$this->stateMachine->addJS($scopedVariableName);
+		if($this->isClassVariable == TRUE && $name == ")"){
+			//keyword 'this' has been passed as a variable e.g.
+			//json_encode_object(this)
+			$this->stateMachine->addJS("this)");
+			//YEAH BABY
+		}
+		else{
+			$scopedVariableName = $this->stateMachine->getVariableNameForScope($variableName, $this->isClassVariable);
+			$this->stateMachine->addJS($scopedVariableName);
+		}
 
 		$this->isClassVariable = FALSE;
 		$this->stateMachine->clearVariableFlags();

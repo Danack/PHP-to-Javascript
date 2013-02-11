@@ -48,6 +48,10 @@ class ClassScope extends CodeScope{
 
 				$js .= "// correct the constructor pointer because it points to $parentClass\n";
 				$js .= "$childClass.prototype.constructor = $childClass;\n";
+
+				$js .= "//Need to copy the static functions across and replace the parent class name with the child class name.\n";
+
+				$js .= "$.extend($childClass, $parentClass);\n";
 			}
 
 			$js .= "\n";

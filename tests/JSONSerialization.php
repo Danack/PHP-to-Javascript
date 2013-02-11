@@ -1,42 +1,40 @@
 <?php
 
+require_once('functions.php');
 
-class ExampleJSON{
 
-	public 		$objectID;
-	public 		$name;
-	public 		$value;
+trait JSONFactory{
 
 	static function	factory($jsonString){
 		$data = json_decode($jsonString);
 
-		$object = new self();
+		$object = new static();
 
-		//Shamoan
-		foreach ($data AS $flipflop => $value){
-			$object->   $flipflop = $value;
+		foreach ($data AS $key => $value){
+			$object->$key = $value;
 		}
 
 		return $object;
 	}
 
+	function	toJSON(){
+		//Shamoan
+		return json_encode_object($this);
+	}
+}
+
+class ExampleJSON{
+
+	use JSONFactory;
+
+	public 		$objectID;
+	public 		$name;
+	public 		$value;
 
 	function	__construct($objectID = FALSE, $name = 'UnknownName', $value = "UnknownValue"){
 		$this->objectID = $objectID;
 		$this->name 	= $name;
 		$this->value 	= $value;
-	}
-
-
-
-	function	toJSON(){
-		$params = array(
-			'objectID'		=>	$this->objectID,
-			'name'			=> 	$this->name,
-			'value'			=>	$this->value,
-		);
-
-		return json_encode($params);
 	}
 
 	function test(){

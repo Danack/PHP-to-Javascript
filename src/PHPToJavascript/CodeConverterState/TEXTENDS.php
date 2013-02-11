@@ -14,6 +14,12 @@ class CodeConverterState_TEXTENDS  extends CodeConverterState{
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
 			return TRUE;
 		}
+
+		// This would support use
+		if($name == ';'){
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
+			return;//don't need to include the ';'
+		}
 	}
 }
 

@@ -11,6 +11,8 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_ECHO' 		=> CONVERTER_STATE_ECHO,
 		'T_ARRAY'		=> CONVERTER_STATE_ARRAY,
 		'T_CLASS'		=> CONVERTER_STATE_CLASS,
+
+		'T_TRAIT'		=> CONVERTER_STATE_CLASS, //Almost the same
 		'T_FUNCTION'	=> CONVERTER_STATE_FUNCTION,
 		'T_FOREACH'		=> CONVERTER_STATE_FOREACH,
 		'T_PUBLIC'		=> CONVERTER_STATE_PUBLIC,
@@ -21,6 +23,8 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_PRIVATE'		=> CONVERTER_STATE_T_PRIVATE,
 
 		'T_EXTENDS'		=> CONVERTER_STATE_T_EXTENDS,
+		'T_USE'			=> CONVERTER_STATE_T_EXTENDS,
+
 		'T_NEW'			=> CONVERTER_STATE_T_NEW,
 		'T_CONSTANT_ENCAPSED_STRING' => CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING,
 		'='					=> CONVERTER_STATE_EQUALS,
@@ -32,6 +36,8 @@ class CodeConverterState_Default extends CodeConverterState {
 
 		'T_INTERFACE'		=> CONVERTER_STATE_INTERFACE,
 		'T_OBJECT_OPERATOR' => CONVERTER_STATE_OBJECT_OPERATOR,
+
+
 	);
 
 	function	processToken($name, $value, $parsedToken){

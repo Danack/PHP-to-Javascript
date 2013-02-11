@@ -33,8 +33,8 @@ class CodeConverterState_VariableValue extends CodeConverterState{
 			return;
 		}
 
-		xdebug_break();
-		throw new \Exception("The only symbols expected here are '=', ';' and some sort of value. Isntead received token name [$name] with value [$value].");
+
+		throw new \Exception("The only symbols expected here are '=', ';' and some sort of value. Instead received token name [$name] with value [$value].");
 	}
 }
 

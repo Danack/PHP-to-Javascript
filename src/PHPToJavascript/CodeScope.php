@@ -33,7 +33,7 @@ abstract class CodeScope{
 	}
 
 	function	markMethodsStart(){
-		throw new Exception("This should only be called on ClassScope");
+		throw new \Exception("This should only be called on ClassScope");
 	}
 
 	/**
@@ -68,7 +68,7 @@ abstract class CodeScope{
 				$js .= $jsElement;
 			}
 			else{
-				throw new Exception("Unknown type in this->jsElements of type [".get_class($jsElement)."]");
+				throw new \Exception("Unknown type in this->jsElements of type [".get_class($jsElement)."]");
 			}
 		}
 		return $js;
@@ -161,7 +161,7 @@ abstract class CodeScope{
 
 		$allKeys = array_keys($this->scopedVariables);
 		if(count($allKeys) == 0){
-			throw new Exception("Trying to add default variable but not variables found yet.");
+			throw new \Exception("Trying to add default variable but not variables found yet.");
 		}
 
 		$variableName = $allKeys[count($allKeys) - 1];
@@ -178,22 +178,22 @@ abstract class CodeScope{
 	}
 
 	function addStaticVariable($variableName){
-		throw new Exception("This should only be called on ClassScope");
+		throw new \Exception("This should only be called on ClassScope");
 		//Yes, I know this is terrible OO-ness.
 	}
 
 	function addPublicVariable($variableName){
-		throw new Exception("This should only be called on ClassScope");
+		throw new \Exception("This should only be called on ClassScope");
 		//Yes, I know this is terrible OO-ness.
 	}
 
 	function addToVariableValue($value){
-		throw new Exception("This should only be called on ClassScope");
+		throw new \Exception("This should only be called on ClassScope");
 		//Yes, I know this is terrible OO-ness.
 	}
 
 	function addParent($value){
-		throw new Exception("This should only be called on ClassScope");
+		throw new \Exception("This should only be called on ClassScope");
 		//Yes, I know this is terrible OO-ness.
 	}
 }
