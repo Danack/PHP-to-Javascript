@@ -11,13 +11,14 @@ error_reporting(E_ALL);
 
 $filesToConvert = array(
 
+	'SwitchStatement.php' => 'SwitchStatement.js',
 	'Inheritance.php' => 'Inheritance.js',
 
-//	'BaseRealityEvent.php' => 'BaseRealityEvent.js',
-//	'StaticTest.php' => 'StaticTest.js',
-//	'Content.php' => 'Content.js',
-//	'ContentImage.php' => 'ContentImage.js',
-//	'PublicPrivate.php' => 'PublicPrivate.js',
+	'BaseRealityEvent.php' => 'BaseRealityEvent.js',
+	'StaticTest.php' => 'StaticTest.js',
+	'Content.php' => 'Content.js',
+	'ContentImage.php' => 'ContentImage.js',
+	'PublicPrivate.php' => 'PublicPrivate.js',
 );
 
 

@@ -51,6 +51,11 @@ TODO
 
 * Figure out how to set flags for what should be done with echo. e.g. should it be sent to console.log(), alert(), document.write() etc. Think these may need to be flags to be set when PHPToJavascript is run.
 
+* Investigate using variable variables for allowing dynamic variable access. e.g.
+
+   PHP setValue($name, $value){ $this->$name = $value; }
+   JS setValue(name, value){ this[name] = $value; }
+
 Limitations
 ===========
 

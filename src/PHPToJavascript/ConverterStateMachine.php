@@ -434,7 +434,7 @@ function accountForCloseBrackets($name){
 		'*',
 		'/', '+', '-', '>',
 		'<', '[', ']', "\"",
-		"'",
+		"'", ":",
 	);
 
 	/** @var array these tokens keeps their value */
@@ -446,6 +446,10 @@ function accountForCloseBrackets($name){
 		'T_LNUMBER',
 		'T_ENCAPSED_AND_WHITESPACE',
 		'T_WHITESPACE',
+		'T_SWITCH',
+		'T_CASE',
+		'T_DEFAULT',
+		'T_THROW',
 	);
 
 	function     generateFile($outputFilename, $originalFilename, $jsOutput) {
