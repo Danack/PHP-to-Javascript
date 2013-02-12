@@ -3,7 +3,6 @@ PHP-to-Javascript
 
 A tool for converting simple PHP objects to Javascript code, so that code for manipulating objects can be used both server-side and client-side.
 
-
 How to use
 ==========
 
@@ -49,6 +48,10 @@ TODO
 * Add support for const to be same as public static.
 
 * Figure out what to do about Javascript reserved keywords. Probably out to detect them and either warn or give an error on detection.  testObject.delete();
+
+* Support variables inside strings. e.g. echo "Hello my name is $name" would be the tokens.
+    CodeConverterState_Default token [T_ENCAPSED_AND_WHITESPACE] => [Hello my name is ]
+    CodeConverterState_Default token [T_VARIABLE] => [$name]
 
 Limitations
 ===========
