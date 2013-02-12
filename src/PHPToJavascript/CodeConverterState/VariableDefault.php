@@ -2,7 +2,7 @@
 
 namespace PHPToJavascript;
 
-class CodeConverterState_TCONSTANTENCAPSEDSTRING extends CodeConverterState{
+class CodeConverterState_VariableDefault extends CodeConverterState{
 	function	processToken($name, $value, $parsedToken){
 		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
 			$this->stateMachine->addJS( "/*". $value ."*/");
