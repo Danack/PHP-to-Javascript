@@ -7,8 +7,8 @@ if(defined('NL') == FALSE){
 }
 
 //Control output of the state-machine trace
-define("PHPToJavascript_TRACE", TRUE);
-//define("PHPToJavascript_TRACE", FALSE);
+//define("PHPToJavascript_TRACE", TRUE);
+define("PHPToJavascript_TRACE", FALSE);
 
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
