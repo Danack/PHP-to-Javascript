@@ -7,8 +7,8 @@ if(defined('NL') == FALSE){
 }
 
 //Control output of the state-machine trace
-//define("PHPToJavascript_TRACE", TRUE);
-define("PHPToJavascript_TRACE", FALSE);
+define("PHPToJavascript_TRACE", TRUE);
+//define("PHPToJavascript_TRACE", FALSE);
 
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
@@ -36,7 +36,6 @@ function cVar($var) {
 
 
 define('CONSTRUCTOR_PARAMETERS_POSITION', "/*Constructor parameters here*/");
-
 define('CONVERTER_STATE_DEFAULT', 	'CONVERTER_STATE_DEFAULT');
 define('CONVERTER_STATE_ECHO', 		'CONVERTER_STATE_ECHO');
 define('CONVERTER_STATE_ARRAY', 	'CONVERTER_STATE_ARRAY');
@@ -49,35 +48,22 @@ define('CONVERTER_STATE_VARIABLE_GLOBAL',  'CONVERTER_STATE_VARIABLE_GLOBAL');
 define('CONVERTER_STATE_VARIABLE_FUNCTION',  'CONVERTER_STATE_VARIABLE_FUNCTION');
 define('CONVERTER_STATE_VARIABLE_CLASS',  'CONVERTER_STATE_VARIABLE_CLASS');
 define('CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER',  'CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER');
-
-
 define('CONVERTER_STATE_STATIC', 	'CONVERTER_STATE_STATIC');
 define('CONVERTER_STATE_STRING', 		'CONVERTER_STATE_STRING');
 define('CONVERTER_STATE_T_PUBLIC', 		'CONVERTER_STATE_T_PUBLIC');
 define('CONVERTER_STATE_T_PRIVATE', 'CONVERTER_STATE_T_PRIVATE');
-
 define('CONVERTER_STATE_DEFINE', 'CONVERTER_STATE_DEFINE');
-
 define('CONVERTER_STATE_T_EXTENDS', 'CONVERTER_STATE_T_EXTENDS');
-
-
 define('CONVERTER_STATE_T_NEW', 'CONVERTER_STATE_T_NEW');
 define('CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING', 'CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING');
 define('CONVERTER_STATE_EQUALS', 'CONVERTER_STATE_EQUALS');
-
 define('CONVERTER_STATE_CLOSE_PARENS', 'CONVERTER_STATE_CLOSE_PARENS');
-
-
 define('CONVERTER_STATE_IMPLEMENTS_INTERFACE', 'CONVERTER_STATE_IMPLEMENTS_INTERFACE');
 define('CONVERTER_STATE_REQUIRE', 'CONVERTER_STATE_REQUIRE');
 define('CONVERTER_STATE_ABSTRACT', 'CONVERTER_STATE_ABSTRACT');
 define('CONVERTER_STATE_ABSTRACT_FUNCTION', 'CONVERTER_STATE_ABSTRACT_FUNCTION');
-
 define('CONVERTER_STATE_INTERFACE', 'CONVERTER_STATE_INTERFACE');
-
 define('CONVERTER_STATE_END_OF_CLASS', 'CONVERTER_STATE_END_OF_CLASS');
-
-
 define('CONVERTER_STATE_VARIABLE_VALUE', 'CONVERTER_STATE_VARIABLE_VALUE');
 define('CONVERTER_STATE_OBJECT_OPERATOR', 'CONVERTER_STATE_OBJECT_OPERATOR');
 
@@ -164,10 +150,16 @@ class PHPToJavascript{
 	 */
 	public $stateMachine;
 
-	function	__construct($srcFilename){
+	function	__construct(){
+	}
 
-		$this->srcFilename = $srcFilename;
-		$fileLines = file($this->srcFilename);
+
+	static function createFromFile($srcFilename){
+
+		$phpToJavascript = new self();
+
+		$phpToJavascript->srcFilename = $srcFilename;
+		$fileLines = file($phpToJavascript->srcFilename);
 
 		if($fileLines == FALSE){
 			throw new \Exception("Failed to open srcFilename [$srcFilename]");
@@ -179,6 +171,20 @@ class PHPToJavascript{
 			$code .= $fileLine;
 		}
 
+		$phpToJavascript->initFromString($code);
+
+		return $phpToJavascript;
+	}
+
+
+	static function createFromString($code){
+		$phpToJavascript = new self();
+		$phpToJavascript->initFromString($code);
+
+		return $phpToJavascript;
+	}
+
+	function initFromString($code){
 		$this->tokenStream = new TokenStream($code);
 		$this->stateMachine = new ConverterStateMachine($this->tokenStream, CONVERTER_STATE_DEFAULT);
 	}

@@ -13,19 +13,20 @@ $filesToConvert = array(
 
 //	'Inheritance.php' => 'Inheritance.js',
 //
-	'CustomEvent.php' => 'CustomEvent.js',
+	//'CustomEvent.php' => 'CustomEvent.js',
 //	'StaticTest.php' => 'StaticTest.js',
 //	'Content.php' => 'Content.js',
 //	'ContentImage.php' => 'ContentImage.js',
 //	'PublicPrivate.php' => 'PublicPrivate.js',
 
+	'SimpleExample.php' => 'SimpleExample.js',
 	//'SwitchStatement.php' => 'SwitchStatement.js',
-	'Trait.php' => 'Trait.js',
+	//'Trait.php' => 'Trait.js',
 );
 
 
 foreach($filesToConvert as $inputFilename => $outputFilename){
-	$phpToJavascript = new PHPToJavascript\PHPToJavascript($inputFilename);
+	$phpToJavascript = PHPToJavascript\PHPToJavascript::createFromFile($inputFilename);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::ECHO_TO_ALERT);
 

@@ -447,7 +447,8 @@ function accountForCloseBrackets($name){
 	/** @var array these tokens keeps their value */
 	public static $_keepValue = array (
 			//'T_CONSTANT_ENCAPSED_STRING',
-		'T_STRING', 'T_COMMENT',
+		'T_STRING',
+		'T_COMMENT',
 		'T_ML_COMMENT',
 		'T_DOC_COMMENT',
 		'T_LNUMBER',
@@ -457,6 +458,7 @@ function accountForCloseBrackets($name){
 		'T_CASE',
 		'T_DEFAULT',
 		'T_THROW',
+		'T_FOR'
 	);
 
 	function     generateFile($outputFilename, $originalFilename, $jsOutput) {
