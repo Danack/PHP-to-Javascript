@@ -8,7 +8,6 @@ class CustomEvent{
 
 	const someEvent = "basereality.someEvent";
 
-
 	public $nullValue = NULL;
 
 	private $privateValue = 12345;
@@ -25,31 +24,12 @@ class CustomEvent{
 	public static $valueCommentNewLine = // You're trying to break it now.
 		12345;
 
-
-
 	public static $previewContent =  'basereality.previewContent';
 	public static $closePreview =  'basereality.closePreview';
 	public static $nextPage = 	'basereality.nextPage';
 	public static $previousPage =  'basereality.previousPage';
 	public static $firstPage =  "basereality.firstPage";
 	public static $lastPage =  "basereality.lastPage";
-
-	public static $addControl =  'basereality.addControl';
-
-	public static $smartyTemplateDebug =  'basereality.smartyTemplateDebug';
-
-	public static $logLevelChange =  'basereality.logLevelChange';
-
-	public static $toggleControlPanelVisibility =  'basereality.toggleControlPanelVisibility';
-	public static $loginRedirect =  'basereality.loginRedirect';
-
-	public static $decrement =  'basereality.decrement';
-	public static $increment =  'basereality.increment';
-
-	function	testFunction($testVar = NULL){
-		echo "testVar is " + $testVar;
-	}
-
 }
 
 

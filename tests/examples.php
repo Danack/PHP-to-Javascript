@@ -13,7 +13,7 @@ $filesToConvert = array(
 
 //	'Inheritance.php' => 'Inheritance.js',
 //
-//	'BaseRealityEvent.php' => 'BaseRealityEvent.js',
+	'CustomEvent.php' => 'CustomEvent.js',
 //	'StaticTest.php' => 'StaticTest.js',
 //	'Content.php' => 'Content.js',
 //	'ContentImage.php' => 'ContentImage.js',

@@ -24,7 +24,7 @@ Programmatically
 * Add the "base-reality/php-to-javascript": ">=0.0.3" to your project's composer.json file:
 
     "require":{
-		"base-reality/php-to-javascript": ">=0.0.9"
+		"base-reality/php-to-javascript": ">=0.1.0"
 	}
 
   Or the latest version.
@@ -46,17 +46,14 @@ TODO
 
 * Add more tests, setup some automated tester.
 
+* Add support for const to be same as public static.
+
 * Figure out what to do about Javascript reserved keywords. Probably out to detect them and either warn or give an error on detection.  testObject.delete();
-
-* Figure out how to set flags for what should be done with echo. e.g. should it be sent to console.log(), alert(), document.write() etc. Think these may need to be flags to be set when PHPToJavascript is run.
-
-* Fix functions that exist in the global (not class) scope being moved to the end of that file, and so potentially being declared after they're being called.
 
 Limitations
 ===========
 
 There are several features of the PHP language that either are too difficult to map into Javascript, or are just not possible in Javascript. These features will almost certainly never be implemented (at least by myself) so if you're waiting for these to be done, give up early.
-
 
 Pass by reference
 -----------------
@@ -82,4 +79,4 @@ is converted to:
     // define('DATABASE_TYPE', 'MySQL');
     document.write( "Database type is " + 'MySQL');
 
-If this is a problem for you - don't use defines. Instead use classes to define your const variables.
+If this is a problem for you - current solution is don't use defines. Instead use classes to define your const variables. It would be possible to add the define as a variable in the Global scope for Javascript. But that would be kind of sucky.
