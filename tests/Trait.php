@@ -18,7 +18,6 @@ trait JSONFactory{
 	}
 
 	function	toJSON(){
-		//Shamoan
 		return json_encode_object($this);
 	}
 }
