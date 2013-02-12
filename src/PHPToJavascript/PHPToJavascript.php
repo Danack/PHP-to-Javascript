@@ -150,7 +150,10 @@ class PHPToJavascript{
 	 */
 	public $stateMachine;
 
-	function	__construct(){
+	/**
+	 * Please use either createFromFile or createFromString
+	 */
+	private function	__construct(){
 	}
 
 

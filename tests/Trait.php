@@ -9,7 +9,6 @@ trait JSONFactory{
 
 		$object = new static();
 
-		//Shamoan
 		foreach ($data AS $key => $value){
 			$object->$key = $value;
 		}
