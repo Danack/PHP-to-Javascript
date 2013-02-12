@@ -29,7 +29,17 @@ abstract class CodeScope{
 	}
 
 	function	getJS(){
-		return $this->getJSRaw();
+		$js = "";
+		foreach($this->jsElements as $jsElement){
+			if($jsElement instanceof CodeScope){
+				$js .= $jsElement->getJS();
+			}
+			else if(is_string($jsElement)){
+				$js .= $jsElement;
+			}
+		}
+
+		return $js;
 	}
 
 	function	markMethodsStart(){
@@ -40,57 +50,41 @@ abstract class CodeScope{
 	 * Get the JS code that needs to be moved to after the end of this scope
 	 * @return string
 	 */
-	function  getEndOfScopeJS(){
-		return "";
-	}
+//	function  getEndOfScopeJS(){
+//		return "";
+//	}
 
-	function	getJSRaw(){
-		$js = "";
-		$js .= $this->getJS_InPlace();
-		$js .= "\n";
-		$js .= $this->getEndOfScopeJS();
-		$js .= "\n";
-		$js .= $this->getChildDelayedJS();
+//	function	getJSRaw(){
+//		$js = "";
+//		$js .= $this->getJS_InPlace();
+//		$js .= "\n";
+//		$js .= $this->getEndOfScopeJS();
+//		$js .= "\n";
+//		$js .= $this->getChildDelayedJS();
+//
+//		return $js;
+//	}
 
-		return $js;
-	}
 
 
-	function getJS_InPlace(){
 
-		$js = "";
+//	function	getChildDelayedJS(){
+//
+//		$js = "";
+//
+//		foreach($this->jsElements as $jsElement){
+//			if($jsElement instanceof CodeScope){
+//				$js .= $jsElement->getDelayedJS($this->getName());
+//				$js .= "\n";
+//			}
+//		}
+//
+//		return $js;
+//	}
 
-		foreach($this->jsElements as $jsElement){
-			if($jsElement instanceof CodeScope){
-				$js .= $jsElement->getJS();
-			}
-			else if(is_string($jsElement)){
-				$js .= $jsElement;
-			}
-			else{
-				throw new \Exception("Unknown type in this->jsElements of type [".get_class($jsElement)."]");
-			}
-		}
-		return $js;
-	}
-
-	function	getChildDelayedJS(){
-
-		$js = "";
-
-		foreach($this->jsElements as $jsElement){
-			if($jsElement instanceof CodeScope){
-				$js .= $jsElement->getDelayedJS($this->getName());
-				$js .= "\n";
-			}
-		}
-
-		return $js;
-	}
-
-	function	getDelayedJS($parentScopeName){
-		return "";
-	}
+//	function	getDelayedJS($parentScopeName){
+//		return "";
+//	}
 
 
 
@@ -111,14 +105,36 @@ abstract class CodeScope{
 	abstract	function	getScopedVariableForScope($variableName, $isClassVariable);
 	abstract	function getType();
 
-	function	getScopedVariable($variableName, $isClassVariable){
+	function	getScopedVariable($variableName, $isClassVariable, $variableFlags, $originalScope){
+
+		if(strpos($variableName, 'result') !== FALSE){
+			xdebug_break();
+		}
+
 		$result = $this->getScopedVariableForScope($variableName, $isClassVariable);
 
 		if($result == NULL){
 			if($this->parentScope != NULL){
-				return $this->parentScope->getScopedVariable($variableName, $isClassVariable);
+				$result = $this->parentScope->getScopedVariable($variableName, $isClassVariable, $variableFlags, FALSE);
 			}
 		}
+
+		if($originalScope == TRUE){
+			if($result == FALSE) {
+				if($isClassVariable == FALSE){
+					//First use of varaible in a function - lets add a 'var' to make Javascript happy.
+					$this->addScopedVariable($variableName, $variableFlags);
+					$result = "var $variableName";
+				}
+				else{
+					//The variable really ought to exist in the class scope
+					throw new Exception("Ought of order use for varaible [".$variableName."]. Please have your variables above your methods. It makes life easier.");
+				}
+			}
+		}
+
+
+
 
 		return $result;
 	}

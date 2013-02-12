@@ -62,9 +62,6 @@ class ClassScope extends CodeScope{
 
 
 	function	getClassVariableInitJS(){
-
-		//$parentScopeName = $this->parentScope->name;
-
 		$js = "";
 
 		foreach($this->publicVariables as $name => $value){
@@ -86,17 +83,60 @@ class ClassScope extends CodeScope{
 		return $js;
 	}
 
+	function getJSForClassInPlace(){
+
+		$js = "";
+
+		foreach($this->jsElements as $jsElement){
+			if($jsElement instanceof CodeScope){
+				$js .= $jsElement->getInPlaceJS();
+			}
+			else if(is_string($jsElement)){
+				$js .= $jsElement;
+			}
+			else{
+				throw new \Exception("Unknown type in this->jsElements of type [".get_class($jsElement)."]");
+			}
+		}
+		return $js;
+	}
+
 	function	getJS(){
 
-		$jsRaw = "//Start class here \n";
+		$js = "//Start class here \n";
 
-		$jsRaw .= $this->getJSRaw();
+		$js = "";
+		$js .= $this->getJSForClassInPlace();
+		$js .= "\n";
+		$js .= $this->getEndOfScopeJS();
+		$js .= "\n";
+		$js .= $this->getChildDelayedJS();
+
+		$js = $this->replaceConstructorInJS($js);
+
+		return $js;
+	}
+
+		function	getChildDelayedJS(){
+			$js = "";
+
+			foreach($this->jsElements as $jsElement){
+				if($jsElement instanceof CodeScope){
+					$js .= $jsElement->getDelayedJS($this->getName());
+					$js .= "\n";
+				}
+			}
+
+			return $js;
+		}
+
+	function replaceConstructorInJS($js){
 		$constructor = FALSE;
 
 		foreach($this->jsElements as $jsElement){
 			if($jsElement instanceof CodeScope){
 				if($jsElement->getName() == '__construct'){
-					$constructor = $jsElement->getJSRaw();
+					$constructor = $jsElement->getJS();
 					break;
 				}
 			}
@@ -111,17 +151,18 @@ class ClassScope extends CodeScope{
 		if($constructor !== FALSE){
 			$constructorInfo = trimConstructor($constructor);
 			$constructorInfo['body'] = $parentConstructor.$constructorInfo['body'];
-			$jsRaw = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, $constructorInfo['parameters'], $jsRaw);
-			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, $constructorInfo['body'], $jsRaw);
+			$js = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, $constructorInfo['parameters'], $js);
+			$js = str_replace(CONSTRUCTOR_POSITION_MARKER, $constructorInfo['body'], $js);
 		}
 		else{
 			//There is no constructor - just remove the magic strings
-			$jsRaw = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, '', $jsRaw);
-			$jsRaw = str_replace(CONSTRUCTOR_POSITION_MARKER, $parentConstructor, $jsRaw);
+			$js = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, '', $js);
+			$js = str_replace(CONSTRUCTOR_POSITION_MARKER, $parentConstructor, $js);
 		}
 
-		return $jsRaw;
+		return $js;
 	}
+
 
 	function	markMethodsStart(){
 		if($this->methodsStartIndex === FALSE){

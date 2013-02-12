@@ -32,9 +32,9 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 			$this->stateMachine->addJS("if (typeof ".$scopeName.".$variableName == 'undefined')\n ");
 		}
 
-		if($this->isClassVariable == FALSE){ //Don't add class variables to the function scope
-			$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
-		}
+//		if($this->isClassVariable == FALSE){ //Don't add class variables to the function scope
+//			$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
+//		}
 
 		if($this->isClassVariable == TRUE && $name == ")"){
 			//keyword 'this' has been passed as a variable e.g.
@@ -43,7 +43,7 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 			//YEAH BABY
 		}
 		else{
-			$scopedVariableName = $this->stateMachine->getVariableNameForScope($variableName, $this->isClassVariable);
+			$scopedVariableName = $this->stateMachine->getVariableNameForScope($variableName, $this->isClassVariable, $this->stateMachine->variableFlags);
 			$this->stateMachine->addJS($scopedVariableName);
 		}
 

@@ -82,9 +82,13 @@ define('CONVERTER_STATE_VARIABLE_VALUE', 'CONVERTER_STATE_VARIABLE_VALUE');
 define('CONVERTER_STATE_OBJECT_OPERATOR', 'CONVERTER_STATE_OBJECT_OPERATOR');
 
 
-
-
-
+/**
+ * Converts a PHP constructor into the parameter string and then body, so that it
+ * can be inlined to Javascript style constructors.
+ *
+ * @param $constructor
+ * @return array
+ */
 function trimConstructor($constructor){
 
 	$constructorInfo = array();
@@ -97,8 +101,9 @@ function trimConstructor($constructor){
 
 	if($firstParensPosition === FALSE ||
 		$lastParensPosition === FALSE){
-		echo "Could not figure out brackets [".$constructor."]";
-		exit(0);
+		//My Parens are deaaaaad - batman.
+		throw new Exception("Could not figure out brackets for constructor [".$constructor."]. Either your code is malformed or something really hinkey is going on.");
+
 	}
 
 	$constructorInfo['parameters'] = substr($constructor, $firstBracketPosition + 1, $closeBracketPosition - ($firstBracketPosition + 1) );
@@ -108,6 +113,12 @@ function trimConstructor($constructor){
 	return $constructorInfo;
 }
 
+/**
+ * Some string constants are spelt differently in PHP to Javascript. Convert between them.
+ *
+ * @param $value
+ * @return string
+ */
 function	convertPHPValueToJSValue($value){
 
 	if($value == 'FALSE'){
@@ -118,6 +129,15 @@ function	convertPHPValueToJSValue($value){
 		return 'true';
 	}
 
+	if($value == 'NULL'){
+		return 'null';
+	}
+
+	if($value == 'Exception'){
+		//Add other exceptions here
+		return 'Error';
+	}
+
 	return $value;
 }
 
@@ -126,6 +146,9 @@ function	convertPHPValueToJSValue($value){
 
 class PHPToJavascript{
 
+	const ECHO_TO_ALERT = 'alert(';
+	const ECHO_TO_DOCUMENT_WRITE = 'document.write(';
+
 	/** @var string */
 	var $srcFilename;
 
@@ -133,6 +156,8 @@ class PHPToJavascript{
 	 * @var TokenStream
 	 */
 	public $tokenStream;
+
+	public $postConversionReplacements = array();
 
 	/**
 	 * @var ConverterStateMachine The state machine for processing the code tokens.
@@ -157,6 +182,19 @@ class PHPToJavascript{
 		$this->tokenStream = new TokenStream($code);
 		$this->stateMachine = new ConverterStateMachine($this->tokenStream, CONVERTER_STATE_DEFAULT);
 	}
+
+
+	/**
+	 * Set what echo function in PHP is converted to. The trailing bracket "(" on the function is required.
+	 *
+	 * @param $echoConversionFunction. This should take the form of "callableJavascriptFunction("
+	 *
+	 * TODO - should support callback function here to allow context sensitive replacement.
+	 */
+	function setEchoConversionFunction($echoConversionFunction){
+		CodeConverterState_Echo::setEchoConversionFunction($echoConversionFunction);
+	}
+
 
 	function	toJavascript(){
 		$name = '';
@@ -194,11 +232,22 @@ class PHPToJavascript{
 					$this->stateMachine->insertToken = FALSE;
 				}
 			}
-
 		}
 
-		return $this->stateMachine->finalize();
+		$output = $this->stateMachine->finalize();
+
+		$searchArray = array_keys($this->postConversionReplacements);
+		$replaceArray = array_values($this->postConversionReplacements);
+
+		$output = str_replace($searchArray, $replaceArray, $output);
+
+		return $output;
 	}
+
+	function addPostConversionReplace($search, $replace){
+		$this->postConversionReplacements[$search] = $replace;
+	}
+
 
 
 	function     generateFile($outputFilename, $originalFilename) {

@@ -6,14 +6,7 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
 
-		if($value == 'NULL'){
-			$value = 'null';
-		}
-
-
-		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
-//			echo "misunderstood.";
-		}
+		$value = convertPHPValueToJSValue($value);
 
 		$defineValue = $this->stateMachine->getDefine($value);
 

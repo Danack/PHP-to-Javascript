@@ -18,7 +18,6 @@ class FunctionScope extends CodeScope{
 	function	getScopedVariableForScope($variableName, $isClassVariable){
 		$cVar = cvar($variableName);
 
-
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
 
 			$variableFlag = $this->scopedVariables[$cVar];

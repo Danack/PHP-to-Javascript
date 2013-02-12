@@ -22,6 +22,10 @@ class CodeConverterState_TFOREACH extends CodeConverterState {
 			if (count($this->chunkArray) == 2) {
 				$array = $this->chunkArray[0];
 				$val = $this->chunkArray[1];
+
+				//TODO - find an example of this, and add a scope variable.
+				//$this->stateMachine->currentScope->addScopedVariable($key, 0);
+
 				$this->stateMachine->addJS( "for (var {$val}Val in $array) {".
 					"		\n                        $val = $array"."[{$val}Val];");
 			}
@@ -29,8 +33,12 @@ class CodeConverterState_TFOREACH extends CodeConverterState {
 				$array = $this->chunkArray[0];
 				$key = $this->chunkArray[1];
 				$val = $this->chunkArray[2];
+
+				$this->stateMachine->currentScope->addScopedVariable($key, 0);
+				$this->stateMachine->currentScope->addScopedVariable($val, 0);
+
 				$this->stateMachine->addJS("for (var $key in $array) {".
-					"\n                        $val = $array"."[$key];");
+					"\n       var $val = $array"."[$key];");
 			}
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
 		}

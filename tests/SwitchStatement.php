@@ -1,30 +1,48 @@
 <?php
 
 
-function 	testSwitchFunction($name, $value){
+function 	testSwitchFunction($name, $value = FALSE){
 
+	$result = FALSE;
 
 	switch($name){
 
 		case('output'):{
-			echo "value is $value";
+			$result =  'putout';
 			break;
 		}
 
 		case('silent'):{
+			$result =  'notloud';
+			break;
+		}
+
+		case('custom'):{
+			$result = $value;
 			break;
 		}
 
 		default:{
-			//echo "Unknown option";
 			throw new Exception("Unknown option");
 		}
 	}
+
+	return $result;
 }
 
-testSwitchFunction('output', 'Shamoan');
-testSwitchFunction('foo', 'bar');
+
+//JS if(typeof assert === undefined){
+//JS 	function assert(var1, var2){
+//JS		if(var1 != var2){
+//JS 			alert("assert failed " + var1 + " != " + var2 );
+//JS			throw new Error("assert failed");
+//JS		}
+//JS    }
+//JS }
 
 
+
+//JS assert(testSwitchFunction('output') == 'putout');
+//JS assert(testSwitchFunction('custom', 'bar') == 'barr');
 
 ?>

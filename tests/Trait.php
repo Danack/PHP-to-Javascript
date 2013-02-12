@@ -2,7 +2,6 @@
 
 require_once('functions.php');
 
-
 trait JSONFactory{
 
 	static function	factory($jsonString){
@@ -10,6 +9,7 @@ trait JSONFactory{
 
 		$object = new static();
 
+		//Shamoan
 		foreach ($data AS $key => $value){
 			$object->$key = $value;
 		}
@@ -37,7 +37,7 @@ class ExampleJSON{
 	}
 
 	function test(){
-		echo "name = ".$this->name." value = ".$this->value;
+		return "name = ".$this->name." value = ".$this->value;
 	}
 }
 
@@ -47,7 +47,19 @@ $json = $testObject->toJSON();
 
 $duplicate = ExampleJSON::factory($json);
 
-$duplicate->test();
+
+//JS if(typeof assert === undefined){
+//JS 	function assert(var1, var2){
+//JS		if(var1 != var2){
+//JS 			alert("assert failed " + var1 + " != " + var2 );
+//JS			throw new Error("assert failed");
+//JS		}
+//JS 		testsPassed++;
+//JS    }
+//JS }
+
+assert($duplicate->name == "First", TRUE);
+assert($duplicate->value == "Testing", TRUE);
 
 
 ?>

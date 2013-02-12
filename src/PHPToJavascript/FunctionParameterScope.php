@@ -11,6 +11,18 @@ class FunctionParameterScope extends CodeScope{
 		$this->variableFlag = $variableFlag;
 	}
 
+	function	getInPlaceJS(){
+		if($this->getName() == "__construct"){
+			//constructor gets included in ClassScope
+			return "";
+		}
+
+		if(($this->variableFlag & DECLARATION_TYPE_PRIVATE) != 0){
+			//return $this->getJSRaw();
+			return $this->getJS();
+		}
+	}
+
 	function	getDelayedJS($parentScopeName){
 
 		if($this->getName() == "__construct"){
@@ -19,7 +31,7 @@ class FunctionParameterScope extends CodeScope{
 		}
 
 		if(($this->variableFlag & DECLARATION_TYPE_PRIVATE) == 0){
-			$jsRaw = $this->getJSRaw();
+			$jsRaw = $this->getJS();
 
 			if(($this->variableFlag & DECLARATION_TYPE_STATIC)){
 				$jsRaw = str_replace(PUBLIC_FUNCTION_MARKER_MAGIC_STRING, $parentScopeName.".", $jsRaw);
@@ -35,6 +47,7 @@ class FunctionParameterScope extends CodeScope{
 		}
 	}
 
+	/*
 	function	getJS(){
 
 		if($this->getName() == "__construct"){
@@ -45,9 +58,7 @@ class FunctionParameterScope extends CodeScope{
 		if(($this->variableFlag & DECLARATION_TYPE_PRIVATE) != 0){
 			return $this->getJSRaw();
 		}
-	}
-
-
+	} */
 
 	function getType(){
 		return CODE_SCOPE_FUNCTION_PARAMETERS;
