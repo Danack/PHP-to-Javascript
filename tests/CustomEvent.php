@@ -1,7 +1,13 @@
 <?php
 
 
-class BaseRealityEvent{
+/**
+ * Simple class that defines
+ */
+class CustomEvent{
+
+	const someEvent = "basereality.someEvent";
+
 
 	public $nullValue = NULL;
 
