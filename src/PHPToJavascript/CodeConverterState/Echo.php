@@ -11,7 +11,12 @@ class CodeConverterState_Echo extends CodeConverterState {
 	 * @var string
 	 */
 	//static public 	$echoConversionFunction = PHPToJavascript::ECHO_TO_DOCUMENT_WRITE;
-	static public 	$echoConversionFunction = PHPToJavascript::ECHO_TO_ALERT;
+	static public 	$echoConversionFunction = "";// = PHPToJavascript::$ECHO_TO_ALERT;
+
+	function __construct(ConverterStateMachine $stateMachine){
+		parent::__construct($stateMachine);
+		self::$echoConversionFunction = PHPToJavascript::$ECHO_TO_ALERT;
+	}
 
 	static function	setEchoConversionFunction($newEchoConversionFunction){
 		self::$echoConversionFunction = $newEchoConversionFunction;

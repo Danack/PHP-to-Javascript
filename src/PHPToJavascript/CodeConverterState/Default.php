@@ -26,7 +26,7 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_USE'			=> CONVERTER_STATE_T_EXTENDS,
 
 		'T_NEW'			=> CONVERTER_STATE_T_NEW,
-		'T_CONSTANT_ENCAPSED_STRING' => CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING,
+		'T_CONSTANT_ENCAPSED_STRING' => CONVERTER_STATE_VARIABLE_DEFAULT,
 		'='					=> CONVERTER_STATE_EQUALS,
 		')' 				=> CONVERTER_STATE_CLOSE_PARENS,
 		'T_REQUIRE_ONCE'	=> CONVERTER_STATE_REQUIRE,
@@ -53,8 +53,19 @@ class CodeConverterState_Default extends CodeConverterState {
 			return TRUE;
 		}
 
+		if($name == 'T_LNUMBER'){
+			if($this->stateMachine->currentScope instanceof FunctionParameterScope){
+				//It's a number as a placeholder for a param e.g.
+				//function someFunction($foo = 5){...}
+				$this->changeToState(CONVERTER_STATE_VARIABLE_DEFAULT);
+				return TRUE;
+			}
+		}
+
 		$js = $parsedToken;
 		$this->stateMachine->addJS($js);
+
+
 
 		if($name == '{'){
 			if($this->stateMachine->currentScope->startOfFunction() == TRUE){

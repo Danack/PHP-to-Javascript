@@ -97,7 +97,7 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_T_EXTENDS] = new CodeConverterState_TEXTENDS($this);
 		$this->states[CONVERTER_STATE_T_NEW] = new CodeConverterState_TNEW($this);
 
-		$this->states[CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING] = new CodeConverterState_TCONSTANTENCAPSEDSTRING($this);
+		$this->states[CONVERTER_STATE_VARIABLE_DEFAULT] = new CodeConverterState_VariableDefault($this);
 		$this->states[CONVERTER_STATE_EQUALS] = new CodeConverterState_Equals($this);
 
 		$this->states[CONVERTER_STATE_CLOSE_PARENS] = new CodeConverterState_CLOSEPARENS($this);
