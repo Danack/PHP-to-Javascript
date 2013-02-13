@@ -45,6 +45,8 @@ TODO
 
 * Add more tests, setup some automated tester.
 
+* Add hasOwnProperty check to foreach loops.
+
 * Add support for const to be same as public static.
 
 * Figure out what to do about Javascript reserved keywords. Probably out to detect them and either warn or give an error on detection.  testObject.delete();
