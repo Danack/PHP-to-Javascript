@@ -18,12 +18,9 @@ class CodeConverterState_VariableValue extends CodeConverterState{
 			$name == 'T_COMMENT' ||
 			$name == 'T_STRING'){
 
-			if($value == 'NULL'){
-				$value = 'null';
-			}
+			$value = convertPHPValueToJSValue($value);
 
 			$this->stateMachine->currentScope->addToVariableValue($value);
-
 			return;
 		}
 
