@@ -136,12 +136,12 @@ class PHPToJavascript{
 	public static $ECHO_TO_DOCUMENT_WRITE = 'document.write(';
 
 	/** @var string */
-	var $srcFilename;
+	var $srcFilename = NULL;
 
-	/**
-	 * @var TokenStream
-	 */
-	public $tokenStream;
+//	/**
+//	 * @var TokenStream
+//	 */
+//	public $tokenStream;
 
 	public $postConversionReplacements = array();
 
@@ -153,10 +153,11 @@ class PHPToJavascript{
 	/**
 	 * Please use either createFromFile or createFromString
 	 */
-	private function	__construct(){
+	function	__construct(){
+		$this->stateMachine = new ConverterStateMachine(/*$this->tokenStream,*/ /*CONVERTER_STATE_DEFAULT */);
 	}
 
-
+/*
 	static function createFromFile($srcFilename){
 
 		$phpToJavascript = new self();
@@ -177,19 +178,29 @@ class PHPToJavascript{
 		$phpToJavascript->initFromString($code);
 
 		return $phpToJavascript;
-	}
+	} */
 
-
+/*
 	static function createFromString($code){
 		$phpToJavascript = new self();
 		$phpToJavascript->initFromString($code);
 
 		return $phpToJavascript;
+	} */
+
+	function	addFromFile($filename){
+		$code = file_get_contents($filename);
+		if($code === FALSE){
+			throw new \Exception("Could not open $filename.");
+		}
+
+		$tokenStream = new TokenStream($code);
+		processTokenStream($tokenStream, $this->stateMachine, NULL);
 	}
 
-	function initFromString($code){
-		$this->tokenStream = new TokenStream($code);
-		$this->stateMachine = new ConverterStateMachine($this->tokenStream, CONVERTER_STATE_DEFAULT);
+	function addFromString($code){
+		$tokenStream = new TokenStream($code);
+		processTokenStream($tokenStream, $this->stateMachine, NULL);
 	}
 
 
@@ -206,43 +217,6 @@ class PHPToJavascript{
 
 
 	function	toJavascript(){
-		$name = '';
-		$value = '';
-
-		while($this->tokenStream->hasMoreTokens() == TRUE){
-			$this->tokenStream->next($name, $value);
-
-			$count = 0;
-
-			do{
-				$parsedToken = $this->stateMachine->parseToken($name, $value, $count);
-
-				if($count == 0){
-					$this->stateMachine->accountForOpenBrackets($name);
-				}
-
-				$reprocess = $this->stateMachine->processToken($name, $value, $parsedToken);
-
-				if($count == 0){
-					$this->stateMachine->accountForCloseBrackets($name);
-				}
-
-				if($count > 5){
-					throw new \Exception("Stuck converting same token.");
-				}
-
-				$count++;
-			}
-			while($reprocess == TRUE);
-
-			if($name == 'T_VARIABLE'){
-				if($this->stateMachine->insertToken != FALSE){
-					$this->stateMachine->addJS($this->stateMachine->insertToken);
-					$this->stateMachine->insertToken = FALSE;
-				}
-			}
-		}
-
 		$output = $this->stateMachine->finalize();
 
 		$searchArray = array_keys($this->postConversionReplacements);
@@ -256,7 +230,6 @@ class PHPToJavascript{
 	function addPostConversionReplace($search, $replace){
 		$this->postConversionReplacements[$search] = $replace;
 	}
-
 
 
 	function     generateFile($outputFilename, $originalFilename) {
@@ -314,6 +287,81 @@ class PHPToJavascript{
 					throw new \Exception("Failed to create directory $filePath");
 				}
 			}
+		}
+	}
+}
+
+
+function processTokenStream($tokenStream, $stateMachine, $originalFilename){
+
+	$name = '';
+	$value = '';
+
+	while($tokenStream->hasMoreTokens() == TRUE){
+		$tokenStream->next($name, $value);
+
+		$count = 0;
+
+		do{
+			$parsedToken = $stateMachine->parseToken($name, $value, $count);
+
+			if($count == 0){
+				$stateMachine->accountForOpenBrackets($name);
+			}
+
+			$reprocess = $stateMachine->processToken($name, $value, $parsedToken);
+
+			if($count == 0){
+				$stateMachine->accountForCloseBrackets($name);
+			}
+
+			if($count > 5){
+				throw new \Exception("Stuck converting same token.");
+			}
+
+			$count++;
+		}
+		while($reprocess == TRUE);
+
+		if($name == 'T_VARIABLE'){
+			//If there's a token that needs to be inserted e.g. 'var'
+			if($stateMachine->insertToken != FALSE){
+				$stateMachine->addJS($stateMachine->insertToken);
+				$stateMachine->insertToken = FALSE;
+			}
+		}
+
+		if(FALSE){
+			$requiredFile = $stateMachine->getRequiredFile();
+			if($requiredFile != NULL){
+
+				//echo "Figure out where $requiredFile is from original file path $originalFilename";
+
+				//TraitInclude.php' is from original file path TraitExample.php
+
+				$pathParts = pathinfo($originalFilename);
+
+				$requireFilePath = $pathParts['dirname'].'/'.$requiredFile;
+
+				//$requireFilePath = realpath($requireFilePath);
+
+				if(PHPToJavascript_TRACE == TRUE){
+					echo "Including file [$requiredFile] on path [$requireFilePath].";
+				}
+
+				$code = file_get_contents($requireFilePath);
+
+				if($code === FALSE){
+					throw new \Exception("Could not open file [$requiredFile] on path [$requireFilePath].");
+				}
+
+				$requireTokenStream = new TokenStream($code);
+
+				processTokenStream($requireTokenStream, $stateMachine, $originalFilename);
+				$stateMachine->addJS("\n//End of require\n");
+				//TODO Add a new state to tidy up semi-colon after include
+			}
+
 		}
 	}
 }

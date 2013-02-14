@@ -44,10 +44,10 @@ class	ConverterStateMachine{
 	 */
 	public $variableFlags = FALSE;
 
-	/**
-	 * @var TokenStream
-	 */
-	public $tokenStream;
+//	/**
+//	 * @var TokenStream
+//	 */
+//	public $tokenStream;
 
 	/**
 	 * @var CodeScope
@@ -64,9 +64,9 @@ class	ConverterStateMachine{
 
 	public $defines = array();
 
-	function	__construct($tokenStream, $defaultState){
+	function	__construct(/* $tokenStream, */ /*$defaultState*/ ){
 
-		$this->tokenStream = $tokenStream;
+		//$this->tokenStream = $tokenStream;
 
 		$this->pushScope(CODE_SCOPE_GLOBAL, 'GLOBAL');
 
@@ -115,7 +115,7 @@ class	ConverterStateMachine{
 
 		$this->states[CONVERTER_STATE_OBJECT_OPERATOR] = new CodeConverterState_TOBJECTOPERATOR($this);
 
-		$this->currentState = $defaultState;
+		$this->currentState = CONVERTER_STATE_DEFAULT;
 	}
 
 
@@ -385,6 +385,22 @@ function accountForCloseBrackets($name){
 
 			$this->addJS($jsString);
 		}
+	}
+
+	public $requireFilename = NULL;
+
+	function requireFile($requireFilename){
+
+		$requireFilename = str_replace('"', '', $requireFilename);
+		$requireFilename = str_replace("'", '', $requireFilename);
+
+		$this->requireFilename = $requireFilename;
+	}
+
+	function getRequiredFile(){
+		$value = $this->requireFilename;
+		$this->requireFilename = NULL;
+		return $value;
 	}
 
 

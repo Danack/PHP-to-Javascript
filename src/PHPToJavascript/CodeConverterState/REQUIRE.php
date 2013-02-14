@@ -5,8 +5,14 @@ namespace PHPToJavascript;
 class CodeConverterState_REQUIRE extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
-		$this->stateMachine->addJS('//'.$value);
-		$this->changeToState(CONVERTER_STATE_DEFAULT);
+
+		if($name == 'T_CONSTANT_ENCAPSED_STRING'){
+			$this->stateMachine->addJS('// Opening the require'.$value."\n");
+
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
+			$this->stateMachine->requireFile($value);
+		}
+
 	}
 }
 

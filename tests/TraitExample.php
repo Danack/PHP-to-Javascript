@@ -1,25 +1,10 @@
 <?php
 
-require_once('functions.php');
+require_once 'TraitInclude.php';
 
-trait JSONFactory{
+//require_once('functions.php');
 
-	static function	factory($jsonString){
-		$data = json_decode($jsonString);
 
-		$object = new static();
-
-		foreach ($data AS $key => $value){
-			$object->$key = $value;
-		}
-
-		return $object;
-	}
-
-	function	toJSON(){
-		return json_encode_object($this);
-	}
-}
 
 class ExampleJSON{
 
