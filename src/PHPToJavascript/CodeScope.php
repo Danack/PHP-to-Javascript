@@ -106,11 +106,6 @@ abstract class CodeScope{
 	abstract	function getType();
 
 	function	getScopedVariable($variableName, $isClassVariable, $variableFlags, $originalScope){
-
-		if(strpos($variableName, 'result') !== FALSE){
-			xdebug_break();
-		}
-
 		$result = $this->getScopedVariableForScope($variableName, $isClassVariable);
 
 		if($result == NULL){
