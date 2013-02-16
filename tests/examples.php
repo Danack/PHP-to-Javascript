@@ -15,18 +15,20 @@ $filesToConvert = array(
 
 	'DefaultValue.js' => 'DefaultValue.php',
 
-//	'Inheritance.php' => 'Inheritance.js',
-//
-	//'CustomEvent.php' => 'CustomEvent.js',
+	'Inheritance.js' => 'Inheritance.php',
+
+	'SimpleExample.js' => 'SimpleExample.php',
+	'StaticTest.js' => 'StaticTest.php',
+	'SwitchStatement.js' => 'SwitchStatement.php',
+);
+
+
+//'CustomEvent.php' => 'CustomEvent.js',
 //	'StaticTest.php' => 'StaticTest.js',
 //	'Content.php' => 'Content.js',
 //	'ContentImage.php' => 'ContentImage.js',
 //	'PublicPrivate.php' => 'PublicPrivate.js',
 
-	'SimpleExample.js' => 'SimpleExample.php',
-	'SwitchStatement.js' => 'SwitchStatement.php',
-
-);
 
 
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){

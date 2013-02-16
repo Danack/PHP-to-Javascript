@@ -10,6 +10,7 @@ if(defined('NL') == FALSE){
 //define("PHPToJavascript_TRACE", TRUE);
 define("PHPToJavascript_TRACE", FALSE);
 
+
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
 define('CODE_SCOPE_FUNCTION_PARAMETERS', 'CODE_SCOPE_FUNCTION_PARAMETERS');
@@ -154,39 +155,20 @@ class PHPToJavascript{
 	 * Please use either createFromFile or createFromString
 	 */
 	function	__construct(){
-		$this->stateMachine = new ConverterStateMachine(/*$this->tokenStream,*/ /*CONVERTER_STATE_DEFAULT */);
+		$this->stateMachine = new ConverterStateMachine();
+
+		//TODO - figure out what to do with PHP constants and the PHP/JS 'standard' library
+		//which apparently converts the constants to strings.
+		$this->addPostConversionReplace('STR_PAD_LEFT', "'STR_PAD_LEFT'");
+
+		//Javascript has a magic operator '+' which forces objects to a 'number' value
+		// e.g. value = '123';
+		// value + 123 => '123123'
+		// but (+value + 123) = 245;
+		// It casts to float/int as appropriate.
+		//TODO figure out how to expose this in not such hacky fashion.
+		$this->addPostConversionReplace('/*value*/', "+");
 	}
-
-/*
-	static function createFromFile($srcFilename){
-
-		$phpToJavascript = new self();
-
-		$phpToJavascript->srcFilename = $srcFilename;
-		$fileLines = file($phpToJavascript->srcFilename);
-
-		if($fileLines == FALSE){
-			throw new \Exception("Failed to open srcFilename [$srcFilename]");
-		}
-
-		$code = "";
-
-		foreach($fileLines as $fileLine){
-			$code .= $fileLine;
-		}
-
-		$phpToJavascript->initFromString($code);
-
-		return $phpToJavascript;
-	} */
-
-/*
-	static function createFromString($code){
-		$phpToJavascript = new self();
-		$phpToJavascript->initFromString($code);
-
-		return $phpToJavascript;
-	} */
 
 	function	addFromFile($filename){
 		$code = file_get_contents($filename);

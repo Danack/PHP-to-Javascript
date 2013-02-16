@@ -2,6 +2,8 @@
 
 class Adult {
 
+	var		$endOffset = FALSE;
+
 	static $adultStaticVar;
 
 	public $adultClassVar;
