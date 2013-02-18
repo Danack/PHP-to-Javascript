@@ -1,0 +1,25 @@
+
+The code for PHP-to-Javascript is released under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0) license.
+
+The full details of this license can be read at http://creativecommons.org/licenses/by-nc-sa/3.0/
+
+You are free:
+to Share — to copy, distribute and transmit the work
+to Remix — to adapt the work
+
+Under the following conditions:
+Attribution — You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).
+Noncommercial — You may not use this work for commercial purposes.
+Share Alike — If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
+
+
+Commercial licenses for PHP-to-Javascript will soon be available.
+
+
+To put the above into some real world examples:
+
+* If you want to use it for your own personal website - no license needed.
+
+* If you want to use it at work for code you're being paid for - please buy a license.
+
+* If you want to deploy it on a client's website - please get the client to buy a license.
