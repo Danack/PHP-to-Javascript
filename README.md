@@ -13,6 +13,7 @@ Examples
 --------
 
 cd tests
+
 php examples.php
 
 This will convert the PHP files in the tests directory and for each write a javascript file equivalent.
