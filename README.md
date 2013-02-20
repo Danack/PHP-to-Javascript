@@ -61,6 +61,8 @@ TODO
     CodeConverterState_Default token [T_ENCAPSED_AND_WHITESPACE] => [Hello my name is ]
     CodeConverterState_Default token [T_VARIABLE] => [$name]
 
+* Support arrays for variables in class declaration.
+
 Limitations
 ===========
 
