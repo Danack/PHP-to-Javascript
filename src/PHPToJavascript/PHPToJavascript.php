@@ -8,7 +8,7 @@ if(defined('NL') == FALSE){
 
 //Control output of the state-machine trace
 //define("PHPToJavascript_TRACE", TRUE);
-define("PHPToJavascript_TRACE", FALSE);
+
 
 
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
@@ -133,6 +133,8 @@ function	convertPHPValueToJSValue($value){
 
 class PHPToJavascript{
 
+	public static $TRACE = false;
+
 	public static $ECHO_TO_ALERT = 'alert(';
 	public static $ECHO_TO_DOCUMENT_WRITE = 'document.write(';
 
@@ -183,6 +185,10 @@ class PHPToJavascript{
 	function addFromString($code){
 		$tokenStream = new TokenStream($code);
 		processTokenStream($tokenStream, $this->stateMachine, NULL);
+	}
+
+	function setTrace($boolean){
+		self::$TRACE = $boolean;
 	}
 
 
@@ -327,7 +333,7 @@ function processTokenStream($tokenStream, $stateMachine, $originalFilename){
 
 				//$requireFilePath = realpath($requireFilePath);
 
-				if(PHPToJavascript_TRACE == TRUE){
+				if(PHPToJavascript::$TRACE == TRUE){
 					echo "Including file [$requiredFile] on path [$requireFilePath].";
 				}
 
@@ -343,7 +349,6 @@ function processTokenStream($tokenStream, $stateMachine, $originalFilename){
 				$stateMachine->addJS("\n//End of require\n");
 				//TODO Add a new state to tidy up semi-colon after include
 			}
-
 		}
 	}
 }

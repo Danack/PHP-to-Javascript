@@ -165,7 +165,7 @@ class	ConverterStateMachine{
 	}
 
 	function	processToken($name, $value, $parsedToken){
-		if(PHPToJavascript_TRACE == TRUE){
+		if(PHPToJavascript::$TRACE == TRUE){
 			echo "SM ".get_class($this->getState())." token [$name] => [$value]  ".NL;
 		}
 		return $this->getState()->processToken($name, $value, $parsedToken);

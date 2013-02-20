@@ -115,7 +115,7 @@ abstract class CodeScope{
 	function	addScopedVariable($variableName, $variableFlag){
 		$cVar = cvar($variableName);
 
-		if(PHPToJavascript_TRACE == TRUE){
+		if(PHPToJavascript::$TRACE == TRUE){
 			echo "Added variable $variableName to scope ".get_class($this)."\n";
 		}
 

@@ -11,8 +11,9 @@ error_reporting(E_ALL);
 
 $filesToConvert = array(
 
-	'TraitExample.js' => array('TraitInclude.php', 'TraitExample.php',),
+	'ClassExample.js' => 'ClassExample.php',
 
+	/*
 	'DefaultValue.js' => 'DefaultValue.php',
 
 	'Inheritance.js' => 'Inheritance.php',
@@ -20,6 +21,10 @@ $filesToConvert = array(
 	'SimpleExample.js' => 'SimpleExample.php',
 	'StaticTest.js' => 'StaticTest.php',
 	'SwitchStatement.js' => 'SwitchStatement.php',
+
+	'TraitExample.js' => array('TraitInclude.php', 'TraitExample.php',),
+
+	*/
 );
 
 
@@ -33,6 +38,8 @@ $filesToConvert = array(
 
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
+
+	$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 

@@ -210,7 +210,7 @@ class ClassScope extends CodeScope{
 	}
 
 	/**
-	 * For class variables that are added to the class scope, but are delayed to be delcared outside
+	 * For class variables that are added to the class scope, but are delayed to be declared outside
 	 * the function (to be public or static) we need to grab the default values to be able to set
 	 * the variables to them. Incidentally grabs any comments.
 	 *
