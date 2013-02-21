@@ -85,6 +85,8 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_VARIABLE_CLASS] = new CodeConverterState_TVARIABLECLASS($this);
 
 		$this->states[CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER] = new CodeConverterState_TVARIABLEPARAMETER($this);
+		$this->states[CONVERTER_STATE_VARIABLE_ARRAY] = new CodeConverterState_TVARIABLEARRAY($this);
+
 
 		$this->states[CONVERTER_STATE_STATIC] = new CodeConverterState_TSTATIC($this);
 		$this->states[CONVERTER_STATE_STRING] = new CodeConverterState_TSTRING($this);
@@ -144,6 +146,9 @@ class	ConverterStateMachine{
 	}
 
 	public function addJS($jsString){
+		if(PHPToJavascript::$TRACE){
+			echo "$jsString \n";
+		}
 		$this->currentScope->addJS($jsString);
 	}
 
@@ -175,20 +180,29 @@ class	ConverterStateMachine{
 		return $this->states[$this->currentState];
 	}
 
-function accountForOpenBrackets($name){
-	if($name == "{"){
-		$this->pushBracket();
+	function accountForOpenBrackets($name){
+		if($name == "{"){
+			$this->currentScope->pushBracket();
+		}
+		if($name == "("){
+			$this->currentScope->pushParens();
+		}
 	}
-}
+
+	function accountForCloseBrackets($name){
+
+		$scopeEnded = FALSE;
+
+		if($name == "}"){
+			$scopeEnded = $this->currentScope->popBracket();
+		}
+		else if($name == ")"){
+			$scopeEnded = $this->currentScope->popParens();
+		}
 
 
-function accountForCloseBrackets($name){
-	if($name == "}"){
-
-		$scopeEnded = $this->currentScope->popBracket();
-
-		if(($this->currentScope instanceof GlobalScope) == FALSE){
-			if ($scopeEnded == TRUE){
+		if ($scopeEnded == TRUE){
+			if(($this->currentScope instanceof GlobalScope) == FALSE){
 				$poppedScope = $this->currentScope;
 
 				$this->popCurrentScope();	//It was the last bracket for a function.
@@ -199,7 +213,6 @@ function accountForCloseBrackets($name){
 			}
 		}
 	}
-}
 
 	function parseToken ($name, $value, $count) {
 
@@ -316,11 +329,7 @@ function accountForCloseBrackets($name){
 	}
 
 	function	popCurrentScope(){
-		//Do something with $this->currentScope before destroying it?
-
 		$previousScope = $this->currentScope;
-
-		//echo "Popped scope ".$previousScope->name."\n";
 
 		$this->currentScope = array_pop($this->scopesStack);
 
@@ -363,10 +372,9 @@ function accountForCloseBrackets($name){
 		throw new \Exception("Trying to get class but no class scope found.");
 	}
 
-
-	function	pushBracket(){
-		$this->currentScope->pushBracket();
-	}
+//	function	pushBracket(){
+//		$this->currentScope->pushBracket();
+//	}
 
 	function	addDefaultsForVariables(){
 		$functionParametersScope = $this->findScopeType(CODE_SCOPE_FUNCTION_PARAMETERS);

@@ -2,16 +2,22 @@
 
 class ClassExample {
 
-	var		$tags = array();
+	static var $testStatic = 1;
+	var		$tags = null;
 
-
+	function testFunction(){
+		json_encode_object($this->varName, 'SomeString');
+	}
 
 	function __construct(){
 		static $count = 0;
+		$this->tags = array();
 		$this->tags[] = $count;
 	}
 }
 
+
+echo ClassExample::$testStatic;
 
 $classExample1 = new ClassExample();
 

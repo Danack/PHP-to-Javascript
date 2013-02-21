@@ -6,6 +6,10 @@ class CodeConverterState_TVARIABLE extends CodeConverterState {
 
 	function	processToken($name, $value, $parsedToken){
 
+		if($value == "\$this"){
+			$this->stateMachine->addJS("this");
+		}
+
 		if($this->stateMachine->currentScope instanceof GlobalScope){
 			$this->changeToState(CONVERTER_STATE_VARIABLE_GLOBAL);
 			return TRUE;

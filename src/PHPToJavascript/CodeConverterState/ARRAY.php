@@ -14,10 +14,12 @@ class CodeConverterState_ARRAY extends CodeConverterState {
 		$this->stateChunk = '';
 	}
 
+	function	processToken($name, $value, $parsedToken){
 
+		$this->stateMachine->pushScope(CODE_SCOPE_CLASS, $value);
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
 
-	function	processToken($name, $value, $parsedToken){		//until ;
-
+		/*
 		if($name == ')'){//This code needs refactoring - as $_keep is not safe, as parens are stateful.
 			$parsedToken = ')';
 		}
@@ -55,7 +57,7 @@ class CodeConverterState_ARRAY extends CodeConverterState {
 
 			$this->stateMachine->addJS($js);
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
-		}
+		} */
 	}
 }
 

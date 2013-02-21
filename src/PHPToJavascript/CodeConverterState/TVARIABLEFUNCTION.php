@@ -19,11 +19,12 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 			return;
 		}
 
-		if($name == 'T_OBJECT_OPERATOR'){
-			//This is skipped as private class variables are converted from
-			// "$this->varName" to "varName" - for the joy of Javascript scoping.
-			return;
-		}
+//		if($name == 'T_OBJECT_OPERATOR'){
+//			//This is skipped as private class variables are converted from
+//			// "$this->varName" to "varName" - for the joy of Javascript scoping.
+//			$this->stateMachine->addJS("this");
+//			return;
+//		}
 
 		$variableName = cVar($value);
 
@@ -39,13 +40,28 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 		if($this->isClassVariable == TRUE && $name == ")"){
 			//keyword 'this' has been passed as a variable e.g.
 			//json_encode_object(this)
-			$this->stateMachine->addJS("this)");
+			//$this->stateMachine->addJS("this)");
+			$this->stateMachine->addJS(")");
 			//YEAH BABY
 		}
-		else{
+		else if($name == "T_OBJECT_OPERATOR"){
+			$this->stateMachine->addJS(".");
+		}
+		else if($name == "T_STRING" ||
+				$name == "T_VARIABLE") {
+
+//			if($variableName == "\$this"){
+//				$this->stateMachine->addJS("this");
+//				return;
+//			}
+
 			$scopedVariableName = $this->stateMachine->getVariableNameForScope($variableName, $this->isClassVariable, $this->stateMachine->variableFlags);
 			$this->stateMachine->addJS($scopedVariableName);
 		}
+		else{
+			throw new \Exception("Unexpected token in state CodeConverterState_TVARIABLEFUNCTION, wasn't expected an [".$name."]");
+		}
+
 
 		$this->isClassVariable = FALSE;
 		$this->stateMachine->clearVariableFlags();

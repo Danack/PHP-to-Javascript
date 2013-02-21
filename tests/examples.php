@@ -11,9 +11,8 @@ error_reporting(E_ALL);
 
 $filesToConvert = array(
 
-	'ClassExample.js' => 'ClassExample.php',
-
-	/*
+	'ArrayExample.js' => 'ArrayExample.php',
+	/*'ClassExample.js' => 'ClassExample.php',
 	'DefaultValue.js' => 'DefaultValue.php',
 
 	'Inheritance.js' => 'Inheritance.php',
@@ -22,9 +21,11 @@ $filesToConvert = array(
 	'StaticTest.js' => 'StaticTest.php',
 	'SwitchStatement.js' => 'SwitchStatement.php',
 
-	'TraitExample.js' => array('TraitInclude.php', 'TraitExample.php',),
+	'TraitExample.js' => array(
+		'TraitInclude.php',
+		'TraitExample.php',
+	),*/
 
-	*/
 );
 
 

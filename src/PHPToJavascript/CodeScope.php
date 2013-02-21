@@ -84,9 +84,6 @@ abstract class CodeScope{
 			}
 		}
 
-
-
-
 		return $result;
 	}
 
@@ -109,6 +106,15 @@ abstract class CodeScope{
 			return TRUE;
 		}
 
+		return FALSE;
+	}
+
+	function	pushParens(){
+		//does nothing
+	}
+
+	function	popParens(){
+		//Does nothings
 		return FALSE;
 	}
 

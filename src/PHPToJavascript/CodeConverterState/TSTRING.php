@@ -13,6 +13,7 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 		if($defineValue !== FALSE){
 			$this->stateMachine->addJS("'".$defineValue."'");
 		}
+		//TODO add isClass($value)
 		else if(strcmp('static', $value) == 0 ||
 			strcmp('self', $value) == 0){
 			$this->stateMachine->addJS($this->stateMachine->getClassName());
@@ -22,8 +23,6 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
 		}
 		else{
-
-
 			$this->stateMachine->addJS($value);
 		}
 

@@ -63,6 +63,23 @@ TODO
 
 * Support arrays for variables in class declaration.
 
+* Add conversion of PHP array push to Javascript array push
+    PHP => $withoutTags[] = false;
+    JS => withoutTags.push(false);
+
+* Add support for array with single element false;
+    PHP => $withoutTags = array(false);
+    JS => var withoutTags = {false};
+
+* Statis class variables should be in class scope not the global one.
+SM PHPToJavascript\CodeConverterState_TSTRING token [T_STRING] => [ClassExample]
+SM PHPToJavascript\CodeConverterState_Default token [T_DOUBLE_COLON] => [::]
+SM PHPToJavascript\CodeConverterState_Default token [T_VARIABLE] => [$testStatic]
+SM PHPToJavascript\CodeConverterState_TVARIABLE token [T_VARIABLE] => [$testStatic]
+SM PHPToJavascript\CodeConverterState_TVARIABLEGLOBAL token [T_VARIABLE] => [$testStatic]
+Added variable testStatic to scope PHPToJavascript\GlobalScope
+
+
 Limitations
 ===========
 

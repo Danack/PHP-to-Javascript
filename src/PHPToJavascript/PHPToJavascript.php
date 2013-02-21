@@ -6,15 +6,11 @@ if(defined('NL') == FALSE){
 	define('NL', "\r\n");
 }
 
-//Control output of the state-machine trace
-//define("PHPToJavascript_TRACE", TRUE);
-
-
-
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
 define('CODE_SCOPE_FUNCTION_PARAMETERS', 'CODE_SCOPE_FUNCTION_PARAMETERS');
 define('CODE_SCOPE_CLASS', 'CODE_SCOPE_CLASS');
+define('CODE_SCOPE_ARRAY', 'CODE_SCOPE_ARRAY');
 
 define("CONSTRUCTOR_POSITION_MARKER", "/*CONSTRUCTOR GOES HERE*/");
 
@@ -49,6 +45,7 @@ define('CONVERTER_STATE_VARIABLE_GLOBAL',  'CONVERTER_STATE_VARIABLE_GLOBAL');
 define('CONVERTER_STATE_VARIABLE_FUNCTION',  'CONVERTER_STATE_VARIABLE_FUNCTION');
 define('CONVERTER_STATE_VARIABLE_CLASS',  'CONVERTER_STATE_VARIABLE_CLASS');
 define('CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER',  'CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER');
+define('CONVERTER_STATE_VARIABLE_ARRAY',  'CONVERTER_STATE_VARIABLE_ARRAY');
 define('CONVERTER_STATE_STATIC', 	'CONVERTER_STATE_STATIC');
 define('CONVERTER_STATE_STRING', 		'CONVERTER_STATE_STRING');
 define('CONVERTER_STATE_T_PUBLIC', 		'CONVERTER_STATE_T_PUBLIC');
@@ -141,11 +138,6 @@ class PHPToJavascript{
 	/** @var string */
 	var $srcFilename = NULL;
 
-//	/**
-//	 * @var TokenStream
-//	 */
-//	public $tokenStream;
-
 	public $postConversionReplacements = array();
 
 	/**
@@ -191,7 +183,6 @@ class PHPToJavascript{
 		self::$TRACE = $boolean;
 	}
 
-
 	/**
 	 * Set what echo function in PHP is converted to. The trailing bracket "(" on the function is required.
 	 *
@@ -218,7 +209,6 @@ class PHPToJavascript{
 	function addPostConversionReplace($search, $replace){
 		$this->postConversionReplacements[$search] = $replace;
 	}
-
 
 	function     generateFile($outputFilename, $originalFilename) {
 
@@ -324,7 +314,6 @@ function processTokenStream($tokenStream, $stateMachine, $originalFilename){
 			if($requiredFile != NULL){
 
 				//echo "Figure out where $requiredFile is from original file path $originalFilename";
-
 				//TraitInclude.php' is from original file path TraitExample.php
 
 				$pathParts = pathinfo($originalFilename);

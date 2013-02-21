@@ -47,19 +47,6 @@ class FunctionParameterScope extends CodeScope{
 		}
 	}
 
-	/*
-	function	getJS(){
-
-		if($this->getName() == "__construct"){
-			//constructor gets included in ClassScope
-			return "";
-		}
-
-		if(($this->variableFlag & DECLARATION_TYPE_PRIVATE) != 0){
-			return $this->getJSRaw();
-		}
-	} */
-
 	function getType(){
 		return CODE_SCOPE_FUNCTION_PARAMETERS;
 	}
