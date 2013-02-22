@@ -36,8 +36,8 @@ class CodeConverterState_Default extends CodeConverterState {
 
 		'T_INTERFACE'		=> CONVERTER_STATE_INTERFACE,
 		'T_OBJECT_OPERATOR' => CONVERTER_STATE_OBJECT_OPERATOR,
-
-
+		','					=> CONVERTER_STATE_COMMA,
+		'T_DOUBLE_ARROW'	=> CONVERTER_STATE_DOUBLE_ARROW,
 	);
 
 	function	processToken($name, $value, $parsedToken){
@@ -61,6 +61,7 @@ class CodeConverterState_Default extends CodeConverterState {
 				return TRUE;
 			}
 		}
+
 
 		$js = $parsedToken;
 		$this->stateMachine->addJS($js);

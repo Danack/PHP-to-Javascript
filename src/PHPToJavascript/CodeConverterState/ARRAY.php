@@ -7,16 +7,18 @@ namespace PHPToJavascript;
 class CodeConverterState_ARRAY extends CodeConverterState {
 
 	private  		$arraySymbolRemap = array('('=>'{',	')'=>'}',);
-	var				$stateChunk = '';
+	//var				$stateChunk = '';
 
 	public function		enterState($extraParams = array()){
 		parent::enterState($extraParams);
-		$this->stateChunk = '';
+		//$this->stateChunk = '';
 	}
 
 	function	processToken($name, $value, $parsedToken){
 
-		$this->stateMachine->pushScope(CODE_SCOPE_CLASS, $value);
+		$this->stateMachine->pushScope(CODE_SCOPE_ARRAY, $value);
+
+		//$this->stateMachine->addJS(ARRAY_MARKER_START_MAGIC_STRING);
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 
 		/*

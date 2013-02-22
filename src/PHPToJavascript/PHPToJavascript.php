@@ -1,5 +1,6 @@
 <?php
 
+
 namespace PHPToJavascript;
 
 if(defined('NL') == FALSE){
@@ -24,6 +25,7 @@ define('DECLARATION_TYPE_NEW', 0x10);
 
 define('METHOD_MARKER_MAGIC_STRING', "/* METHODS HERE */");
 define('PUBLIC_FUNCTION_MARKER_MAGIC_STRING', 'PUBLIC METHOD HERE');
+define('ARRAY_MARKER_START_MAGIC_STRING', '/*ARRAY_MARKER_MAGIC_STRING*/');
 
 
 function cVar($var) {
@@ -56,6 +58,9 @@ define('CONVERTER_STATE_T_NEW', 'CONVERTER_STATE_T_NEW');
 define('CONVERTER_STATE_VARIABLE_DEFAULT', 'CONVERTER_STATE_T_CONSTANT_ENCAPSED_STRING');
 define('CONVERTER_STATE_EQUALS', 'CONVERTER_STATE_EQUALS');
 define('CONVERTER_STATE_CLOSE_PARENS', 'CONVERTER_STATE_CLOSE_PARENS');
+define('CONVERTER_STATE_COMMA', 'CONVERTER_STATE_COMMA');
+define('CONVERTER_STATE_DOUBLE_ARROW', 'CONVERTER_STATE_DOUBLE_ARROW');
+
 define('CONVERTER_STATE_IMPLEMENTS_INTERFACE', 'CONVERTER_STATE_IMPLEMENTS_INTERFACE');
 define('CONVERTER_STATE_REQUIRE', 'CONVERTER_STATE_REQUIRE');
 define('CONVERTER_STATE_ABSTRACT', 'CONVERTER_STATE_ABSTRACT');
@@ -270,7 +275,7 @@ class PHPToJavascript{
 }
 
 
-function processTokenStream($tokenStream, $stateMachine, $originalFilename){
+function processTokenStream($tokenStream, ConverterStateMachine $stateMachine, $originalFilename){
 
 	$name = '';
 	$value = '';
@@ -280,18 +285,16 @@ function processTokenStream($tokenStream, $stateMachine, $originalFilename){
 
 		$count = 0;
 
+		$parsedToken = $stateMachine->parseToken($name, $value, $count);
+
+//		if($count == 0){
+		//TODO - was moving this out safe?
+		$stateMachine->accountForOpenBrackets($name);
+		//}
+		$stateMachine->scopePreStateMagic($name, $value);
+
 		do{
-			$parsedToken = $stateMachine->parseToken($name, $value, $count);
-
-			if($count == 0){
-				$stateMachine->accountForOpenBrackets($name);
-			}
-
 			$reprocess = $stateMachine->processToken($name, $value, $parsedToken);
-
-			if($count == 0){
-				$stateMachine->accountForCloseBrackets($name);
-			}
 
 			if($count > 5){
 				throw new \Exception("Stuck converting same token.");
@@ -300,6 +303,12 @@ function processTokenStream($tokenStream, $stateMachine, $originalFilename){
 			$count++;
 		}
 		while($reprocess == TRUE);
+
+		$stateMachine->accountForCloseBrackets($name);
+		$stateMachine->scopePostStateMagic($name, $value);
+
+
+
 
 		if($name == 'T_VARIABLE'){
 			//If there's a token that needs to be inserted e.g. 'var'

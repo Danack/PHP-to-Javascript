@@ -30,6 +30,10 @@ class CodeConverterState_TVARIABLE extends CodeConverterState {
 			$this->changeToState(CONVERTER_STATE_VARIABLE_CLASS);
 			return TRUE;
 		}
+		if($this->stateMachine->currentScope instanceof ArrayScope){
+			$this->changeToState(CONVERTER_STATE_VARIABLE_ARRAY);
+			return TRUE;
+		}
 	}
 }
 

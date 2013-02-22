@@ -117,18 +117,18 @@ class ClassScope extends CodeScope{
 		return $js;
 	}
 
-		function	getChildDelayedJS(){
-			$js = "";
+	function	getChildDelayedJS(){
+		$js = "";
 
-			foreach($this->jsElements as $jsElement){
-				if($jsElement instanceof CodeScope){
-					$js .= $jsElement->getDelayedJS($this->getName());
-					$js .= "\n";
-				}
+		foreach($this->jsElements as $jsElement){
+			if($jsElement instanceof CodeScope){
+				$js .= $jsElement->getDelayedJS($this->getName());
+				$js .= "\n";
 			}
-
-			return $js;
 		}
+
+		return $js;
+	}
 
 	function replaceConstructorInJS($js){
 		$constructor = FALSE;
@@ -229,6 +229,28 @@ class ClassScope extends CodeScope{
 		}
 
 		$this->currentVariableForConcattingValue .= $value;
+	}
+
+	function	getDelayedJS($parentScopeName){
+		$output = "";
+
+		foreach($this->publicVariables as $name => $value){
+			if($value === FALSE){
+				$value = 'null';
+			}
+
+			$output .= $this->name.".prototype.".$name." = $value;\n";
+		}
+
+		foreach($this->staticVariables as $name => $value){
+			if($value === FALSE){
+				$value = 'null';
+			}
+
+			$output .= $this->name.".".$name." = $value;\n";
+		}
+
+		return $output;
 	}
 }
 

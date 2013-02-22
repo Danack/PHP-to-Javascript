@@ -169,6 +169,64 @@ abstract class CodeScope{
 		throw new \Exception("This should only be called on ClassScope");
 		//Yes, I know this is terrible OO-ness.
 	}
+
+
+
+	/**
+	 * For class variables that are added to the class scope, but are delayed to be delcared outside
+	 * the function (to be public or static) we need to grab the default values to be able to set
+
+
+	/**
+	 * Get the JS code that needs to be moved to after the end of this scope
+	 * @return string
+	 */
+	function  getEndOfScopeJS(){
+		return "";
+	}
+
+	function	getJSRaw(){
+		$js = "";
+		$js .= $this->getJS_InPlace();
+		$js .= "\n";
+		$js .= $this->getEndOfScopeJS();
+		$js .= "\n";
+		$js .= $this->getChildDelayedJS();
+
+		return $js;
+	}
+
+	function	getChildDelayedJS(){
+		$js = "";
+
+		foreach($this->jsElements as $jsElement){
+			if($jsElement instanceof CodeScope){
+				$js .= $jsElement->getDelayedJS($this->getName());
+				$js .= "\n";
+			}
+		}
+
+		return $js;
+	}
+
+	function	getDelayedJS($parentScopeName){
+		return "";
+	}
+
+	function	getInPlaceJS(){
+		return $this->getJS();
+	}
+
+
+	//Contains hacks
+	function	preStateMagic($name, $value){
+
+	}
+
+	//Contains hacks
+	function	postStateMagic($name, $value){
+
+	}
 }
 
 

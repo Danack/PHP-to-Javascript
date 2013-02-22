@@ -56,7 +56,10 @@ class	ConverterStateMachine{
 
 	public $pendingSymbols = array();
 
-	/** @var CodeScope */
+
+	/**
+	 * @var CodeScope
+	 */
 	public $currentScope = NULL;
 
 	/** @var CodeScope[] */
@@ -103,6 +106,10 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_EQUALS] = new CodeConverterState_Equals($this);
 
 		$this->states[CONVERTER_STATE_CLOSE_PARENS] = new CodeConverterState_CLOSEPARENS($this);
+		$this->states[CONVERTER_STATE_COMMA] = new CodeConverterState_Comma($this);
+		$this->states[CONVERTER_STATE_DOUBLE_ARROW] = new CodeConverterState_DoubleArrow($this);
+
+
 
 		$this->states[CONVERTER_STATE_IMPLEMENTS_INTERFACE] = new CodeConverterState_TIMPLEMENTSINTERFACE($this);
 		$this->states[CONVERTER_STATE_INTERFACE] = new CodeConverterState_TINTERFACE($this);
@@ -146,9 +153,9 @@ class	ConverterStateMachine{
 	}
 
 	public function addJS($jsString){
-		if(PHPToJavascript::$TRACE){
-			echo "$jsString \n";
-		}
+//		if(PHPToJavascript::$TRACE){
+//			echo "$jsString \n";
+//		}
 		$this->currentScope->addJS($jsString);
 	}
 
@@ -199,7 +206,6 @@ class	ConverterStateMachine{
 		else if($name == ")"){
 			$scopeEnded = $this->currentScope->popParens();
 		}
-
 
 		if ($scopeEnded == TRUE){
 			if(($this->currentScope instanceof GlobalScope) == FALSE){
@@ -283,6 +289,9 @@ class	ConverterStateMachine{
 	}
 
 	function	pushScope($type, $name, $variableFlag = 0){
+
+		echo "Pushing scope $name \n";
+
 		if($this->currentScope != NULL){
 			array_push($this->scopesStack, $this->currentScope);
 		}
@@ -308,6 +317,11 @@ class	ConverterStateMachine{
 				break;
 			}
 
+			case(CODE_SCOPE_ARRAY):{
+				$newScope = new ArrayScope($name, $this->currentScope);
+				break;
+			}
+
 			default:{
 				throw new \Exception("Unknown scope type [".$type."]");
 				break;
@@ -329,6 +343,9 @@ class	ConverterStateMachine{
 	}
 
 	function	popCurrentScope(){
+
+		echo "popped scope ".$this->currentScope->getType()."\n";
+
 		$previousScope = $this->currentScope;
 
 		$this->currentScope = array_pop($this->scopesStack);
@@ -372,10 +389,6 @@ class	ConverterStateMachine{
 		throw new \Exception("Trying to get class but no class scope found.");
 	}
 
-//	function	pushBracket(){
-//		$this->currentScope->pushBracket();
-//	}
-
 	function	addDefaultsForVariables(){
 		$functionParametersScope = $this->findScopeType(CODE_SCOPE_FUNCTION_PARAMETERS);
 
@@ -410,6 +423,16 @@ class	ConverterStateMachine{
 		$this->requireFilename = NULL;
 		return $value;
 	}
+
+	function	scopePreStateMagic($name, $value){
+		$this->currentScope->preStateMagic($name, $value);
+	}
+
+	function	scopePostStateMagic($name, $value){
+		$this->currentScope->postStateMagic($name, $value);
+	}
+
+
 
 
 
@@ -453,13 +476,14 @@ class	ConverterStateMachine{
 		'T_EVAL' => 'eval',
 		'T_ELSEIF' => 'else if',
 		'T_BREAK' => 'break',
-		'T_DOUBLE_ARROW' => ':',
+		//'T_DOUBLE_ARROW' => ':', //Replaced by state
 	);
 
 	/** @var array these tokens stays the same */
 	public static $_keep = array(
-			//'=',
-		',', '}', '{',
+		//'=',
+		//',',		//Replaced by comma state
+		'}', '{',
 		';',
 		'(', //')',
 		'*',
