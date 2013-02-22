@@ -10,8 +10,8 @@ $exportPath = "export";
 error_reporting(E_ALL);
 
 $filesToConvert = array(
-
 	'ArrayExample.js' => 'ArrayExample.php',
+	'AssigningThis.js' => 'AssigningThis.php',
 	/*'ClassExample.js' => 'ClassExample.php',
 	'DefaultValue.js' => 'DefaultValue.php',
 

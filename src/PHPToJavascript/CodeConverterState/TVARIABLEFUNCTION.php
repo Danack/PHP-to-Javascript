@@ -37,12 +37,14 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 //			$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
 //		}
 
-		if($this->isClassVariable == TRUE && $name == ")"){
+		if ($this->isClassVariable == TRUE && (
+				$name == ")" || $name == ',' || $name == ';'
+			)
+		) {
 			//keyword 'this' has been passed as a variable e.g.
 			//json_encode_object(this)
 			//$this->stateMachine->addJS("this)");
-			$this->stateMachine->addJS(")");
-			//YEAH BABY
+			$this->stateMachine->addJS($name);
 		}
 		else if($name == "T_OBJECT_OPERATOR"){
 			$this->stateMachine->addJS(".");

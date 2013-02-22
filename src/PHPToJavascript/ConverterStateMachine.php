@@ -290,7 +290,7 @@ class	ConverterStateMachine{
 
 	function	pushScope($type, $name, $variableFlag = 0){
 
-		echo "Pushing scope $name \n";
+		//echo "Pushing scope $name \n";
 
 		if($this->currentScope != NULL){
 			array_push($this->scopesStack, $this->currentScope);
@@ -344,7 +344,7 @@ class	ConverterStateMachine{
 
 	function	popCurrentScope(){
 
-		echo "popped scope ".$this->currentScope->getType()."\n";
+		//echo "popped scope ".$this->currentScope->getType()."\n";
 
 		$previousScope = $this->currentScope;
 
