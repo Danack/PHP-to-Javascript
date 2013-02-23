@@ -31,17 +31,6 @@ $json = $testObject->toJSON();
 
 $duplicate = ExampleJSON::factory($json);
 
-
-//JS if(typeof assert === undefined){
-//JS 	function assert(var1, var2){
-//JS		if(var1 != var2){
-//JS 			alert("assert failed " + var1 + " != " + var2 );
-//JS			throw new Error("assert failed");
-//JS		}
-//JS 		testsPassed++;
-//JS    }
-//JS }
-
 assert($duplicate->name == "First", TRUE);
 assert($duplicate->value == "Testing", TRUE);
 

@@ -1,24 +1,46 @@
 <?php
 
+function	paramTest($object, $otherVar){
+	return $object;
+}
+
 
 class TestClass{
 
-	function	toJSON(){
-		$className = get_class($this);
-		$testing = $this;
+	var $five = 5;
 
-		return json_encode_object($testing, $className);
+	function	getThis(){
+		return $this;
 	}
 
-	function	test2(){
-		$className = get_class($this);
-		return json_encode_object($this, $className);
+	function	getThis2(){
+		return paramTest($this, 'ignored var');
 	}
 
-	function	test3(){
-		$className = get_class($this);
-		return json_encode_object($this, $className, $this);
+	function	getThis3(){
+		$returnValue = $this;
+		return $returnValue;
 	}
+
+	function	getClassName(){
+		$className = get_class($this);
+		return $className;
+	}
+
+	function	getValue(){
+		return $this->five;
+	}
+
+
 }
+
+$testClass = new TestClass();
+
+assert($testClass->getThis(), $testClass);
+assert($testClass->getThis2(), $testClass);
+assert($testClass->getThis3(), $testClass);
+assert($testClass->getClassName(), 'TestClass');
+assert($testClass->getValue(), 5);
+
 
 ?>

@@ -7,6 +7,6 @@ function	getTotal($value1, $value2 = 5){
 
 $mathTotal = getTotal(5);
 
-//JS assert(mathTotal, 1);
+assert(mathTotal, 10);
 
 ?>

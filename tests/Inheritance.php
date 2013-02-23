@@ -8,13 +8,11 @@ class Adult {
 
 	public $adultClassVar;
 
-	function	adultMethod(){
+	public $isExtended = false;
 
-		self::$adultStaticVar = 123;
-
+	function	adultValue(){
 		$this->adultClassVar = 123;
-
-		echo "This is an adult method. \n" + $this->adultClassVar + " " + self::$adultStaticVar;
+		return $this->adultClassVar;
 	}
 }
 
@@ -25,25 +23,35 @@ class Child extends Adult {
 
 	public $childInstanceVar;
 
-	function	childMethod(){
+	function __construct(){
+		$this->isExtended = true;
+	}
 
-		self::$childStaticVar = 123;
+	function	childValue(){
+
+	//	self::$childStaticVar = 123;
 
 		$this->childInstanceVar = 123;
 
 		// TODO - Adult static variable needs to be accessed via Adult.adultStaticVar not
 		// Child.adultStaticVar in the generated javascript. Which may be tricky.
 
-		echo "This is a child method. \n" + $this->childInstanceVar + " " + self::$childStaticVar + " " +  + $this->adultClassVar + " " + self::$adultStaticVar;
+	//	echo "This is a child method. \n" + $this->childInstanceVar + " " + self::$childStaticVar + " " +  + $this->adultClassVar + " " + self::$adultStaticVar;
+
+		return 12345;
 	}
 }
 
+$adultOnly = new Adult();
+
+assert($adultOnly->adultValue(), 123);
+assert($adultOnly->isExtended, false);
 
 $child = new Child();
 
-$child->childMethod();
-
-$child->adultMethod();
+assert($child->childValue(), 12345);
+assert($child->adultValue(), 123);
+assert($child->isExtended, true);
 
 
 

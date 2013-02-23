@@ -2,33 +2,26 @@
 
 class ClassExample {
 
-	static var $testStatic = 1;
-	var		$tags = null;
 
-	function testFunction(){
-		json_encode_object($this->varName, 'SomeString');
+	var		$value = null;
+
+	function	__construct($initialValue){
+		$this->value = $initialValue;
 	}
 
-	function __construct(){
-		static $count = 0;
-		$this->tags = array();
-		$this->tags[] = $count;
+	function	addValue($value){
+		$this->value += $value;
 	}
 }
 
 
-echo ClassExample::$testStatic;
 
-$classExample1 = new ClassExample();
+$classExample = new ClassExample(5);
 
-foreach($classExample1->tags as $tag){
-	echo $tag."\n";
-}
+$classExample->addValue(5);
 
-$classExample2 = new ClassExample();
+assert($classExample->value, 10);
 
-foreach($classExample2->tags as $tag){
-	echo $tag."\n";
-}
+
 
 ?>

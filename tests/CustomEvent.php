@@ -6,8 +6,6 @@
  */
 class CustomEvent{
 
-	const someEvent = "basereality.someEvent";
-
 	public $nullValue = NULL;
 
 	private $privateValue = 12345;
@@ -21,7 +19,7 @@ class CustomEvent{
 
 	public static $valueAfterComment = /* Seriously? */ 0xa12345;
 
-	public static $valueCommentNewLine = // You're trying to break it now.
+	public static $valueCommentNewLine = // You're just trying to break it now.
 		12345;
 
 	public static $previewContent =  'basereality.previewContent';
@@ -32,5 +30,10 @@ class CustomEvent{
 	public static $lastPage =  "basereality.lastPage";
 }
 
+
+
+assert(CustomEvent::$nextPage, 'basereality.nextPage');
+
+assert(CustomEvent::$valueAfterComment, 10560325);
 
 ?>

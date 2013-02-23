@@ -110,3 +110,24 @@ is converted to:
     document.write( "Database type is " + 'MySQL');
 
 If this is a problem for you - current solution is don't use defines. Instead use classes to define your const variables. It would be possible to add the define as a variable in the Global scope for Javascript. But that would be kind of sucky.
+
+
+Associative arrays aren't ordered in Javascript.
+------------------------------------------------
+
+In PHP an array will have the same order it's declared in e.g.
+
+    $testArray = array(
+        'salutation' => 'Hello',
+        ' ',
+        'people' => 'world'
+    );
+
+    foreach($testArray as $string){
+        echo $string;
+    }
+
+Will output "Hello world". The equivalent in Javascript outputs " Helloworld" as the indexes aren't kept in order.
+
+If you need arrays to stay in order you should use integer keys only.
+

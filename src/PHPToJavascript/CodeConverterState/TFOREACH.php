@@ -27,7 +27,8 @@ class CodeConverterState_TFOREACH extends CodeConverterState {
 				//$this->stateMachine->currentScope->addScopedVariable($key, 0);
 
 				$this->stateMachine->addJS( "for (var {$val}Val in $array) {".
-					"		\n                        $val = $array"."[{$val}Val];");
+					"		\n                 var $val = $array"."[{$val}Val];");
+				$this->stateMachine->currentScope->addScopedVariable($val, 0);
 			}
 			if (count($this->chunkArray) == 3) {
 				$array = $this->chunkArray[0];

@@ -8,7 +8,7 @@ function 	testSwitchFunction($name, $value = FALSE){
 	switch($name){
 
 		case('output'):{
-			$result =  'putout';
+			$result =  'output';
 			break;
 		}
 
@@ -23,7 +23,7 @@ function 	testSwitchFunction($name, $value = FALSE){
 		}
 
 		default:{
-			throw new Exception("Unknown option");
+			$result = 'Unknown';
 		}
 	}
 
@@ -31,18 +31,8 @@ function 	testSwitchFunction($name, $value = FALSE){
 }
 
 
-//JS if(typeof assert === undefined){
-//JS 	function assert(var1, var2){
-//JS		if(var1 != var2){
-//JS 			alert("assert failed " + var1 + " != " + var2 );
-//JS			throw new Error("assert failed");
-//JS		}
-//JS    }
-//JS }
-
-
-
-//JS assert(testSwitchFunction('output') == 'putout');
-//JS assert(testSwitchFunction('custom', 'bar') == 'barr');
+assert(testSwitchFunction('output'), 'output');
+assert(testSwitchFunction('custom', 'bar'), 'bar');
+assert(testSwitchFunction('shamoan'), 'Unknown');
 
 ?>
