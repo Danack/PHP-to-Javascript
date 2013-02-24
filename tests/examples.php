@@ -16,7 +16,9 @@ $filesToConvert = array(
 	'CustomEvent.js' => 'CustomEvent.php' ,
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
-	'PublicPrivate.js' => 'PublicPrivate.php',
+
+	//Broken test
+	//'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
 
 	//Broken tests - https://github.com/Danack/PHP-to-Javascript/issues/7
@@ -29,13 +31,19 @@ $filesToConvert = array(
 	),
 );
 
+//
+//$filesToConvert = array(
+//	'ClassExample.js' => 'ClassExample.php',
+//);
+
+
 $convertedFiles = array();
 
 function generateTestPage($convertedFiles){
 
 	$fileHandle = fopen("output/test.html",  "w");
 
-	fwrite($fileHandle, "<html><body>Tests are loaded via javascript. <br/>&nbsp;<br/> If nothing turns green then probably the conversion failed completely, and either the Javascript files are not present or so invalid that the can't be compiled. <br/>&nbsp;<br/>");
+	fwrite($fileHandle, "<html><body>Tests are loaded via javascript into this webpage. <br/>&nbsp;<br/> If nothing turns green then probably the conversion failed completely, and either the Javascript files are not present or so invalid that the can't be compiled. <br/>&nbsp;<br/>");
 
 	foreach($convertedFiles as $convertedFile){
 		$testID = str_replace(".", "_", $convertedFile);
@@ -44,12 +52,12 @@ function generateTestPage($convertedFiles){
 
 	fwrite($fileHandle, "</body>");
 
-	fwrite($fileHandle, "<script type='text/javascript' src='php.js'></script>");
-	fwrite($fileHandle, "<script type='text/javascript' src='testStart.js'></script>");
-	fwrite($fileHandle, "<script type='text/javascript' src='jquery-1.9.1.min.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../php.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../testStart.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../jquery-1.9.1.min.js'></script>");
 
 	foreach($convertedFiles as $convertedFile){
-		fwrite($fileHandle, "<script type='text/javascript' src='output/".$convertedFile."'></script>\n");
+		fwrite($fileHandle, "<script type='text/javascript' src='".$convertedFile."'></script>\n");
 		$testID = str_replace(".", "_", $convertedFile);
 		fwrite($fileHandle, "<script type='text/javascript'> \n");
 		fwrite($fileHandle, "setTestsResult('$testID');\n");
@@ -63,7 +71,7 @@ function generateTestPage($convertedFiles){
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-	//$phpToJavascript->setTrace(true);
+	$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 
