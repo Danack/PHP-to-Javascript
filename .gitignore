@@ -5,3 +5,7 @@ export
 .DS_Store
 
 tests/*.js
+tests/output/*.js
+tests/output/*.html
+
+/.gitignore.swp
