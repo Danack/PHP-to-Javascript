@@ -83,5 +83,25 @@ assert($value, 6);
 //*************************************************************
 //*************************************************************
 
+class ArrayTestClass{
+
+	var $noteID = 123;
+
+	function getTestArray(){
+		$params = array('noteID' => $this->noteID);
+		return $params;
+	}
+}
+
+$arrayTestClass = new ArrayTestClass();
+
+$testArray = $arrayTestClass->getTestArray();
+
+$value = sumArray($testArray);
+
+assert($value, 123);
+
+
+
 
 ?>

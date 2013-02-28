@@ -31,9 +31,8 @@ $filesToConvert = array(
 	),
 );
 
-//
 //$filesToConvert = array(
-//	'ClassExample.js' => 'ClassExample.php',
+//	'ArrayExample.js' => 'ArrayExample.php',
 //);
 
 

@@ -153,9 +153,9 @@ class	ConverterStateMachine{
 	}
 
 	public function addJS($jsString){
-//		if(PHPToJavascript::$TRACE){
-//			echo "$jsString \n";
-//		}
+		if(PHPToJavascript::$TRACE){
+			echo "$jsString \n";
+		}
 		$this->currentScope->addJS($jsString);
 	}
 

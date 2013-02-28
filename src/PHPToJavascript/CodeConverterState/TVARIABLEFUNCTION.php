@@ -15,6 +15,7 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 	function    processToken($name, $value, $parsedToken) {
 
 		if($value == '$this'){
+			$this->stateMachine->addJS("this");
 			$this->isClassVariable = TRUE;
 			return;
 		}
