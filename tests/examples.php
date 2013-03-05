@@ -17,6 +17,7 @@ $filesToConvert = array(
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
 
+	'NameSpace.js' => 'NameSpace.php',
 	//Broken test
 	//'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
@@ -31,9 +32,9 @@ $filesToConvert = array(
 	),
 );
 
-$filesToConvert = array(
-	'NameSpace.js' => 'NameSpace.php',
-);
+//$filesToConvert = array(
+//	'NameSpace.js' => 'NameSpace.php',
+//);
 
 
 $convertedFiles = array();
