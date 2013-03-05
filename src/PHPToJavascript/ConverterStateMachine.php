@@ -44,11 +44,6 @@ class	ConverterStateMachine{
 	 */
 	public $variableFlags = FALSE;
 
-//	/**
-//	 * @var TokenStream
-//	 */
-//	public $tokenStream;
-
 	/**
 	 * @var CodeScope
 	 */
@@ -66,6 +61,10 @@ class	ConverterStateMachine{
 	public $scopesStack = array();
 
 	public $defines = array();
+
+
+	public $quoteOpen = FALSE;
+
 
 	function	__construct(/* $tokenStream, */ /*$defaultState*/ ){
 
@@ -124,12 +123,21 @@ class	ConverterStateMachine{
 
 		$this->states[CONVERTER_STATE_OBJECT_OPERATOR] = new CodeConverterState_TOBJECTOPERATOR($this);
 
+		$this->states[CONVERTER_STATE_DOUBLE_COLON] = new CodeConverterState_TDOUBLECOLON($this);
+
+
 		$this->currentState = CONVERTER_STATE_DEFAULT;
 	}
 
 
+	/**
+	 * Adds a variable to the current scope.
+	 * @param $variableName
+	 * @param $variableFlags
+	 * @return bool Whether the variable was a new one to the current scope.
+	 */
 	function	addScopedVariable($variableName, $variableFlags){
-		$this->currentScope->addScopedVariable($variableName, $variableFlags);
+		return $this->currentScope->addScopedVariable($variableName, $variableFlags);
 	}
 
 	function	getVariableNameForScope($variableName, $isClassVariable, $variableFlags){
@@ -195,6 +203,38 @@ class	ConverterStateMachine{
 			$this->currentScope->pushParens();
 		}
 	}
+
+	function accountForQuotes($name){
+		if($name == '"' || $name == "'"){
+			if($this->quoteOpen == $name){ //Quote was open
+				$this->quoteOpen = FALSE; //now it's closed
+			}
+			else{
+				$this->quoteOpen = $name;
+			}
+		}
+	}
+
+	/**
+	 * Encloses a varaible so that it can be used in a string properly e.g.
+	 * $target = "world";
+	 * $greeting = "Hello $target!";
+	 *
+	 * is converted to
+	 * var target = "world";
+	 * var greeting = "Hello " + target +"!";
+	 *
+	 * @param $variableName
+	 * @return string
+	 */
+	function encloseVariable($variableName){
+		if($this->quoteOpen == FALSE){
+			return $variableName;
+		}
+
+		return	$this->quoteOpen." + ".$variableName." + ".$this->quoteOpen;
+	}
+
 
 	function accountForCloseBrackets($name){
 
@@ -449,7 +489,7 @@ class	ConverterStateMachine{
 		'T_BOOLEAN_OR'=>'||',
 		'T_CONCAT_EQUAL'=>'+= ',
 		'T_DIV_EQUAL'=>'/=',
-		'T_DOUBLE_COLON'=>'.',
+		//'T_DOUBLE_COLON'=>'.',
 		'T_INC'=>'++',
 		'T_MINUS_EQUAL'=>'-=',
 		'T_MOD_EQUAL'=>'%=',

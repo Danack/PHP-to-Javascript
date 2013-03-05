@@ -118,7 +118,21 @@ abstract class CodeScope{
 		return FALSE;
 	}
 
+	/**
+	 * Adds a variable to the scope
+	 *
+	 * @param $variableName
+	 * @param $variableFlag
+	 * @return bool true if it was a new variable to this scope.
+	 */
 	function	addScopedVariable($variableName, $variableFlag){
+
+		if($variableFlag & DECLARATION_TYPE_CLASS){
+			//In cases lile "$this->variableName" variableName is never
+			//added to the scope.
+			return false;
+		}
+
 		$cVar = cvar($variableName);
 
 		if(PHPToJavascript::$TRACE == TRUE){
@@ -127,7 +141,9 @@ abstract class CodeScope{
 
 		if(array_key_exists($cVar, $this->scopedVariables) == FALSE){
 			$this->scopedVariables[$cVar] = $variableFlag;// $this->name.".".$variableName;
+			return TRUE;
 		}
+		return FALSE;
 	}
 
 	function	setDefaultValueForPreviousVariable($value){

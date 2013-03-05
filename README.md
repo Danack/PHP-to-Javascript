@@ -49,6 +49,8 @@ $jsOutput will now contain an auto-generated Javascript version of the PHP sourc
 TODO
 ====
 
+* Fix private functions not being callable.
+
 * Add more tests, setup some automated testing.
 
 * Add hasOwnProperty check to foreach loops.

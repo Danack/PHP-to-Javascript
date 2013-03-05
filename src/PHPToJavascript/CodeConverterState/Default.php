@@ -38,6 +38,7 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_OBJECT_OPERATOR' => CONVERTER_STATE_OBJECT_OPERATOR,
 		','					=> CONVERTER_STATE_COMMA,
 		'T_DOUBLE_ARROW'	=> CONVERTER_STATE_DOUBLE_ARROW,
+		'T_DOUBLE_COLON'	=> CONVERTER_STATE_DOUBLE_COLON,
 	);
 
 	function	processToken($name, $value, $parsedToken){

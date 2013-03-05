@@ -70,6 +70,9 @@ define('CONVERTER_STATE_END_OF_CLASS', 'CONVERTER_STATE_END_OF_CLASS');
 define('CONVERTER_STATE_VARIABLE_VALUE', 'CONVERTER_STATE_VARIABLE_VALUE');
 define('CONVERTER_STATE_OBJECT_OPERATOR', 'CONVERTER_STATE_OBJECT_OPERATOR');
 
+define('CONVERTER_STATE_DOUBLE_COLON', 'CONVERTER_STATE_DOUBLE_COLON');
+
+
 
 /**
  * Converts a PHP constructor into the parameter string and then body, so that it
@@ -287,10 +290,8 @@ function processTokenStream($tokenStream, ConverterStateMachine $stateMachine, $
 
 		$parsedToken = $stateMachine->parseToken($name, $value, $count);
 
-//		if($count == 0){
-		//TODO - was moving this out safe?
 		$stateMachine->accountForOpenBrackets($name);
-		//}
+		$stateMachine->accountForQuotes($name);
 		$stateMachine->scopePreStateMagic($name, $value);
 
 		do{

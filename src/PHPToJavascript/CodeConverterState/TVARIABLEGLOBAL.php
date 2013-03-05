@@ -14,8 +14,15 @@ class CodeConverterState_TVARIABLEGLOBAL extends CodeConverterState {
 
 		$variableName = cVar($value);
 
-		$this->stateMachine->addScopedVariable($variableName, 0);
-		$this->stateMachine->addJS($variableName);
+		$wasAdded = $this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
+
+		if($wasAdded == true){
+			$this->stateMachine->addJS("var ");
+		}
+
+		$enclosedVariableName = $this->stateMachine->encloseVariable($variableName);
+
+		$this->stateMachine->addJS($enclosedVariableName);
 
 		$this->stateMachine->clearVariableFlags();
 
