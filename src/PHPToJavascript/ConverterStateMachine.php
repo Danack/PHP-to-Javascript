@@ -140,8 +140,11 @@ class	ConverterStateMachine{
 		return $this->currentScope->addScopedVariable($variableName, $variableFlags);
 	}
 
-	function	getVariableNameForScope($variableName, $isClassVariable, $variableFlags){
-		return $this->currentScope->getScopedVariable($variableName, $isClassVariable, $variableFlags, TRUE);
+	function	getVariableNameForScope($variableName,  $variableFlags){
+		//$isClassVariable,
+
+		//$isClassVariable,
+		return $this->currentScope->getScopedVariable($variableName,  $variableFlags, TRUE);
 	}
 
 	function	findScopeType($type){

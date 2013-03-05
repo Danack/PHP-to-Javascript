@@ -32,7 +32,7 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//	'CustomEvent.js' => 'CustomEvent.php',
+//	'ClassExample.js' => 'ClassExample.php',
 //);
 
 

@@ -61,7 +61,9 @@ abstract class CodeScope{
 	abstract	function	getScopedVariableForScope($variableName, $isClassVariable);
 	abstract	function getType();
 
-	function	getScopedVariable($variableName, $isClassVariable, $variableFlags, $originalScope){
+	function	getScopedVariable($variableName,  $variableFlags, $originalScope){
+
+		$isClassVariable = ($variableFlags & DECLARATION_TYPE_CLASS);
 		$result = $this->getScopedVariableForScope($variableName, $isClassVariable);
 
 		if($result == NULL){
@@ -72,7 +74,7 @@ abstract class CodeScope{
 
 		if($originalScope == TRUE){
 			if($result == FALSE) {
-				if($isClassVariable == FALSE){
+				if(($variableFlags & DECLARATION_TYPE_CLASS) == 0){
 					//First use of varaible in a function - lets add a 'var' to make Javascript happy.
 					$this->addScopedVariable($variableName, $variableFlags);
 					$result = "var $variableName";

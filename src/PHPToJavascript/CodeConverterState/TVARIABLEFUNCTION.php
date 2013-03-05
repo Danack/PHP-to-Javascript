@@ -5,18 +5,18 @@ namespace PHPToJavascript;
 
 class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 
-	var $isClassVariable;
+//	var $isClassVariable;
 
 	public function		enterState($extraParams = array()){
 		parent::enterState($extraParams);
-		$this->isClassVariable = FALSE;
+		//$this->isClassVariable = FALSE;
 	}
 
 	function    processToken($name, $value, $parsedToken) {
 
 		if($value == '$this'){
 			$this->stateMachine->addJS("this");
-			$this->isClassVariable = TRUE;
+			$this->stateMachine->addVariableFlags(DECLARATION_TYPE_CLASS);
 			return;
 		}
 
@@ -27,7 +27,9 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 			$this->stateMachine->addJS("if (typeof ".$scopeName.".$variableName == 'undefined')\n ");
 		}
 
-		if ($this->isClassVariable == TRUE && (
+		$isClassVariable = ($this->stateMachine->variableFlags & DECLARATION_TYPE_CLASS);
+
+		if ($isClassVariable == TRUE && (
 				$name == ")" || $name == ',' || $name == ';'
 			)
 		) {
@@ -42,13 +44,13 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 		else if($name == "T_STRING" ||
 				$name == "T_VARIABLE") {
 
-			$scopedVariableName = $this->stateMachine->getVariableNameForScope($variableName, $this->isClassVariable, $this->stateMachine->variableFlags);
+
+			$scopedVariableName = $this->stateMachine->getVariableNameForScope($variableName, $this->stateMachine->variableFlags);
 
 			//$this->stateMachine->addJS($scopedVariableName);
 
 			$enclosedVariableName = $this->stateMachine->encloseVariable($scopedVariableName);
 			$this->stateMachine->addJS($enclosedVariableName);
-
 		}
 		else{
 			throw new \Exception("Unexpected token in state CodeConverterState_TVARIABLEFUNCTION, wasn't expected an [".$name."]");
