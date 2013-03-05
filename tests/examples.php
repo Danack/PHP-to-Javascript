@@ -32,9 +32,9 @@ $filesToConvert = array(
 	),
 );
 
-$filesToConvert = array(
-	'NameSpace.js' => 'NameSpace.php',
-);
+//$filesToConvert = array(
+//	'NameSpace.js' => 'NameSpace.php',
+//);
 
 
 $convertedFiles = array();

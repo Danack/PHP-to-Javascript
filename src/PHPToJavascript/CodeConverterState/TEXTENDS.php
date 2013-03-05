@@ -4,18 +4,12 @@ namespace PHPToJavascript;
 
 class CodeConverterState_TEXTENDS  extends CodeConverterState{
 
-	var $extendsName = null;
-
-	public function		enterState($extraParams = array()){
-		$this->extendsName = null;
-	}
 
 
 	function	processToken($name, $value, $parsedToken){
 		if($name == 'T_STRING'){
 			//echo "Need to grab variables/functions from [$value]";
-			//$this->stateMachine->currentScope->addParent($value);
-			$this->extendsName = $value;
+			$this->stateMachine->currentScope->addParent($value);
 		}
 
 		if($name == '{'){
@@ -24,7 +18,7 @@ class CodeConverterState_TEXTENDS  extends CodeConverterState{
 		}
 
 		// This would support use
-		if($name == ';'){
+		/*if($name == ';'){
 			if($this->extendsName == null){
 				throw new \Exception("Didn't find class name to USE.");
 			}
@@ -33,7 +27,7 @@ class CodeConverterState_TEXTENDS  extends CodeConverterState{
 			//$this->extendsName = $value;
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
 			return;//don't need to include the ';'
-		}
+		}*/
 	}
 }
 

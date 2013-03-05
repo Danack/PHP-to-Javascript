@@ -4,12 +4,22 @@ namespace BaseReality;
 
 use Intahwebz\TestNamespace;
 
+trait SomeTrait{
+	var $someVariable;
+}
+
+
+
 class TestClass{
 
 	use Intahwebz\SomeTrait;
 
 }
 
+class OtherClass extends TestClass {
+
+
+}
 
 //echo "Hello, This is in a namspace.";
 
