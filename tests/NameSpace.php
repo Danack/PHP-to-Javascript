@@ -4,6 +4,12 @@ namespace BaseReality;
 
 use Intahwebz\TestNamespace;
 
+class TestClass{
+
+	use Intahwebz\SomeTrait;
+
+}
+
 
 //echo "Hello, This is in a namspace.";
 
