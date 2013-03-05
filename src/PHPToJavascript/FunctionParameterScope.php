@@ -2,6 +2,21 @@
 
 namespace PHPToJavascript;
 
+/* Str_replace limited by count
+*/
+function str_replace_count($search, $replace, $subject, $count){
+	for($x=0; $x<$count ; $x++){
+		$pos = strpos($subject, $search);
+		if ($pos !== FALSE) {
+			$subject = substr_replace($subject, $replace, $pos, strlen($search));
+		}
+	}
+
+	return $subject;
+}
+
+
+
 class FunctionParameterScope extends CodeScope{
 
 	var $variableFlag = 0;
@@ -31,10 +46,13 @@ class FunctionParameterScope extends CodeScope{
 				$jsRaw = trim($jsRaw).";\n\n";
 				return $jsRaw;
 			}
-
 		}
 		else{
-			return $this->getJS();
+			$result = "this.".$this->getName()." = ";
+			$jsRaw = $this->getJS();
+			$jsRaw = str_replace_count($this->getName(), '/*'.$this->getName().'*/', $jsRaw, 1);
+			$result .= $jsRaw;
+			return $result;
 		}
 	}
 

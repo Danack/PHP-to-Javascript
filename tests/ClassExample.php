@@ -48,6 +48,14 @@ class ClassExample {
 		return $result;
 	}
 
+	private function privateFunction(){
+		return 5;
+	}
+
+	public function publicAccess(){
+		return $this->privateFunction();
+	}
+
 
 }
 
@@ -71,6 +79,30 @@ $result = $classExample->testStatic();
 
 //Called two times, but value is only incremented twice
 assert($result, 2);
+
+/* TODO - make exception conversion work.
+
+
+
+$privateAccessed = false;
+
+try{
+	$classExample->privateFunction();
+	privateAccessed = true;
+}
+catch(Exception $error){
+	//This correct - the private function should not be callable.
+}
+
+assert(privateAccessed, false);
+
+*/
+
+
+
+$value = $classExample->publicAccess();
+
+assert($value, 5);
 
 
 ?>
