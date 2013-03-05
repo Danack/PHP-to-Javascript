@@ -124,6 +124,7 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_OBJECT_OPERATOR] = new CodeConverterState_TOBJECTOPERATOR($this);
 
 		$this->states[CONVERTER_STATE_DOUBLE_COLON] = new CodeConverterState_TDOUBLECOLON($this);
+		$this->states[CONVERTER_STATE_NAME_SPACE] = new CodeConverterState_TNAMESPACE($this);
 
 
 		$this->currentState = CONVERTER_STATE_DEFAULT;

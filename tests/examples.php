@@ -31,9 +31,9 @@ $filesToConvert = array(
 	),
 );
 
-//$filesToConvert = array(
-//	'SimpleExample.js' => 'SimpleExample.php',
-//);
+$filesToConvert = array(
+	'NameSpace.js' => 'NameSpace.php',
+);
 
 
 $convertedFiles = array();
