@@ -16,7 +16,10 @@ trait JSONFactory{
 	}
 
 	function	toJSON(){
-		return json_encode_object($this);
+
+		$className = get_class($this);
+
+		return json_encode_object($this, $className);
 	}
 }
 

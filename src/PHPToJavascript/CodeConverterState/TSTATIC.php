@@ -8,9 +8,6 @@ class CodeConverterState_TSTATIC extends CodeConverterState{
 	function	processToken($name, $value, $parsedToken){
 
 		if($this->stateMachine->variableFlags & DECLARATION_TYPE_NEW){
-
-
-			//$this->stateMachine->addJS($this->stateMachine->getClassName());
 			$this->stateMachine->addJS("this.prototype.constructor");
 		}
 		else{
