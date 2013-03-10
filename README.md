@@ -127,3 +127,9 @@ Will output "Hello world". The equivalent in Javascript outputs " Helloworld" as
 
 If you need arrays to stay in order you should use integer keys only.
 
+
+
+Unset is fragile
+----------------
+
+The `unset` command in PHP works on any variable. PHP-To-Javascript converts it to the Javascript function delete, which only works on objects. This is okay for now as all arrays are currently created as objects, but it is a very fragile way of doing things. I would recommend not using unset, but instead copy out the values you want to keep into a new array.
