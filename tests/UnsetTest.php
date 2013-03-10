@@ -33,7 +33,7 @@ $array = array(
 $unsetArray = testUnset($array);
 
 
-$result = sumArray($unsetArray)
+$result = sumArray($unsetArray);
 
 
 assert($result, 4);

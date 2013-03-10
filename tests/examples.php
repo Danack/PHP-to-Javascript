@@ -32,10 +32,10 @@ $filesToConvert = array(
 	),
 );
 
-$filesToConvert = array(
-	'UnsetTest.js' => 'UnsetTest.php',
-);
-
+//$filesToConvert = array(
+//	'UnsetTest.js' => 'UnsetTest.php',
+//);
+//
 
 $convertedFiles = array();
 
@@ -71,7 +71,7 @@ function generateTestPage($convertedFiles){
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-	$phpToJavascript->setTrace(true);
+//	$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 
