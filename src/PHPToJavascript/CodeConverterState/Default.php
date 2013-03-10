@@ -12,7 +12,7 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_ARRAY'		=> CONVERTER_STATE_ARRAY,
 		'T_CLASS'		=> CONVERTER_STATE_CLASS,
 
-		'T_TRAIT'		=> CONVERTER_STATE_CLASS, //Almost the same
+		'T_TRAIT'		=> CONVERTER_STATE_CLASS, //traits are effectively the same as classes
 		'T_FUNCTION'	=> CONVERTER_STATE_FUNCTION,
 		'T_FOREACH'		=> CONVERTER_STATE_FOREACH,
 		'T_PUBLIC'		=> CONVERTER_STATE_PUBLIC,
@@ -40,6 +40,7 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_DOUBLE_ARROW'	=> CONVERTER_STATE_DOUBLE_ARROW,
 		'T_DOUBLE_COLON'	=> CONVERTER_STATE_DOUBLE_COLON,
 		'T_NAMESPACE'		=> CONVERTER_STATE_NAME_SPACE,
+		'T_UNSET' 			=> CONVERTER_STATE_T_UNSET
 	);
 
 	function	processToken($name, $value, $parsedToken){
@@ -64,25 +65,14 @@ class CodeConverterState_Default extends CodeConverterState {
 			}
 		}
 
-
 		$js = $parsedToken;
 		$this->stateMachine->addJS($js);
-
-
 
 		if($name == '{'){
 			if($this->stateMachine->currentScope->startOfFunction() == TRUE){
 				$this->stateMachine->addDefaultsForVariables();
 			}
 		}
-
-
-//		if($name == '{'){
-//			if($this->stateMachine->currentScope->endOfClass() == TRUE){
-//				$this->stateMachine->addClassBindingMagic();
-//			}
-//		}
-
 
 		return FALSE;
 	}

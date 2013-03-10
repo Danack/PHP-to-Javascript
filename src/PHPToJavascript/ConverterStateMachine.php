@@ -128,6 +128,10 @@ class	ConverterStateMachine{
 		$this->states[CONVERTER_STATE_IMPORT_NAMESPACE] = new CodeConverterState_ImportNamespace($this);
 		$this->states[CONVERTER_STATE_T_USE] = new CodeConverterState_TUSE($this);
 
+
+		$this->states[CONVERTER_STATE_T_UNSET] = new CodeConverterState_TUNSET($this);
+
+
 		$this->currentState = CONVERTER_STATE_DEFAULT;
 	}
 

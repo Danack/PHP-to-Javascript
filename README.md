@@ -49,19 +49,13 @@ $jsOutput will now contain an auto-generated Javascript version of the PHP sourc
 TODO
 ====
 
-* Fix private functions not being callable.
-
-* Add more tests, setup some automated testing.
+* Setup some automated testing.
 
 * Add hasOwnProperty check to foreach loops.
 
 * Add support for const to be same as public static.
 
 * Figure out what to do about Javascript reserved keywords. Probably out to detect them and either warn or give an error on detection.  testObject.delete();
-
-* Support variables inside strings. e.g. echo "Hello my name is $name" would be the tokens.
-    CodeConverterState_Default token [T_ENCAPSED_AND_WHITESPACE] => [Hello my name is ]
-    CodeConverterState_Default token [T_VARIABLE] => [$name]
 
 * Support arrays for variables in class declaration.
 
