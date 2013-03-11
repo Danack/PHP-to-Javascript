@@ -131,6 +131,12 @@ class	ConverterStateMachine{
 
 		$this->states[CONVERTER_STATE_T_UNSET] = new CodeConverterState_TUNSET($this);
 
+		$this->states[CONVERTER_STATE_T_TRY] = new CodeConverterState_TTRY($this);
+		$this->states[CONVERTER_STATE_T_CATCH] = new CodeConverterState_TCATCH($this);
+
+
+		$this->states[CONVERTER_STATE_VARIABLE_CATCH] = new CodeConverterState_TVARIABLECATCH($this);
+
 
 		$this->currentState = CONVERTER_STATE_DEFAULT;
 	}
@@ -371,6 +377,11 @@ class	ConverterStateMachine{
 				break;
 			}
 
+			case(CODE_SCOPE_CATCH):{
+				$newScope = new CatchScope($name, $this->currentScope);
+				break;
+			}
+
 			default:{
 				throw new \Exception("Unknown scope type [".$type."]");
 				break;
@@ -442,7 +453,10 @@ class	ConverterStateMachine{
 		$functionParametersScope = $this->findScopeType(CODE_SCOPE_FUNCTION_PARAMETERS);
 
 		if($functionParametersScope == NULL){
-			throw new \Exception("We're inside a function but we can't find the CODE_SCOPE_FUNCTION_PARAMETERS - that shouldn't be possible.");
+//			throw new \Exception("We're inside a function but we can't find the CODE_SCOPE_FUNCTION_PARAMETERS - that shouldn't be possible.");
+
+			//We're probably inside a catch block
+			return;
 		}
 
 		$variablesWithDefaultParameters = $functionParametersScope->getVariablesWithDefaultParameters();
@@ -543,7 +557,6 @@ class	ConverterStateMachine{
 
 	/** @var array these tokens keeps their value */
 	public static $_keepValue = array (
-			//'T_CONSTANT_ENCAPSED_STRING',
 		'T_STRING',
 		'T_COMMENT',
 		'T_ML_COMMENT',

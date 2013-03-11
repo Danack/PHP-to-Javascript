@@ -186,7 +186,6 @@ class ClassScope extends CodeScope{
 				}
 				if($variableFlag & DECLARATION_TYPE_PUBLIC){
 					//TODO should the 'this' be here, or in the T_OBJECTOPERATOR
-					//return 	'this.'.$variableName;
 					return 	$variableName;
 				}
 			}

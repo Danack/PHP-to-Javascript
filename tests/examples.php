@@ -26,16 +26,18 @@ $filesToConvert = array(
 	// 'StaticTest.js' => 'StaticTest.php',
 
 	'SwitchStatement.js' => 'SwitchStatement.php',
+	'TryCatch.js' => 'TryCatch.php',
 	'TraitExample.js' => array(
 		'TraitInclude.php',
 		'TraitExample.php',
 	),
+	'TypeHinting.js' => 'TypeHinting.php',
 );
 
 //$filesToConvert = array(
-//	'UnsetTest.js' => 'UnsetTest.php',
+//	'TypeHinting.js' => 'TypeHinting.php',
 //);
-//
+
 
 $convertedFiles = array();
 
@@ -71,7 +73,7 @@ function generateTestPage($convertedFiles){
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-//	$phpToJavascript->setTrace(true);
+	//$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 

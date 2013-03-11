@@ -22,6 +22,10 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			$this->stateMachine->addJS( "/*". $value ."*/");
 			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
 		}
+		else if($this->stateMachine->currentScope instanceof CatchScope){
+			//$this->stateMachine->currentScope->addExceptionName($value);
+			$this->stateMachine->addJS( "/*". $value ."*/");
+		}
 		else{
 			$this->stateMachine->addJS($value);
 		}

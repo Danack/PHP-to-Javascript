@@ -21,6 +21,9 @@ class FunctionParameterScope extends CodeScope{
 
 	var $variableFlag = 0;
 
+	//Whether we are currently before or after a variable name
+	var $beforeVariable = true;
+
 	function	__construct($name, $parentScope, $variableFlag){
 		parent::__construct($name, $parentScope);
 		$this->variableFlag = $variableFlag;
@@ -71,11 +74,7 @@ class FunctionParameterScope extends CodeScope{
 				return $jsRaw;
 			}
 			else{
-//				$jsRaw = str_replace(PUBLIC_FUNCTION_MARKER_MAGIC_STRING, $parentScopeName.".prototype.", $jsRaw);
-//
-//				//Functions declared as prototypes on the class object need to have a semi-colon
-//				//to avoid a missing ';' warning in jsLint
-//				$jsRaw = trim($jsRaw).";\n\n";
+
 			}
 		}
 		return "";
@@ -102,6 +101,32 @@ class FunctionParameterScope extends CodeScope{
 		}
 
 		return NULL;
+	}
+
+	function	setDefaultValueForPreviousVariable($value){
+
+		if($this->beforeVariable == true){
+			//It's actually a type-hint not a default value, as it before the variable name
+			return;
+		}
+
+		$allKeys = array_keys($this->scopedVariables);
+		if(count($allKeys) == 0){
+			throw new \Exception("Trying to add default variable but not variables found yet.");
+		}
+
+		$variableName = $allKeys[count($allKeys) - 1];
+
+		$this->defaultValues[$variableName] = convertPHPValueToJSValue($value);
+	}
+
+	function	addScopedVariable($variableName, $variableFlag){
+		parent::addScopedVariable($variableName, $variableFlag);
+		$this->setBeforeVariable(false);
+	}
+
+	function setBeforeVariable($boolean){
+		$this->beforeVariable = $boolean;
 	}
 }
 

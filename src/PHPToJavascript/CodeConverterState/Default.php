@@ -40,7 +40,9 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_DOUBLE_ARROW'	=> CONVERTER_STATE_DOUBLE_ARROW,
 		'T_DOUBLE_COLON'	=> CONVERTER_STATE_DOUBLE_COLON,
 		'T_NAMESPACE'		=> CONVERTER_STATE_NAME_SPACE,
-		'T_UNSET' 			=> CONVERTER_STATE_T_UNSET
+		'T_UNSET' 			=> CONVERTER_STATE_T_UNSET,
+		'T_TRY'				=> CONVERTER_STATE_T_TRY,
+		'T_CATCH'			=> CONVERTER_STATE_T_CATCH,
 	);
 
 	function	processToken($name, $value, $parsedToken){

@@ -16,8 +16,6 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 			$this->stateMachine->pushScope(CODE_SCOPE_FUNCTION_PARAMETERS, $value, $this->stateMachine->variableFlags);
 
 			if($previousScope instanceof ClassScope){
-				//$this->stateMachine->markMethodsStart();
-				//echo "Gaah";
 				$previousScope->markMethodsStart();
 
 				if($this->stateMachine->variableFlags & DECLARATION_TYPE_PRIVATE){

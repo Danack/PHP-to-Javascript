@@ -31,10 +31,12 @@ class CodeConverterState_TVARIABLE extends CodeConverterState {
 			return TRUE;
 		}
 
-		//TODO - this should never be called?
-		if($value == "\$this"){
-			$this->stateMachine->addJS("this");
+		if($this->stateMachine->currentScope instanceof CatchScope){
+			$this->changeToState(CONVERTER_STATE_VARIABLE_CATCH);
+			return TRUE;
 		}
+
+		throw new \Exception("Unknown scope [".get_class($this->stateMachine->currentScope)."] - don't know how to process variables.");
 	}
 }
 

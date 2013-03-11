@@ -20,8 +20,6 @@ abstract class CodeConverterState{
 
 	public function		enterState($extraParams = array()){
 	}
-//	public function		exitState($extraParams){
-//	}
 
 	/**
 	 * @param $name

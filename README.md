@@ -133,3 +133,11 @@ Unset is fragile
 ----------------
 
 The `unset` command in PHP works on any variable. PHP-To-Javascript converts it to the Javascript function delete, which only works on objects. This is okay for now as all arrays are currently created as objects, but it is a very fragile way of doing things. I would recommend not using unset, but instead copy out the values you want to keep into a new array.
+
+
+
+Different behaviour for unitialized variables
+---------------------------------------------
+
+
+var value = 5 / var value2;

@@ -8,9 +8,9 @@ class CodeConverterState_Comma extends CodeConverterState{
 
 		$this->stateMachine->addJS(',');
 
-//		if($this->stateMachine->currentScope instanceof ArrayScope){
-//			$this->stateMachine->currentScope->closeEntry();
-//		}
+		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
+			$this->stateMachine->currentScope->setBeforeVariable(true);
+		}
 
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}

@@ -148,17 +148,7 @@ abstract class CodeScope{
 		return FALSE;
 	}
 
-	function	setDefaultValueForPreviousVariable($value){
 
-		$allKeys = array_keys($this->scopedVariables);
-		if(count($allKeys) == 0){
-			throw new \Exception("Trying to add default variable but not variables found yet.");
-		}
-
-		$variableName = $allKeys[count($allKeys) - 1];
-
-		$this->defaultValues[$variableName] = convertPHPValueToJSValue($value);
-	}
 
 	function	getVariablesWithDefaultParameters(){
 		return $this->defaultValues;

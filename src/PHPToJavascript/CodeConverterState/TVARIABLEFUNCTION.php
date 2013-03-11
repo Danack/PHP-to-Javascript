@@ -44,11 +44,7 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 		else if($name == "T_STRING" ||
 				$name == "T_VARIABLE") {
 
-
 			$scopedVariableName = $this->stateMachine->getVariableNameForScope($variableName, $this->stateMachine->variableFlags);
-
-			//$this->stateMachine->addJS($scopedVariableName);
-
 			$enclosedVariableName = $this->stateMachine->encloseVariable($scopedVariableName);
 			$this->stateMachine->addJS($enclosedVariableName);
 		}
