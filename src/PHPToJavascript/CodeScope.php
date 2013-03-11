@@ -75,7 +75,7 @@ abstract class CodeScope{
 		if($originalScope == TRUE){
 			if($result == FALSE) {
 				if(($variableFlags & DECLARATION_TYPE_CLASS) == 0){
-					//First use of varaible in a function - lets add a 'var' to make Javascript happy.
+					//First use of variable in a function - lets add a 'var' to make Javascript happy.
 					$this->addScopedVariable($variableName, $variableFlags);
 					$result = "var $variableName";
 				}
@@ -85,6 +85,9 @@ abstract class CodeScope{
 				}
 			}
 		}
+
+
+
 
 		return $result;
 	}
@@ -137,12 +140,13 @@ abstract class CodeScope{
 
 		$cVar = cvar($variableName);
 
+
 		if(PHPToJavascript::$TRACE == TRUE){
 			echo "Added variable $variableName to scope ".get_class($this)."\n";
 		}
 
 		if(array_key_exists($cVar, $this->scopedVariables) == FALSE){
-			$this->scopedVariables[$cVar] = $variableFlag;// $this->name.".".$variableName;
+			$this->scopedVariables[$cVar] = $variableFlag;
 			return TRUE;
 		}
 		return FALSE;
@@ -233,7 +237,19 @@ abstract class CodeScope{
 
 	//Contains hacks
 	function	postStateMagic($name, $value){
+	}
 
+	function	findAncestorScopeByType($type){
+
+		if($this->parentScope == null){
+			return null;
+		}
+
+		if($this->parentScope->getType() == $type){
+			return $this->parentScope;
+		}
+
+		return $this->parentScope->findAncestorScopeByType($type);
 	}
 }
 

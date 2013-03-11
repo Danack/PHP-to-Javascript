@@ -153,9 +153,6 @@ class	ConverterStateMachine{
 	}
 
 	function	getVariableNameForScope($variableName,  $variableFlags){
-		//$isClassVariable,
-
-		//$isClassVariable,
 		return $this->currentScope->getScopedVariable($variableName,  $variableFlags, TRUE);
 	}
 
@@ -340,6 +337,12 @@ class	ConverterStateMachine{
 	}
 
 	function	getScopeName(){
+
+		$parentClassScope = $this->currentScope->findAncestorScopeByType(CODE_SCOPE_CLASS);
+		if($parentClassScope != null){
+			return "this.".$this->currentScope->getName();
+		}
+
 		return $this->currentScope->getName();
 	}
 

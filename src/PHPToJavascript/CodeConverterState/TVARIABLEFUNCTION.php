@@ -23,8 +23,12 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 		$variableName = cVar($value);
 
 		if($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC){
-			$scopeName = $this->stateMachine->getScopeName();
-			$this->stateMachine->addJS("if (typeof ".$scopeName.".$variableName == 'undefined')\n ");
+			//$variableName = $this->stateMachine->getScopeName().$variableName;
+
+			$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
+
+			$scopedName = $this->stateMachine->getVariableNameForScope($variableName, $this->stateMachine->variableFlags);
+			$this->stateMachine->addJS("if (typeof ".$scopedName." == 'undefined')\n ");
 		}
 
 		$isClassVariable = ($this->stateMachine->variableFlags & DECLARATION_TYPE_CLASS);

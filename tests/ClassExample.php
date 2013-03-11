@@ -56,6 +56,13 @@ class ClassExample {
 		return $this->privateFunction();
 	}
 
+	public function testFunctionStatic(){
+		static $countUnique = 0;
+		$countUnique++;
+
+		return $countUnique;
+	}
+
 
 }
 
@@ -80,29 +87,34 @@ $result = $classExample->testStatic();
 //Called two times, but value is only incremented twice
 assert($result, 2);
 
-/* TODO - make exception conversion work.
 
 
 
 $privateAccessed = false;
-
+$exceptionCaught = false;
 try{
+	//Yes IDE - I know this isn't allowed.
 	$classExample->privateFunction();
-	privateAccessed = true;
+	$privateAccessed = true;
 }
 catch(Exception $error){
 	//This correct - the private function should not be callable.
+	$exceptionCaught = true;
 }
 
-assert(privateAccessed, false);
-
-*/
-
-
+assert($privateAccessed, false);
+assert($exceptionCaught, true);
 
 $value = $classExample->publicAccess();
-
 assert($value, 5);
+
+
+$classExample->testFunctionStatic();
+$classExample->testFunctionStatic();
+$classExample->testFunctionStatic();
+$value = $classExample->testFunctionStatic();
+
+assert($value, 4);
 
 
 ?>

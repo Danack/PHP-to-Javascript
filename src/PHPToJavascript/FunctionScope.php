@@ -15,13 +15,27 @@ class FunctionScope extends CodeScope{
 		return FALSE;
 	}
 
+	function	getScopedName(){
+
+
+		$containingClassScope = $this->findAncestorScopeByType(CODE_SCOPE_CLASS);
+
+		if($containingClassScope == null){
+			return $this->name;
+		}
+		else{
+			return "this.".$this->name;
+		}
+	}
+
+
 	function	getScopedVariableForScope($variableName, $isClassVariable){
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
 			$variableFlag = $this->scopedVariables[$cVar];
 			if($variableFlag & DECLARATION_TYPE_STATIC){
-				return 	$this->name.".".$variableName;
+				return 	$this->getScopedName().".".$variableName;
 			}
 			else if($isClassVariable == TRUE){
 				if(strpos($variableName, "$") !== FALSE){
@@ -38,6 +52,21 @@ class FunctionScope extends CodeScope{
 
 		return NULL;
 	}
+
+//	function	getVariablesWithDefaultParameters(){
+//
+//		$parentClassScope = $this->findAncestorScopeByType(CODE_SCOPE_CLASS);
+//
+//		if($parentClassScope != null){
+//			$returnArray = array();
+//			foreach($this->defaultValues as $key => $value){
+//				$returnArray["this.".$key] = $value;
+//			}
+//			return $returnArray;
+//		}
+//
+//		return $this->defaultValues;
+//	}
 }
 
 
