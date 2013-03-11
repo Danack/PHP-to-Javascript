@@ -136,8 +136,8 @@ The `unset` command in PHP works on any variable. PHP-To-Javascript converts it 
 
 
 
-Different behaviour for unitialized variables
----------------------------------------------
+Exception model is different
+----------------------------
 
+Short version - you shouldn't rely on exceptions behaving in a particular way, they should only be used for catching errors to stop them from being shown to the user. *TODO* find a decent example.
 
-var value = 5 / var value2;

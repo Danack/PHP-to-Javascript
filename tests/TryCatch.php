@@ -22,4 +22,16 @@ catch(Exception $e){
 assert($exceptionCaught, true);
 assertGreater(strlen($exceptionMessage), 5);
 
+
+$thrownExceptionCaught = false;
+try{
+	throw new Exception("What is this?");
+}
+catch(Exception $e){
+	//echo "Exception caught ".$e->getMessage();
+	$thrownExceptionCaught = true;
+}
+
+assert($thrownExceptionCaught, true);
+
 ?>
