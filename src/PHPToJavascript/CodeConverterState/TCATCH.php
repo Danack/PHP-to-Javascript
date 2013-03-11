@@ -22,24 +22,6 @@ class CodeConverterState_TCATCH  extends CodeConverterState{
 			);
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
 		}
-//		else if($name == ')'){
-//			$this->stateMachine->addJS(')');
-//			$this->changeToState(CONVERTER_STATE_DEFAULT);
-//		}
-//		else if($name == '('){
-//			$this->stateMachine->addJS('(');
-//		}
-//		else if ($name == 'T_STRING'){
-//			//Throw away exception class
-//		}
-//		else if($name == 'T_VARIABLE'){
-//			$varName = cVar($value);
-//
-//			//Variable is implicitly declared - doesn't need a `var` in front of it.
-//			$this->stateMachine->currentScope->addScopedVariable($value, 0);
-//
-//			$this->stateMachine->addJS($varName);
-//		}
 	}
 }
 

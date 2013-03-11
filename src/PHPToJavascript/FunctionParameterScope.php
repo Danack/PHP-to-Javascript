@@ -22,7 +22,7 @@ class FunctionParameterScope extends CodeScope{
 	var $variableFlag = 0;
 
 	//Whether we are currently before or after a variable name
-	var $beforeVariable = true;
+	var $beforeVariable = TRUE;
 
 	function	__construct($name, $parentScope, $variableFlag){
 		parent::__construct($name, $parentScope);
@@ -51,10 +51,10 @@ class FunctionParameterScope extends CodeScope{
 			}
 		}
 		else{
-			$result = "this.".$this->getName()." = ";
-			$jsRaw = $this->getJS();
-			$jsRaw = str_replace_count($this->getName(), '/*'.$this->getName().'*/', $jsRaw, 1);
-			$result .= $jsRaw;
+			//$result = "this.".$this->getName()." = ";
+			$result = $this->getJS();
+			//$jsRaw = str_replace_count($this->getName(), '/*'.$this->getName().'*/', $jsRaw, 1);
+			//$result .= $jsRaw;
 			return $result;
 		}
 	}
@@ -105,7 +105,7 @@ class FunctionParameterScope extends CodeScope{
 
 	function	setDefaultValueForPreviousVariable($value){
 
-		if($this->beforeVariable == true){
+		if($this->beforeVariable == TRUE){
 			//It's actually a type-hint not a default value, as it before the variable name
 			return;
 		}
@@ -120,9 +120,15 @@ class FunctionParameterScope extends CodeScope{
 		$this->defaultValues[$variableName] = convertPHPValueToJSValue($value);
 	}
 
+	/**
+	 * @param $variableName
+	 * @param $variableFlag
+	 * @return bool
+	 */
 	function	addScopedVariable($variableName, $variableFlag){
-		parent::addScopedVariable($variableName, $variableFlag);
-		$this->setBeforeVariable(false);
+		$result = parent::addScopedVariable($variableName, $variableFlag);
+		$this->setBeforeVariable(FALSE);
+		return $result;
 	}
 
 	function setBeforeVariable($boolean){

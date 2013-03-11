@@ -14,6 +14,10 @@ class CodeConverterState_TVARIABLEGLOBAL extends CodeConverterState {
 
 		$variableName = cVar($value);
 
+		if($variableName == 'lolWutTest'){
+			echo "hmm";
+		}
+
 		$wasAdded = $this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
 
 		if($wasAdded == true){

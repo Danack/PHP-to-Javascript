@@ -30,6 +30,10 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			$this->stateMachine->addJS($value);
 		}
 
+		//TODO - added this to fix "SomeClass::someFunc()" leaving variableFlags in non zero state
+		//But not sure if this is safe.
+		$this->stateMachine->variableFlags = 0;
+
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
 }

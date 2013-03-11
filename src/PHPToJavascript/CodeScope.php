@@ -140,7 +140,6 @@ abstract class CodeScope{
 
 		$cVar = cvar($variableName);
 
-
 		if(PHPToJavascript::$TRACE == TRUE){
 			echo "Added variable $variableName to scope ".get_class($this)."\n";
 		}

@@ -27,6 +27,7 @@ class StaticTest {
 
 StaticTest::staticMethod();
 
+
 $staticTest = new StaticTest();
 
 $staticTest->instanceMethod();

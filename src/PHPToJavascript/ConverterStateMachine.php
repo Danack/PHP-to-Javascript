@@ -339,7 +339,7 @@ class	ConverterStateMachine{
 	function	getScopeName(){
 
 		$parentClassScope = $this->currentScope->findAncestorScopeByType(CODE_SCOPE_CLASS);
-		if($parentClassScope != null){
+		if($parentClassScope != NULL){
 			return "this.".$this->currentScope->getName();
 		}
 
@@ -403,11 +403,24 @@ class	ConverterStateMachine{
 		if($type == CODE_SCOPE_CLASS){
 			$this->methodsStartIndex = 0;
 		}
+
+		//$this->resetVariableFlags();
+	}
+
+	function resetVariableFlags() {
+		//TODO - this is a good idea but may only work on popping scope.
+		//the static and private var flag needs to operate across a function_parameter_scope into function_scope
+		if ($this->variableFlags != 0) {
+			echo "Warning: Variable flags is not zero but [" . $this->variableFlags . "] which probably means some flags were unused.";
+			$this->variableFlags = 0;
+		}
 	}
 
 	function	popCurrentScope(){
 
 		//echo "popped scope ".$this->currentScope->getType()."\n";
+
+		//$this->resetVariableFlags();
 
 		$previousScope = $this->currentScope;
 
