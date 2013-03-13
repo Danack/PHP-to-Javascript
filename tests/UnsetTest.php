@@ -38,4 +38,6 @@ $result = sumArray($unsetArray);
 
 assert($result, 4);
 
+testEnd();
+
 ?>

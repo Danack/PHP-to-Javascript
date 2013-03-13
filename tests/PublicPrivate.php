@@ -19,5 +19,6 @@ class StaticTest {
 	}
 }
 
+testEnd();
 
 ?>

@@ -16,8 +16,6 @@ class FunctionScope extends CodeScope{
 	}
 
 	function	getScopedName(){
-
-
 		$containingClassScope = $this->findAncestorScopeByType(CODE_SCOPE_CLASS);
 
 		if($containingClassScope == null){
@@ -52,21 +50,6 @@ class FunctionScope extends CodeScope{
 
 		return NULL;
 	}
-
-//	function	getVariablesWithDefaultParameters(){
-//
-//		$parentClassScope = $this->findAncestorScopeByType(CODE_SCOPE_CLASS);
-//
-//		if($parentClassScope != null){
-//			$returnArray = array();
-//			foreach($this->defaultValues as $key => $value){
-//				$returnArray["this.".$key] = $value;
-//			}
-//			return $returnArray;
-//		}
-//
-//		return $this->defaultValues;
-//	}
 }
 
 

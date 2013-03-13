@@ -102,6 +102,6 @@ $value = sumArray($testArray);
 assert($value, 123);
 
 
-
+testEnd();
 
 ?>

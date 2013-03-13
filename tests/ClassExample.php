@@ -116,5 +116,6 @@ $value = $classExample->testFunctionStatic();
 
 assert($value, 4);
 
+testEnd();
 
 ?>

@@ -54,6 +54,6 @@ assert($child->adultValue(), 123);
 assert($child->isExtended, true);
 
 
-
+testEnd();
 
 ?>

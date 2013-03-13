@@ -34,5 +34,6 @@ $duplicate = ExampleJSON::factory($json);
 assert($duplicate->name == "First", TRUE);
 assert($duplicate->value == "Testing", TRUE);
 
+testEnd();
 
 ?>

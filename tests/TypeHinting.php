@@ -31,4 +31,6 @@ $testArray = array(1, 2, 3);
 $test2 = test2($testArray);
 assert($test2, 6);
 
+testEnd();
+
 ?>

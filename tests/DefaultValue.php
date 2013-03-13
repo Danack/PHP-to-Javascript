@@ -9,4 +9,5 @@ $mathTotal = getTotal(5);
 
 assert(mathTotal, 10);
 
+testEnd();
 ?>

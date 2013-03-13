@@ -23,6 +23,6 @@ trait JSONFactory{
 	}
 }
 
-
+testEnd();
 
 ?>

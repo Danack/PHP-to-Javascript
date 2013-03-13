@@ -49,7 +49,13 @@ function generateTestPage($convertedFiles){
 
 	foreach($convertedFiles as $convertedFile){
 		$testID = str_replace(".", "_", $convertedFile);
-		fwrite($fileHandle, "<div>$convertedFile - <span id='$testID'>Not tested.</span></div>");
+		$testIDStatus = $testID."_status";
+		fwrite($fileHandle, "<div>$convertedFile -
+			<span id='$testID'>Not tested.</span>
+			<span id='$testIDStatus'>
+				<span style='background-color: #af3f3f;'>Incomplete.</span>
+			</span>
+			</div>");
 	}
 
 	fwrite($fileHandle, "</body>");
@@ -59,6 +65,12 @@ function generateTestPage($convertedFiles){
 	fwrite($fileHandle, "<script type='text/javascript' src='../jquery-1.9.1.min.js'></script>");
 
 	foreach($convertedFiles as $convertedFile){
+		$testID = str_replace(".", "_", $convertedFile);
+		fwrite($fileHandle, "<script type='text/javascript'> \n");
+
+			fwrite($fileHandle, "testStart('".$testID."_status');\n");
+		fwrite($fileHandle, "</script>\n");
+
 		fwrite($fileHandle, "<script type='text/javascript' src='".$convertedFile."'></script>\n");
 		$testID = str_replace(".", "_", $convertedFile);
 		fwrite($fileHandle, "<script type='text/javascript'> \n");
@@ -101,5 +113,9 @@ foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 
 generateTestPage($convertedFiles);
 
+
+function testEnd(){
+
+}
 
 ?>

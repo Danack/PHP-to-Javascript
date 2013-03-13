@@ -42,5 +42,6 @@ assert($testClass->getThis3(), $testClass);
 assert($testClass->getClassName(), 'TestClass');
 assert($testClass->getValue(), 5);
 
+testEnd();
 
 ?>

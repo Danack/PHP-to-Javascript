@@ -35,4 +35,6 @@ assert(testSwitchFunction('output'), 'output');
 assert(testSwitchFunction('custom', 'bar'), 'bar');
 assert(testSwitchFunction('shamoan'), 'Unknown');
 
+testEnd();
+
 ?>

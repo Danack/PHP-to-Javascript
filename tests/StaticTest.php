@@ -40,5 +40,6 @@ assert(StaticTest::$staticClassVar, 1);
 assert($staticTest->instanceVar, 1);
 assert($staticTest->methodWithStatic(), 4);
 
+testEnd();
 
 ?>

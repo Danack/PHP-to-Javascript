@@ -44,4 +44,6 @@ $value = testFunction($testArray);
 
 assert($value, 6);
 
+testEnd();
+
 ?>

@@ -34,4 +34,6 @@ catch(Exception $e){
 
 assert($thrownExceptionCaught, true);
 
+testEnd();
+
 ?>
