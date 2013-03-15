@@ -204,6 +204,10 @@ abstract class CodeScope{
 		$js .= "\n";
 		$js .= $this->getChildDelayedJS();
 
+
+
+
+
 		return $js;
 	}
 

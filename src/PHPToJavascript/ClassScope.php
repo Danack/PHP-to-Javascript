@@ -114,6 +114,8 @@ class ClassScope extends CodeScope{
 
 		$js = $this->replaceConstructorInJS($js);
 
+		$js = $this->manglePrivateFunctions($js);
+
 		return $js;
 	}
 
@@ -130,6 +132,43 @@ class ClassScope extends CodeScope{
 		return $js;
 	}
 
+
+	/**
+	 * Change function calls to private functions from "this.privateFunction()" to
+	 * "privateFunction()" as that is how they need to be called in Javascript OO layout.
+	 *
+	 * @param $js
+	 * @return mixed
+	 */
+	function manglePrivateFunctions($js){
+
+		$search = array();
+		$replace = array();
+
+		foreach($this->jsElements as $jsElement){
+			if($jsElement instanceof FunctionParameterScope){
+
+				/** @var $functionParameterScope FunctionParameterScope  */
+				$functionParameterScope = $jsElement;
+
+				if(($functionParameterScope->variableFlag & DECLARATION_TYPE_PRIVATE) != 0){
+					//echo "You touched my privates ".$functionParameterScope->getName();
+					$search[] = "this.".$functionParameterScope->getName()."(";
+					$replace[] = "".$functionParameterScope->getName()."(";
+				}
+			}
+		}
+
+		return str_replace($search, $replace, $js);
+	}
+
+	/**
+	 * The constructor method for a 'class' in Javascript is actually just inlined with the class scope,
+	 * rather than being a function inside the class. This function moves the constructor code from the function
+	 * to the class scope, so that it's in the correct place.
+	 * @param $js
+	 * @return mixed
+	 */
 	function replaceConstructorInJS($js){
 		$constructor = FALSE;
 
@@ -164,6 +203,9 @@ class ClassScope extends CodeScope{
 	}
 
 
+	/**
+	 * Mark where methods start, so we can put the class constructor here.
+	 */
 	function	markMethodsStart(){
 		if($this->methodsStartIndex === FALSE){
 			$this->methodsStartIndex = count($this->jsElements);
@@ -237,7 +279,6 @@ class ClassScope extends CodeScope{
 			if($value === FALSE){
 				$value = 'null';
 			}
-
 			$output .= $this->name.".prototype.".$name." = $value;\n";
 		}
 
@@ -245,7 +286,6 @@ class ClassScope extends CodeScope{
 			if($value === FALSE){
 				$value = 'null';
 			}
-
 			$output .= $this->name.".".$name." = $value;\n";
 		}
 
