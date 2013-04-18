@@ -34,11 +34,17 @@ class CodeConverterState_TFOREACH extends CodeConverterState {
 		if ($name == 'T_VARIABLE'){
 			$jsToAdd = cVar($value);
 		}
-		else if ($name == 'T_OBJECT_OPERATOR' ){
+		else if ($name == 'T_OBJECT_OPERATOR' ||
+				 $name == 'T_DOUBLE_COLON'){
 			$jsToAdd = '.';
 		}
 		else if ($name == 'T_STRING'){
-			$jsToAdd = $value;
+			if (strtolower($value) == 'self') {
+				$jsToAdd = $this->stateMachine->getClassName();
+			}
+			else{
+				$jsToAdd = $value;
+			}
 		}
 		else if ($name == 'T_WHITESPACE'){
 			$jsToAdd = $value;

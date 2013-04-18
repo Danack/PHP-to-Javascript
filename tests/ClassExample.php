@@ -94,6 +94,9 @@ $privateAccessed = false;
 $exceptionCaught = false;
 try{
 	//Yes IDE - I know this isn't allowed.
+	///** @noinspection PhpIllegalArrayKeyTypeInspection */
+
+	// @SuppressWarnings
 	$classExample->privateFunction();
 	$privateAccessed = true;
 }

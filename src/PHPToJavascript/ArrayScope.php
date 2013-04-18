@@ -14,6 +14,8 @@ class ArrayScope extends CodeScope{
 
 	var $doubleArrayUsed = FALSE;
 
+	var $variableName = null;
+
 	/**
 	 * @param $variableName
 	 * @param $isClassVariable - whether the variable was prefixed by $this
@@ -25,6 +27,11 @@ class ArrayScope extends CodeScope{
 		//Array scopes don't contain variables.
 		return NULL;
 	}
+
+	function setVariableName($variableName) {
+		$this->variableName = $variableName;
+	}
+
 
 	function	pushParens(){
 		$this->parensCount += 1;
@@ -43,7 +50,6 @@ class ArrayScope extends CodeScope{
 	}
 
 	function	getJS(){
-
 		$js = parent::getJS();
 
 		$firstOpenParens = strpos($js, "(");
@@ -54,6 +60,11 @@ class ArrayScope extends CodeScope{
 		}
 		if($lastCloseParens !== FALSE){
 			$js = substr_replace($js, '}', $lastCloseParens, 1);
+		}
+
+		if ($this->parentScope instanceof ClassScope) {
+			$this->parentScope->setVariableString($this->variableName, $js);
+			return "/* ".$this->variableName." */";
 		}
 
 		return $js;
@@ -107,7 +118,6 @@ class ArrayScope extends CodeScope{
 			$name == ')'){
 			//Array has ended.
 			$this->fixupArrayIndex();
-
 		}
 	}
 

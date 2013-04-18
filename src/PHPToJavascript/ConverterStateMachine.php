@@ -403,8 +403,6 @@ class	ConverterStateMachine{
 		if($type == CODE_SCOPE_CLASS){
 			$this->methodsStartIndex = 0;
 		}
-
-		//$this->resetVariableFlags();
 	}
 
 	function resetVariableFlags() {

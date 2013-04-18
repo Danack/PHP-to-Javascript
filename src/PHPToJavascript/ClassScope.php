@@ -4,15 +4,15 @@ namespace PHPToJavascript;
 
 class ClassScope extends CodeScope{
 
-	var		$methodsStartIndex = FALSE;
+	var		$methodsStartIndex = false;
 
 	var 	$publicVariables = array();
 	var		$staticVariables = array();
 
 	var 	$parentClasses = array();
 
-
-	var 	$currentVariableForConcattingValue = NULL;
+	var 	$currentVariableName = null;
+	var 	$currentVariableForConcattingValue = null;
 
 	function addParent($value){
 		$this->parentClasses[] = $value;
@@ -65,7 +65,7 @@ class ClassScope extends CodeScope{
 		$js = "";
 
 		foreach($this->publicVariables as $name => $value){
-			if($value === FALSE){
+			if($value === false){
 				$value = 'null';
 			}
 
@@ -73,7 +73,7 @@ class ClassScope extends CodeScope{
 		}
 
 		foreach($this->staticVariables as $name => $value){
-			if($value === FALSE){
+			if($value === false){
 				$value = 'null';
 			}
 
@@ -170,7 +170,7 @@ class ClassScope extends CodeScope{
 	 * @return mixed
 	 */
 	function replaceConstructorInJS($js){
-		$constructor = FALSE;
+		$constructor = false;
 
 		foreach($this->jsElements as $jsElement){
 			if($jsElement instanceof CodeScope){
@@ -187,7 +187,7 @@ class ClassScope extends CodeScope{
 			$parentConstructor .= "".$parentClass.".call(this);\n";
 		}
 
-		if($constructor !== FALSE){
+		if($constructor !== false){
 			$constructorInfo = trimConstructor($constructor);
 			$constructorInfo['body'] = $parentConstructor.$constructorInfo['body'];
 			$js = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, $constructorInfo['parameters'], $js);
@@ -207,7 +207,7 @@ class ClassScope extends CodeScope{
 	 * Mark where methods start, so we can put the class constructor here.
 	 */
 	function	markMethodsStart(){
-		if($this->methodsStartIndex === FALSE){
+		if($this->methodsStartIndex === false){
 			$this->methodsStartIndex = count($this->jsElements);
 			$this->addJS(CONSTRUCTOR_POSITION_MARKER);
 		}
@@ -216,10 +216,10 @@ class ClassScope extends CodeScope{
 	function	getScopedVariableForScope($variableName, $isClassVariable){
 		$cVar = cvar($variableName);
 
-		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
+		if(array_key_exists($cVar, $this->scopedVariables) == true){
 			$variableFlag = $this->scopedVariables[$cVar];
 
-			if($isClassVariable == TRUE){
+			if($isClassVariable == true){
 				if($variableFlag & DECLARATION_TYPE_PRIVATE){
 					return 	$variableName;
 				}
@@ -233,24 +233,44 @@ class ClassScope extends CodeScope{
 			}
 		}
 
-		if($isClassVariable == TRUE){
+		if($isClassVariable == true){
 			//Either a function or property set below where it is defined.
 			// OR it could be a variable that is defined in the parent class' scope.
 			return 	'this.'.$variableName;
 		}
 
-		return NULL;
+		return null;
 	}
 
 	function addStaticVariable($variableName){
-		$this->staticVariables[$variableName] = FALSE;
+		$this->staticVariables[$variableName] = false;
 		$this->currentVariableForConcattingValue = &$this->staticVariables[$variableName];
+
+		$this->currentVariableName = $variableName;
 	}
 
 	function addPublicVariable($variableName){
-		$this->publicVariables[$variableName] = FALSE;
+		$this->publicVariables[$variableName] = false;
 		$this->currentVariableForConcattingValue = &$this->publicVariables[$variableName];
+		$this->currentVariableName = $variableName;
 	}
+
+	function setVariableString($variableName, $string) {
+
+		if (array_key_exists($variableName, $this->staticVariables) == true) {
+			$this->staticVariables[$variableName] = $string;
+			return;
+		}
+
+		if (array_key_exists($variableName, $this->publicVariables) == true) {
+			$this->publicVariables[$variableName] = $string;
+			return;
+		}
+
+		throw new \Exception("Variable $variableName not known - cannot set it's string value.");
+	}
+
+
 
 	/**
 	 * For class variables that are added to the class scope, but are delayed to be declared outside
@@ -261,11 +281,11 @@ class ClassScope extends CodeScope{
 	 * @throws \Exception
 	 */
 	function addToVariableValue($value){
-		if($this->currentVariableForConcattingValue === NULL){
+		if($this->currentVariableForConcattingValue === null){
 			throw new \Exception("Trying to concat [$value] to the current variable - but it's not set. ");
 		}
 
-		if($this->currentVariableForConcattingValue === FALSE){
+		if($this->currentVariableForConcattingValue === false){
 			$this->currentVariableForConcattingValue = '';
 		}
 
@@ -276,14 +296,14 @@ class ClassScope extends CodeScope{
 		$output = "";
 
 		foreach($this->publicVariables as $name => $value){
-			if($value === FALSE){
+			if($value === false){
 				$value = 'null';
 			}
 			$output .= $this->name.".prototype.".$name." = $value;\n";
 		}
 
 		foreach($this->staticVariables as $name => $value){
-			if($value === FALSE){
+			if($value === false){
 				$value = 'null';
 			}
 			$output .= $this->name.".".$name." = $value;\n";

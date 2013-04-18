@@ -14,8 +14,8 @@ abstract class CodeConverterState{
 		$this->stateMachine = $stateMachine;
 	}
 
-	function	changeToState($newState){
-		$this->stateMachine->changeToState($newState);
+	function	changeToState($newState, $extraParams = array()){
+		$this->stateMachine->changeToState($newState, $extraParams);
 	}
 
 	public function		enterState($extraParams = array()){
