@@ -256,7 +256,6 @@ class ClassScope extends CodeScope{
 	}
 
 	function setVariableString($variableName, $string) {
-
 		if (array_key_exists($variableName, $this->staticVariables) == true) {
 			$this->staticVariables[$variableName] = $string;
 			return;
@@ -267,7 +266,7 @@ class ClassScope extends CodeScope{
 			return;
 		}
 
-		throw new \Exception("Variable $variableName not known - cannot set it's string value.");
+		throw new \Exception("Variable [$variableName] not known - cannot set it's string value.");
 	}
 
 

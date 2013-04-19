@@ -22,7 +22,6 @@ $filesToConvert = array(
 	//'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
 
-	//Broken tests - https://github.com/Danack/PHP-to-Javascript/issues/7
 	'StaticTest.js' => 'StaticTest.php',
 
 	'SwitchStatement.js' => 'SwitchStatement.php',
@@ -36,6 +35,7 @@ $filesToConvert = array(
 
 //$filesToConvert = array(
 //	'ClassSetVarExample.js' => 'ClassSetVarExample.php',
+//	'ArrayExample.js' => 'ArrayExample.php',
 //);
 
 
@@ -85,7 +85,7 @@ function generateTestPage($convertedFiles){
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-//	$phpToJavascript->setTrace(true);
+	//$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 
@@ -94,7 +94,6 @@ foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	if(is_array($inputFileList) == TRUE){
 		foreach($inputFileList as $inputFile){
 			$phpToJavascript->addFromFile($inputFile);
-
 			$inputFilename = $inputFile." ";
 		}
 	}

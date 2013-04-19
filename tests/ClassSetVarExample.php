@@ -2,6 +2,16 @@
 
 class ClassSetVarExample {
 
+	static protected $dataMap = [
+		array('photoID', 'id'),
+		['owner', 'owner'],
+//		['secret', 'secret'],
+//		['serverID', 'server'],
+//		['farmID', 'farm'],
+//		['title', 'title', 'unindex' => '_content'],
+//		['description', 'description', 'unindex' => '_content', 'optional' => true],
+	];
+
 	public 		$instanceTestArray = array(
 		1, 2, 3
 	);
@@ -10,9 +20,14 @@ class ClassSetVarExample {
 		1, 2, 3, 4
 	);
 
+
 	var		$value = null;
 
 	function __construct(){
+
+		echo "lol";
+
+
 	}
 
 	function	getInstanceArrayValue(){

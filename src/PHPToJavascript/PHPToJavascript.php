@@ -24,6 +24,9 @@ define('DECLARATION_TYPE_CLASS', 0x8);
 
 define('DECLARATION_TYPE_NEW', 0x10);
 
+
+define('DECLARATION_TYPE_SQUARE_ARRAY', 0x20);
+
 define('METHOD_MARKER_MAGIC_STRING', "/* METHODS HERE */");
 define('PUBLIC_FUNCTION_MARKER_MAGIC_STRING', 'PUBLIC METHOD HERE');
 define('ARRAY_MARKER_START_MAGIC_STRING', '/*ARRAY_MARKER_MAGIC_STRING*/');
@@ -291,10 +294,12 @@ class PHPToJavascript{
 }
 
 
-function processTokenStream($tokenStream, ConverterStateMachine $stateMachine, $originalFilename){
+function processTokenStream(TokenStream $tokenStream, ConverterStateMachine $stateMachine, $originalFilename){
 
 	$name = '';
 	$value = '';
+
+	$stateMachine->currentTokenStream = $tokenStream;
 
 	while($tokenStream->hasMoreTokens() == TRUE){
 		$tokenStream->next($name, $value);

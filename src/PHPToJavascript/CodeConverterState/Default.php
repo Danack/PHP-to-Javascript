@@ -53,6 +53,34 @@ class CodeConverterState_Default extends CodeConverterState {
 			}
 		}
 
+		if ($name == '[') {
+			//echo "We were in default state - but encountered a [";
+
+			$previousName = false;
+			$previousValue = false;
+			$this->stateMachine->getPreviousNonWhitespaceToken($previousName, $previousValue);
+
+			if ($previousName == '=' ||
+				$previousName == 'T_DOUBLE_ARROW' ||
+				$previousName == ',' ||
+				$previousName == '(' ||
+				$previousName == '[' ) { //Yep, this is the start of an array declaration.
+
+				$this->stateMachine->startArrayScope("");
+				$this->stateMachine->currentTokenStream->insertToken('(');
+				return false;
+			}
+		}
+
+		if ($name == ']') {
+			if ($this->stateMachine->currentScope instanceof ArrayScope) {
+				$this->stateMachine->currentTokenStream->insertToken(')');
+				return false;
+			}
+		}
+
+
+
 		if(array_key_exists($name, $this->tokenStateChangeList) == TRUE){
 			$this->changeToState($this->tokenStateChangeList[$name]);
 			return TRUE;

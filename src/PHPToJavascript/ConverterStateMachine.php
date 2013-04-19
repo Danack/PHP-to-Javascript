@@ -42,12 +42,12 @@ class	ConverterStateMachine{
 	/**
 	 * @var bool Are we inside static var or function?
 	 */
-	public $variableFlags = FALSE;
+	public $variableFlags = false;
 
 	/**
 	 * @var CodeScope
 	 */
-	public $rootScope = NULL;
+	public $rootScope = null;
 
 	public $pendingSymbols = array();
 
@@ -55,7 +55,7 @@ class	ConverterStateMachine{
 	/**
 	 * @var CodeScope
 	 */
-	public $currentScope = NULL;
+	public $currentScope = null;
 
 	/** @var CodeScope[] */
 	public $scopesStack = array();
@@ -63,7 +63,13 @@ class	ConverterStateMachine{
 	public $defines = array();
 
 
-	public $quoteOpen = FALSE;
+	public $quoteOpen = false;
+
+
+	/**
+	 * @var TokenStream
+	 */
+	public $currentTokenStream = null;
 
 
 	function	__construct(/* $tokenStream, */ /*$defaultState*/ ){
@@ -142,6 +148,11 @@ class	ConverterStateMachine{
 	}
 
 
+	function	getPreviousNonWhitespaceToken(&$name, &$value){
+		return $this->currentTokenStream->getPreviousNonWhitespaceToken($name, $value);
+	}
+
+
 	/**
 	 * Adds a variable to the current scope.
 	 * @param $variableName
@@ -153,7 +164,7 @@ class	ConverterStateMachine{
 	}
 
 	function	getVariableNameForScope($variableName,  $variableFlags){
-		return $this->currentScope->getScopedVariable($variableName,  $variableFlags, TRUE);
+		return $this->currentScope->getScopedVariable($variableName,  $variableFlags, true);
 	}
 
 	function	findScopeType($type){
@@ -165,7 +176,7 @@ class	ConverterStateMachine{
 			}
 		}
 
-		return NULL;
+		return null;
 	}
 
 	function	getJS(){
@@ -180,7 +191,7 @@ class	ConverterStateMachine{
 	}
 
 	function	changeToState($newState, $extraParams = array()){
-		if(array_key_exists($newState, $this->states) == FALSE){
+		if(array_key_exists($newState, $this->states) == false){
 			throw new \Exception("Unknown state [$newState], cannot changeState to it.");
 		}
 
@@ -189,7 +200,7 @@ class	ConverterStateMachine{
 	}
 
 	function	clearVariableFlags(){
-		$this->variableFlags = FALSE;
+		$this->variableFlags = false;
 	}
 
 	function	addVariableFlags($variableFlag){
@@ -197,7 +208,7 @@ class	ConverterStateMachine{
 	}
 
 	function	processToken($name, $value, $parsedToken){
-		if(PHPToJavascript::$TRACE == TRUE){
+		if(PHPToJavascript::$TRACE == true){
 			echo "SM ".get_class($this->getState())." token [$name] => [$value]  ".NL;
 		}
 		return $this->getState()->processToken($name, $value, $parsedToken);
@@ -219,7 +230,7 @@ class	ConverterStateMachine{
 	function accountForQuotes($name){
 		if($name == '"' || $name == "'"){
 			if($this->quoteOpen == $name){ //Quote was open
-				$this->quoteOpen = FALSE; //now it's closed
+				$this->quoteOpen = false; //now it's closed
 			}
 			else{
 				$this->quoteOpen = $name;
@@ -240,7 +251,7 @@ class	ConverterStateMachine{
 	 * @return string
 	 */
 	function encloseVariable($variableName){
-		if($this->quoteOpen == FALSE){
+		if($this->quoteOpen == false){
 			return $variableName;
 		}
 
@@ -250,7 +261,7 @@ class	ConverterStateMachine{
 
 	function accountForCloseBrackets($name){
 
-		$scopeEnded = FALSE;
+		$scopeEnded = false;
 
 		if($name == "}"){
 			$scopeEnded = $this->currentScope->popBracket();
@@ -259,8 +270,8 @@ class	ConverterStateMachine{
 			$scopeEnded = $this->currentScope->popParens();
 		}
 
-		if ($scopeEnded == TRUE){
-			if(($this->currentScope instanceof GlobalScope) == FALSE){
+		if ($scopeEnded == true){
+			if(($this->currentScope instanceof GlobalScope) == false){
 				$poppedScope = $this->currentScope;
 
 				$this->popCurrentScope();	//It was the last bracket for a function.
@@ -280,7 +291,7 @@ class	ConverterStateMachine{
 			$returnValue .= $value;
 		}
 		else if (in_array($name, array_keys(self::$_convert))) {
-			if(empty(self::$_convert[$name]) == TRUE){
+			if(empty(self::$_convert[$name]) == true){
 				$returnValue .= $name;		//keep key
 			}
 			else{
@@ -322,7 +333,7 @@ class	ConverterStateMachine{
  	}
 
 	//TODO - HACK HACK HACK
-	var $insertToken = FALSE;
+	var $insertToken = false;
 
 	function	addSymbolAfterNextToken($symbol){
 		$this->insertToken = $symbol;
@@ -339,7 +350,7 @@ class	ConverterStateMachine{
 	function	getScopeName(){
 
 		$parentClassScope = $this->currentScope->findAncestorScopeByType(CODE_SCOPE_CLASS);
-		if($parentClassScope != NULL){
+		if($parentClassScope != null){
 			return "this.".$this->currentScope->getName();
 		}
 
@@ -348,9 +359,7 @@ class	ConverterStateMachine{
 
 	function	pushScope($type, $name, $variableFlag = 0){
 
-		//echo "Pushing scope $name \n";
-
-		if($this->currentScope != NULL){
+		if($this->currentScope != null){
 			array_push($this->scopesStack, $this->currentScope);
 		}
 
@@ -376,7 +385,7 @@ class	ConverterStateMachine{
 			}
 
 			case(CODE_SCOPE_ARRAY):{
-				$newScope = new ArrayScope($name, $this->currentScope);
+				$newScope = new ArrayScope($name, $this->currentScope, $variableFlag);
 				break;
 			}
 
@@ -391,7 +400,7 @@ class	ConverterStateMachine{
 			}
 		}
 
-		if($this->currentScope == NULL){
+		if($this->currentScope == null){
 			$this->rootScope = $newScope;
 		}
 		else{
@@ -447,16 +456,16 @@ class	ConverterStateMachine{
 	}
 
 	function	getDefine($name){
-		if(array_key_exists($name, $this->defines) == TRUE){
+		if(array_key_exists($name, $this->defines) == true){
 			return $this->defines[$name];
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	function	getClassName(){
 		$scope = $this->findScopeType(CODE_SCOPE_CLASS);
-		if($scope != NULL){
+		if($scope != null){
 			return $scope->name;
 		}
 
@@ -466,7 +475,7 @@ class	ConverterStateMachine{
 	function	addDefaultsForVariables(){
 		$functionParametersScope = $this->findScopeType(CODE_SCOPE_FUNCTION_PARAMETERS);
 
-		if($functionParametersScope == NULL){
+		if($functionParametersScope == null){
 //			throw new \Exception("We're inside a function but we can't find the CODE_SCOPE_FUNCTION_PARAMETERS - that shouldn't be possible.");
 
 			//We're probably inside a catch block
@@ -485,7 +494,7 @@ class	ConverterStateMachine{
 		}
 	}
 
-	public $requireFilename = NULL;
+	public $requireFilename = null;
 
 	function requireFile($requireFilename){
 
@@ -497,7 +506,7 @@ class	ConverterStateMachine{
 
 	function getRequiredFile(){
 		$value = $this->requireFilename;
-		$this->requireFilename = NULL;
+		$this->requireFilename = null;
 		return $value;
 	}
 
@@ -510,6 +519,21 @@ class	ConverterStateMachine{
 	}
 
 
+	function 	startArrayScope($scopeName) {
+
+		$classScope = false;
+
+		if ($this->currentScope instanceof ClassScope) {
+			$classScope = $this->currentScope;
+		}
+
+		$this->pushScope(CODE_SCOPE_ARRAY, $scopeName);
+		$this->changeToState(CONVERTER_STATE_DEFAULT);
+
+		if ($classScope != false) {
+			$this->currentScope->setVariableName($classScope->currentVariableName);
+		}
+	}
 
 
 
@@ -593,7 +617,7 @@ class	ConverterStateMachine{
 
 		$fileHandle = fopen($outputFilename, "w");
 
-		if ($fileHandle == FALSE) {
+		if ($fileHandle == false) {
 			throw new \Exception("Failed to open file [$outputFilename] for writing.");
 		}
 

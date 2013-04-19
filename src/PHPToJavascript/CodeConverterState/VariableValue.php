@@ -28,6 +28,26 @@ class CodeConverterState_VariableValue extends CodeConverterState{
 			return true;//reprocess token
 		}
 
+		if ($name == "[") {
+
+			$classScope = false;
+			$this->stateMachine->startArrayScope("");
+//			if ($this->stateMachine->currentScope instanceof ClassScope) {
+//				$classScope = $this->stateMachine->currentScope;
+//			}
+//
+//
+//			$this->stateMachine->pushScope(CODE_SCOPE_ARRAY, $value, DECLARATION_TYPE_SQUARE_ARRAY);
+//
+//			if ($classScope != false) {
+//				$this->stateMachine->currentScope->setVariableName($classScope->currentVariableName);
+//			}
+//
+//			$this->changeToState(CONVERTER_STATE_DEFAULT);
+			$this->stateMachine->currentTokenStream->insertToken('(');
+			return false;
+		}
+
 //		if($this->stateMachine->currentScope instanceof ClassScope){
 //			throw new \Exception("Sorry, initializing class variables to an array is not supported yet. The difficultly is that the initial value must be moved from where it is declared to outside the class declaration code, which is difficult for arrays. Please instead declare the variable as null, and then assign it an array in the constructor.");
 //		}

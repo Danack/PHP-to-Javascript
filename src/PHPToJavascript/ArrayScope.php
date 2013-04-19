@@ -16,6 +16,16 @@ class ArrayScope extends CodeScope{
 
 	var $variableName = null;
 
+
+	var $variableFlag = false;
+
+	//$currentScope->variableFlag & DECLARATION_TYPE_SQUARE_ARRAY
+
+	function	__construct($name, $parentScope, $variableFlag = 0){
+		parent::__construct($name, $parentScope);
+		$this->variableFlag = $variableFlag;
+	}
+
 	/**
 	 * @param $variableName
 	 * @param $isClassVariable - whether the variable was prefixed by $this
@@ -97,7 +107,10 @@ class ArrayScope extends CodeScope{
 		if($this->arrayElementStarted == false){
 			if ($name == 'T_LNUMBER' ||
 				$name == 'T_VARIABLE' ||
-				$name == 'T_CONSTANT_ENCAPSED_STRING'){
+				$name == 'T_CONSTANT_ENCAPSED_STRING'
+				|| 	$name == 'T_ARRAY'
+				|| 	$name == '['
+			){ //another embedded array.
 				$this->addJS(ARRAY_ELEMENT_START_MAGIC);
 				$this->arrayElementStarted = true;
 			}
@@ -116,7 +129,7 @@ class ArrayScope extends CodeScope{
 
 		if ($name == ',' ||
 			$name == ')'){
-			//Array has ended.
+			//Array element has ended.
 			$this->fixupArrayIndex();
 		}
 	}
@@ -124,8 +137,14 @@ class ArrayScope extends CodeScope{
 	//Contains hacks
 	function	postStateMagic($name, $value){
 		parent::postStateMagic($name, $value);
-	}
 
+//		if($this->arrayElementStarted == false){
+//			if ($name == '(') { //past array opening '('
+//				$this->addJS(ARRAY_ELEMENT_START_MAGIC);
+//				$this->arrayElementStarted = true;
+//			}
+//		}
+	}
 }
 
 

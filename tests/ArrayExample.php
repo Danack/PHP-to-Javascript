@@ -1,6 +1,29 @@
 <?php
 
 
+
+$dataMap = [
+	array('photoID', 'id'),
+	['owner', 'owner'],
+];
+
+$gah = [1, 2];
+
+
+$test = $gah[0];
+
+$intArray2 = array(
+	1,
+	1 => 2,
+	2 => 3,
+	'subArray' => [
+		[1],
+		2,
+		3 => 3
+	],
+);
+
+
 //JS function	array_push_value(array, value){
 //JS
 //JS 	for(var x=0 ; x<1000 ; x++){
