@@ -72,9 +72,7 @@ class	ConverterStateMachine{
 	public $currentTokenStream = null;
 
 
-	function	__construct(/* $tokenStream, */ /*$defaultState*/ ){
-
-		//$this->tokenStream = $tokenStream;
+	function	__construct(){
 
 		$this->pushScope(CODE_SCOPE_GLOBAL, 'GLOBAL');
 
@@ -348,7 +346,6 @@ class	ConverterStateMachine{
 	}
 
 	function	getScopeName(){
-
 		$parentClassScope = $this->currentScope->findAncestorScopeByType(CODE_SCOPE_CLASS);
 		if($parentClassScope != null){
 			return "this.".$this->currentScope->getName();
@@ -358,7 +355,6 @@ class	ConverterStateMachine{
 	}
 
 	function	pushScope($type, $name, $variableFlag = 0){
-
 		if($this->currentScope != null){
 			array_push($this->scopesStack, $this->currentScope);
 		}
@@ -632,7 +628,6 @@ class	ConverterStateMachine{
 
 		fclose($fileHandle);
 	}
-
 }
 
 
