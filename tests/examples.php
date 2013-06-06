@@ -12,6 +12,7 @@ error_reporting(E_ALL);
 $filesToConvert = array(
 	'ArrayExample.js' => 'ArrayExample.php',
 	'AssigningThis.js' => 'AssigningThis.php',
+	'BugReports.js' => 'BugReports.php',
 	'ClassExample.js' => 'ClassExample.php',
 	'CustomEvent.js' => 'CustomEvent.php' ,
 	'DefaultValue.js' => 'DefaultValue.php',
@@ -33,10 +34,10 @@ $filesToConvert = array(
 	'TypeHinting.js' => 'TypeHinting.php',
 );
 
-//$filesToConvert = array(
-//	'ClassSetVarExample.js' => 'ClassSetVarExample.php',
-//	'ArrayExample.js' => 'ArrayExample.php',
-//);
+$filesToConvert = array(
+	//'ClassSetVarExample.js' => 'ClassSetVarExample.php',
+	'BugReports.js' => 'BugReports.php',
+);
 
 
 $convertedFiles = array();
