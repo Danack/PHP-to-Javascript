@@ -34,10 +34,10 @@ $filesToConvert = array(
 	'TypeHinting.js' => 'TypeHinting.php',
 );
 
-$filesToConvert = array(
-	//'ClassSetVarExample.js' => 'ClassSetVarExample.php',
-	'BugReports.js' => 'BugReports.php',
-);
+//$filesToConvert = array(
+//	//'ClassSetVarExample.js' => 'ClassSetVarExample.php',
+//	'BugReports.js' => 'BugReports.php',
+//);
 
 
 $convertedFiles = array();

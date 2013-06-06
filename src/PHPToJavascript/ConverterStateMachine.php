@@ -548,6 +548,7 @@ class	ConverterStateMachine{
 		'T_DIV_EQUAL'=>'/=',
 		//'T_DOUBLE_COLON'=>'.',
 		'T_INC'=>'++',
+		'T_DEC'=>'--',
 		'T_MINUS_EQUAL'=>'-=',
 		'T_MOD_EQUAL'=>'%=',
 		'T_MUL_EQUAL'=>'*=',
@@ -587,6 +588,7 @@ class	ConverterStateMachine{
 		'/', '+', '-', '>',
 		'<', '[', ']', "\"",
 		"'", ":",
+		'%',
 	);
 
 	/** @var array these tokens keeps their value */
