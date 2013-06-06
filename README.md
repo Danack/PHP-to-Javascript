@@ -27,10 +27,10 @@ Programmatically
 * Add the "base-reality/php-to-javascript": ">=0.0.3" to your project's composer.json file:
 
     "require":{
-		"base-reality/php-to-javascript": ">=0.1.0"
+		"base-reality/php-to-javascript": "0.1.16"
 	}
 
-  Or the latest version.
+  Or the latest tagged version. The dev master should only be used for development, not production.
 
 * Include the Composer SPL autoload file in your project:
 
