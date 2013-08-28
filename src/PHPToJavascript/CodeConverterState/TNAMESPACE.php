@@ -25,7 +25,3 @@ class CodeConverterState_TNAMESPACE extends CodeConverterState{
 	}
 }
 
-
-
-
-?>

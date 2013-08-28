@@ -390,5 +390,3 @@ trait SafeAccess {
 	}
 }
 
-
-?>

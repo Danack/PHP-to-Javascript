@@ -22,6 +22,3 @@ class CodeConverterState_ARRAY extends CodeConverterState {
 		//$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
 }
-
-
-?>

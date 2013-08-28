@@ -16,6 +16,3 @@ class CodeConverterState_Comma extends CodeConverterState{
 	}
 }
 
-
-
-?>

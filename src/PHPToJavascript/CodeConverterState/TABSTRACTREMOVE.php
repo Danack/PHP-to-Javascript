@@ -20,7 +20,3 @@ class CodeConverterState_TABSTRACTREMOVE extends CodeConverterState{
 	}
 }
 
-
-
-
-?>

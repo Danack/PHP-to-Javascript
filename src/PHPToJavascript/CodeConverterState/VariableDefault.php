@@ -18,4 +18,3 @@ class CodeConverterState_VariableDefault extends CodeConverterState{
 }
 
 
-?>

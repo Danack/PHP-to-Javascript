@@ -36,7 +36,3 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 }
 
 
-
-
-
-?>

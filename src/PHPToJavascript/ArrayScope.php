@@ -147,5 +147,3 @@ class ArrayScope extends CodeScope{
 	}
 }
 
-
-?>

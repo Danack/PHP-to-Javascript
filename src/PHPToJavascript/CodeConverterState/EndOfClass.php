@@ -25,6 +25,3 @@ class CodeConverterState_EndOfClass extends CodeConverterState{
 	}
 }
 
-
-
-?>

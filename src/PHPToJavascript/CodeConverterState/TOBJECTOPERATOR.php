@@ -33,6 +33,3 @@ class CodeConverterState_TOBJECTOPERATOR extends CodeConverterState{
 	}
 }
 
-
-
-?>

@@ -12,7 +12,3 @@ class CodeConverterState_TNEW  extends CodeConverterState{
 }
 
 
-
-
-
-?>

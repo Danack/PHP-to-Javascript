@@ -108,7 +108,3 @@ class CodeConverterState_Default extends CodeConverterState {
 	}
 }
 
-
-
-
-?>

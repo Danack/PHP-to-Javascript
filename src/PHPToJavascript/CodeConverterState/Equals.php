@@ -17,7 +17,3 @@ class CodeConverterState_Equals extends CodeConverterState{
 }
 
 
-
-
-
-?>

@@ -633,10 +633,3 @@ class	ConverterStateMachine{
 }
 
 
-
-
-
-
-
-
-?>

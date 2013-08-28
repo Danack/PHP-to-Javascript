@@ -25,8 +25,3 @@ class CodeConverterState_TCATCH  extends CodeConverterState{
 	}
 }
 
-
-
-
-
-?>

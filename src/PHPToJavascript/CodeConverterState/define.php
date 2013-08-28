@@ -29,7 +29,3 @@ class CodeConverterState_define extends CodeConverterState{
 }
 
 
-
-
-
-?>

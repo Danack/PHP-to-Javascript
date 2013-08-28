@@ -13,8 +13,3 @@ class CodeConverterState_TTRY  extends CodeConverterState{
 	}
 }
 
-
-
-
-
-?>

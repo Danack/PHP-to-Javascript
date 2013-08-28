@@ -20,6 +20,3 @@ class CodeConverterState_importNamespace extends CodeConverterState{
 	}
 }
 
-
-
-?>

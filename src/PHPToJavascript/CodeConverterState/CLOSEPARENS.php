@@ -19,6 +19,3 @@ class CodeConverterState_CLOSEPARENS extends CodeConverterState{
 	}
 }
 
-
-
-?>

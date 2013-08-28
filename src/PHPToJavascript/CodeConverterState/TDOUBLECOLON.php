@@ -13,6 +13,3 @@ class CodeConverterState_TDOUBLECOLON extends CodeConverterState{
 
 
 
-
-
-?>

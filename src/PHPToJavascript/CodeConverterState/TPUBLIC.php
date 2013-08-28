@@ -12,6 +12,3 @@ class CodeConverterState_TPUBLIC extends CodeConverterState{
 	}
 }
 
-
-
-?>

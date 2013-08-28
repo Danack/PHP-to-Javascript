@@ -63,6 +63,3 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 }
 
 
-
-
-?>

@@ -35,6 +35,3 @@ class CodeConverterState_TVARIABLEGLOBAL extends CodeConverterState {
 }
 
 
-
-
-?>

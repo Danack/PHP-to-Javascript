@@ -256,7 +256,3 @@ abstract class CodeScope{
 	}
 }
 
-
-
-
-?>

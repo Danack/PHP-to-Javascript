@@ -29,6 +29,3 @@ abstract class CodeConverterState{
 	abstract function	processToken($name, $value, $parsedToken);
 
 }
-
-
-?>

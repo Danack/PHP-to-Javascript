@@ -15,7 +15,3 @@ class CodeConverterState_TVARIABLECATCH extends CodeConverterState {
 	}
 }
 
-
-
-
-?>

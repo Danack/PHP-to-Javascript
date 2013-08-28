@@ -19,6 +19,3 @@ class CodeConverterState_DoubleArrow extends CodeConverterState{
 	}
 }
 
-
-
-?>

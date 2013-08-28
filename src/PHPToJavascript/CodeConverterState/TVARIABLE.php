@@ -41,7 +41,3 @@ class CodeConverterState_TVARIABLE extends CodeConverterState {
 }
 
 
-
-
-
-?>

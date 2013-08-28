@@ -18,8 +18,3 @@ class CodeConverterState_TSTATIC extends CodeConverterState{
 }
 
 
-
-
-
-
-?>

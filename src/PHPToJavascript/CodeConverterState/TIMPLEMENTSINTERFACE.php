@@ -29,6 +29,3 @@ class CodeConverterState_TIMPLEMENTSINTERFACE  extends CodeConverterState{
 	}
 }
 
-
-
-?>

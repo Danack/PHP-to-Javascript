@@ -40,7 +40,3 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 
 
 
-
-
-
-?>

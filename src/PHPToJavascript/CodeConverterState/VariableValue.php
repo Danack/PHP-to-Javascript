@@ -56,6 +56,3 @@ class CodeConverterState_VariableValue extends CodeConverterState{
 	}
 }
 
-
-
-?>

@@ -36,7 +36,3 @@ class CodeConverterState_Echo extends CodeConverterState {
 		return FALSE;
 	}
 }
-
-
-
-?>

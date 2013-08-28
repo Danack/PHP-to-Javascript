@@ -11,7 +11,3 @@ class CodeConverterState_TPRIVATE extends CodeConverterState{
 	}
 }
 
-
-
-
-?>

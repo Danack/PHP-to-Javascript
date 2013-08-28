@@ -312,7 +312,3 @@ class ClassScope extends CodeScope{
 	}
 }
 
-
-
-
-?>

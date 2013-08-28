@@ -22,6 +22,3 @@ class CodeConverterState_TABSTRACT extends CodeConverterState{
 	}
 }
 
-
-
-?>

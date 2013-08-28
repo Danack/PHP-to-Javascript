@@ -32,6 +32,3 @@ class CodeConverterState_TEXTENDS  extends CodeConverterState{
 }
 
 
-
-
-?>

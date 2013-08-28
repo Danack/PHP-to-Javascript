@@ -31,7 +31,3 @@ class CodeConverterState_TINTERFACE  extends CodeConverterState{
 	}
 }
 
-
-
-
-?>

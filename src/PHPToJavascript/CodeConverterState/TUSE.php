@@ -42,7 +42,3 @@ class CodeConverterState_TUSE extends CodeConverterState{
 }
 
 
-
-
-
-?>

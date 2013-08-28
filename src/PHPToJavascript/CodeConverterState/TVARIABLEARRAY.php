@@ -13,7 +13,3 @@ class CodeConverterState_TVARIABLEARRAY extends CodeConverterState {
 	}
 }
 
-
-
-
-?>

@@ -13,7 +13,3 @@ class CodeConverterState_CLASS extends CodeConverterState {
 	}
 }
 
-
-
-
-?>

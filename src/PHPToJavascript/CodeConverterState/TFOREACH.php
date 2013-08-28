@@ -123,6 +123,3 @@ class CodeConverterState_TFOREACH extends CodeConverterState {
 }
 
 
-
-
-?>

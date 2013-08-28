@@ -53,6 +53,3 @@ class FunctionScope extends CodeScope{
 }
 
 
-
-
-?>

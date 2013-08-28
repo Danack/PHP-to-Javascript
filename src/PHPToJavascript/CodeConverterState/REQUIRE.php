@@ -16,7 +16,3 @@ class CodeConverterState_REQUIRE extends CodeConverterState{
 	}
 }
 
-
-
-
-?>
