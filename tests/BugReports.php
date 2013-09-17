@@ -14,16 +14,18 @@ assert($p2, 6);
 //*************************************************************
 
 //https://github.com/Danack/PHP-to-Javascript/issues/15
-$count = 4;
-$count--;
+$countValue = 4;
+$countValue--;
 
-assert($count, 3);
+assert($countValue, 3);
 
-$count--;
+$countValue--;
 
-assert($count, 2);
+assert($countValue, 2);
 
 
 testEnd();
+
+
 
 ?>
