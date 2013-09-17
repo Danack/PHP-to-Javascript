@@ -1,3 +1,10 @@
+About Fork
+----------
+
+creating fileWatcher for IDE phpStorm. see http://www.youtube.com/watch?v=fe14-21NTGU
+
+also be redesigned javascript class generation and implemented more things
+
 PHP-to-Javascript
 =================
 
