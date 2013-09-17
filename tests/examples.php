@@ -15,6 +15,7 @@ $filesToConvert = array(
 	'BugReports.js' => 'BugReports.php',
 	'ClassExample.js' => 'ClassExample.php',
     'continue.js' => 'continue.php',
+    'countItems.js' => 'countItems.php',
 	'CustomEvent.js' => 'CustomEvent.php' ,
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
@@ -36,7 +37,7 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//	'continue.js' => 'continue.php',
+//    'countItems.js' => 'countItems.php',
 //	//'BugReports.js' => 'BugReports.php',
 //);
 
