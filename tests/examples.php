@@ -14,6 +14,7 @@ $filesToConvert = array(
 	'AssigningThis.js' => 'AssigningThis.php',
 	'BugReports.js' => 'BugReports.php',
 	'ClassExample.js' => 'ClassExample.php',
+    'continue.js' => 'continue.php',
 	'CustomEvent.js' => 'CustomEvent.php' ,
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
@@ -35,8 +36,8 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//	//'ClassSetVarExample.js' => 'ClassSetVarExample.php',
-//	'BugReports.js' => 'BugReports.php',
+//	'continue.js' => 'continue.php',
+//	//'BugReports.js' => 'BugReports.php',
 //);
 
 
