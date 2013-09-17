@@ -158,6 +158,7 @@ class PHPToJavascript{
 
 	public static $ECHO_TO_ALERT = 'alert(';
 	public static $ECHO_TO_DOCUMENT_WRITE = 'document.write(';
+	public static $ECHO_TO_CONSOLE_LOG = 'console.log(';
 
 	/** @var string */
 	var $srcFilename = NULL;
@@ -381,6 +382,8 @@ function processTokenStream(TokenStream $tokenStream, ConverterStateMachine $sta
  * As you spend an hour trying to find out why isValidated isn't being set. This trait turns all bad
  * get and set calls on non-existent variables into exceptions.
  */
+// TODO: fixt older php version
+ /*
 trait SafeAccess {
 	public function __set($name, $value) {
 		throw new \Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can set it");
@@ -388,5 +391,5 @@ trait SafeAccess {
 	public function __get($name) {
 		throw new \Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can get it");
 	}
-}
+}*/
 

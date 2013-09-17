@@ -44,14 +44,16 @@ class ClassScope extends CodeScope{
 				//https://developer.mozilla.org/en-US/docs/JavaScript/Introduction_to_Object-Oriented_JavaScript
 
 				$js .= "// inherit $parentClass\n";
-				$js .= "$childClass.prototype = new $parentClass();\n";
+                // TODO: fix inheritance
+				//$js .= "$childClass.prototype = new $parentClass();\n";
 
 				$js .= "// correct the constructor pointer because it points to $parentClass\n";
 				$js .= "$childClass.prototype.constructor = $childClass;\n";
 
-				$js .= "//Need to copy the static functions across and replace the parent class name with the child class name.\n";
 
-				$js .= "$.extend($childClass, $parentClass);\n";
+                // TODO: fix inheritance
+				//$js .= "//Need to copy the static functions across and replace the parent class name with the child class name.\n";
+				//$js .= "$.extend($childClass, $parentClass);\n";
 			}
 
 			$js .= "\n";
@@ -184,6 +186,8 @@ class ClassScope extends CodeScope{
 		$parentConstructor = "";
 
 		foreach($this->parentClasses as $parentClass){
+            // TODO: fix interface
+            if (strtolower(substr($parentClass,strlen($parentClass)-3,3))!='int')
 			$parentConstructor .= "".$parentClass.".call(this);\n";
 		}
 

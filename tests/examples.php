@@ -61,21 +61,21 @@ function generateTestPage($convertedFiles){
 
 	fwrite($fileHandle, "</body>");
 
-	fwrite($fileHandle, "<script type='text/javascript' src='../php.js'></script>");
-	fwrite($fileHandle, "<script type='text/javascript' src='../testStart.js'></script>");
-	fwrite($fileHandle, "<script type='text/javascript' src='../jquery-1.9.1.min.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../../php.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../../testStart.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../../jquery.min.js'></script>");
 
 	foreach($convertedFiles as $convertedFile){
 		$testID = str_replace(".", "_", $convertedFile);
 		fwrite($fileHandle, "<script type='text/javascript'> \n");
 
-			fwrite($fileHandle, "testStart('".$testID."_status');\n");
+			fwrite($fileHandle, "testStart('".$testID."');\n");
 		fwrite($fileHandle, "</script>\n");
 
 		fwrite($fileHandle, "<script type='text/javascript' src='".$convertedFile."'></script>\n");
 		$testID = str_replace(".", "_", $convertedFile);
 		fwrite($fileHandle, "<script type='text/javascript'> \n");
-		fwrite($fileHandle, "setTestsResult('$testID');\n");
+		fwrite($fileHandle, "setTestsResult('{$testID}_status');\n");
 		fwrite($fileHandle, "</script>\n");
 	}
 
@@ -113,7 +113,7 @@ foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 
 generateTestPage($convertedFiles);
 
-
+echo "<a href='./output/test.html'>Result</a>";
 function testEnd(){
 
 }

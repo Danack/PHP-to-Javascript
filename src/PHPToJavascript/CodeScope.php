@@ -4,8 +4,8 @@ namespace PHPToJavascript;
 
 
 abstract class CodeScope{
-
-	use SafeAccess;
+    // TODO: fixt older php version
+	//use SafeAccess;
 
 	var $bracketCount = 0;
 

@@ -97,7 +97,7 @@ try{
 	///** @noinspection PhpIllegalArrayKeyTypeInspection */
 
 	// @SuppressWarnings
-	$classExample->privateFunction();
+    $classExample->privateFunction();
 	$privateAccessed = true;
 }
 catch(Exception $error){
