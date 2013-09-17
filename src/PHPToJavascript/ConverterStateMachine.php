@@ -284,10 +284,7 @@ class	ConverterStateMachine{
 	function parseToken ($name, $value, $count) {
 
 		$returnValue = $this->getPendingInsert($name);
-        
-        if ($name == 'T_CONTINUE') {
-            echo "Found continue";
-        }
+
 
 		if($name == "T_VARIABLE"){
 			$returnValue .= $value;
