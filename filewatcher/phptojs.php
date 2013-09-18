@@ -6,7 +6,7 @@ if (!$file) {
 }
 $outputFile = str_replace('.php', '.js', $file);
 if (count($argv) == 4) {
-	$tmp  = explode(DIRECTORY_SEPARATOR, str_replace($argv[2], '', getcwd()));
+	$tmp  = explode(DIRECTORY_SEPARATOR, str_replace(realpath($argv[2]), '', realpath(getcwd())));
 	$path = $argv[3];
 	foreach ($tmp as $dir) {
 		if ($dir == '') {

@@ -9,7 +9,7 @@ abstract class FooAbs {
 	function fooAbs() {
 		echo "--fooAbs--";
 		for ($i = 0; $i < 10; $i++) {
-			$e = ($i * 10 - $i) + " foo in abs";
+			$e = ($i * 10 - $i) . " foo in abs";
 			echo $e;
 		}
 	}
@@ -42,4 +42,6 @@ echo $foo->getFoo();
 $foo->fooInt();
 $foo->fooAbsAbs();
 $foo->fooAbs();
+
+
 

@@ -1,5 +1,4 @@
 <?php
-
 $test = function($arg=5){
 	return $arg;
 };
@@ -11,7 +10,8 @@ class Foo{
 			return $arg;
 		};
 	}
-	function foo(){
+
+    function foo(){
 		return function($arg){
 			return $arg;
 		};

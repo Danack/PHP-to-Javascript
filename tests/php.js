@@ -58,7 +58,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
+function gettype(variable){return typeof variable;}
 // {{{ array
 function array() {
     // #!#!#!#!# array::$descr1 does not contain valid 'array' at line 260
