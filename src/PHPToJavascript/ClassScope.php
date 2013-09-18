@@ -94,7 +94,7 @@ class ClassScope extends CodeScope {
 		$js .= "\n";
 		$js .= $this->getChildDelayedJS();
 		$js = $this->replaceConstructorInJS($js);
-		$js = $this->manglePrivateFunctions($js);
+		//$js = $this->manglePrivateFunctions($js);
 		return $js;
 	}
 
@@ -117,6 +117,7 @@ class ClassScope extends CodeScope {
 	 * @param $js
 	 *
 	 * @return mixed
+	 * @deprecated in js is impossible make private methods
 	 */
 	function manglePrivateFunctions($js) {
 		$search  = array();

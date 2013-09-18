@@ -74,13 +74,12 @@ $classExample->testStatic();
 $result = $classExample->testStatic();
 //Called two times, but value is only incremented twice
 assert($result, 2);
+/*  In js is impossible make private fields or methods
 $privateAccessed = false;
 $exceptionCaught = false;
 try {
 	//Yes IDE - I know this isn't allowed.
-	///** @noinspection PhpIllegalArrayKeyTypeInspection */
-	// @SuppressWarnings
-	/** @noinspection PhpAssignmentInConditionInspection */
+	///** @noinspection PhpIllegalArrayKeyTypeInspection * /
 	$classExample->privateFunction();
 	$privateAccessed = true;
 } catch (Exception $error) {
@@ -89,6 +88,7 @@ try {
 }
 assert($privateAccessed, false);
 assert($exceptionCaught, true);
+*/
 $value = $classExample->publicAccess();
 assert($value, 'foo');
 $value = $classExample->privateField();
