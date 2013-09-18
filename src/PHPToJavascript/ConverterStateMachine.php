@@ -110,6 +110,8 @@ class    ConverterStateMachine {
 		$this->states[CONVERTER_STATE_T_TRY]   = new CodeConverterState_TTRY($this);
 		$this->states[CONVERTER_STATE_T_CATCH] = new CodeConverterState_TCATCH($this);
 		$this->states[CONVERTER_STATE_VARIABLE_CATCH] = new CodeConverterState_TVARIABLECATCH($this);
+		$this->states[CONVERTER_STATE_GLOBAL] = new CodeConverterState_TGLOBAL($this);
+		$this->states[CONVERTER_STATE_SEMICOLON] = new CodeConverterState_Semicolon($this);
 		$this->currentState = CONVERTER_STATE_DEFAULT;
 	}
 

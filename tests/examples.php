@@ -23,7 +23,7 @@ $filesToConvert = array(
 $convertedFiles = array();
 function generateTestPage($convertedFiles) {
 	$fileHandle = fopen("output/test.html", "w");
-	fwrite($fileHandle, "<html><body>Tests are loaded via javascript into this webpage. <br/>&nbsp;<br/> If nothing turns green then probably the conversion failed completely, and either the Javascript files are not present or so invalid that the can't be compiled. <br/>&nbsp;<br/>");
+	fwrite($fileHandle, "<html><body><a href='../examples.php'>rebuild</a><br>Tests are loaded via javascript into this webpage. <br/>&nbsp;<br/> If nothing turns green then probably the conversion failed completely, and either the Javascript files are not present or so invalid that the can't be compiled. <br/>&nbsp;<br/>");
 	foreach ($convertedFiles as $convertedFile) {
 		$testID       = str_replace(".", "_", $convertedFile);
 		$testIDStatus = $testID . "_status";
@@ -74,5 +74,5 @@ foreach ($filesToConvert as $outputFilename => $inputFileList) {
 generateTestPage($convertedFiles);
 function testEnd() {
 }
-
+echo '<a href="./output/test.html">result</a> ';
 ?>
