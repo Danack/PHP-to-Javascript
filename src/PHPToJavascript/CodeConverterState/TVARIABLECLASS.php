@@ -12,12 +12,16 @@ class CodeConverterState_TVARIABLECLASS extends CodeConverterState {
 		if ($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC) {
 			$this->stateMachine->currentScope->addStaticVariable($variableName);
 			$this->changeToState(CONVERTER_STATE_VARIABLE_VALUE);
-		} else if ($this->stateMachine->variableFlags & DECLARATION_TYPE_PUBLIC) {
+		} else if (false /*&& $this->stateMachine->variableFlags & DECLARATION_TYPE_PUBLIC*/) {
+			/* addPublicVariable is deprecated*/
 			$this->stateMachine->currentScope->addPublicVariable($variableName);
 			$this->changeToState(CONVERTER_STATE_VARIABLE_VALUE);
 		} else {
-			//All other variables are treated as private
-			$this->stateMachine->addJS("var ");
+			if ($this->stateMachine->variableFlags & DECLARATION_TYPE_PUBLIC){
+				$this->stateMachine->addJS("this.");
+			}else{
+				$this->stateMachine->addJS("var ");
+			}
 			$this->stateMachine->addJS($variableName);
 			$this->stateMachine->clearVariableFlags();
 			$this->changeToState(CONVERTER_STATE_DEFAULT);

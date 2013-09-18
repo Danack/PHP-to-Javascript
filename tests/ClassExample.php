@@ -4,6 +4,7 @@ class ClassExample {
 
 	var $value = null;
 	var $testArray = null;
+	public $publicVal5 = 5;
 
 	static public $staticVar = 0;
 
