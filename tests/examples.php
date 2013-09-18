@@ -14,6 +14,8 @@ $filesToConvert = array(
 	'AssigningThis.js' => 'AssigningThis.php',
 	'BugReports.js' => 'BugReports.php',
 	'ClassExample.js' => 'ClassExample.php',
+    'continue.js' => 'continue.php',
+    'countItems.js' => 'countItems.php',
 	'CustomEvent.js' => 'CustomEvent.php' ,
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
@@ -35,8 +37,8 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//	//'ClassSetVarExample.js' => 'ClassSetVarExample.php',
-//	'BugReports.js' => 'BugReports.php',
+//    'countItems.js' => 'countItems.php',
+//	//'BugReports.js' => 'BugReports.php',
 //);
 
 
@@ -61,21 +63,21 @@ function generateTestPage($convertedFiles){
 
 	fwrite($fileHandle, "</body>");
 
-	fwrite($fileHandle, "<script type='text/javascript' src='../../php.js'></script>");
-	fwrite($fileHandle, "<script type='text/javascript' src='../../testStart.js'></script>");
-	fwrite($fileHandle, "<script type='text/javascript' src='../../jquery.min.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../php.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../testStart.js'></script>");
+	fwrite($fileHandle, "<script type='text/javascript' src='../jquery-1.9.1.min.js'></script>");
 
 	foreach($convertedFiles as $convertedFile){
 		$testID = str_replace(".", "_", $convertedFile);
 		fwrite($fileHandle, "<script type='text/javascript'> \n");
 
-			fwrite($fileHandle, "testStart('".$testID."');\n");
+			fwrite($fileHandle, "testStart('".$testID."_status');\n");
 		fwrite($fileHandle, "</script>\n");
 
 		fwrite($fileHandle, "<script type='text/javascript' src='".$convertedFile."'></script>\n");
 		$testID = str_replace(".", "_", $convertedFile);
 		fwrite($fileHandle, "<script type='text/javascript'> \n");
-		fwrite($fileHandle, "setTestsResult('{$testID}_status');\n");
+		fwrite($fileHandle, "setTestsResult('$testID');\n");
 		fwrite($fileHandle, "</script>\n");
 	}
 
@@ -113,7 +115,7 @@ foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 
 generateTestPage($convertedFiles);
 
-echo "<a href='./output/test.html'>Result</a>";
+
 function testEnd(){
 
 }

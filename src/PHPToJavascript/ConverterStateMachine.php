@@ -285,6 +285,7 @@ class	ConverterStateMachine{
 
 		$returnValue = $this->getPendingInsert($name);
 
+
 		if($name == "T_VARIABLE"){
 			$returnValue .= $value;
 		}
@@ -604,7 +605,8 @@ class	ConverterStateMachine{
 		'T_CASE',
 		'T_DEFAULT',
 		'T_THROW',
-		'T_FOR'
+		'T_FOR',
+        'T_CONTINUE'
 	);
 
 	function     generateFile($outputFilename, $originalFilename, $jsOutput) {

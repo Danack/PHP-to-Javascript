@@ -17,6 +17,7 @@ if (count($argv)==4){
         if (!file_exists($path)){
             if (!mkdir($path)){
                 echo "cant create directory '".$path."'".PHP_EOL;
+                exit(0);
             }
         }
     }
