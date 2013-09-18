@@ -37,6 +37,9 @@ class TokenStream {
 		$this->getTokenAtIndex($this->current, $name, $value);
 		$this->current++;
 	}
+	function moveBack(){
+		$this->current--;
+	}
 
 	function    getCurrentIndex() {
 		return $this->current;

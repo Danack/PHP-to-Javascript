@@ -5,6 +5,7 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 
 	function    processToken($name, $value, $parsedToken) {
 		if ($name == "T_STRING") {
+
 			$previousScope = $this->stateMachine->currentScope;
 			$this->stateMachine->pushScope(CODE_SCOPE_FUNCTION_PARAMETERS, $value, $this->stateMachine->variableFlags);
 			if ($previousScope instanceof ClassScope) {
@@ -19,6 +20,12 @@ class CodeConverterState_FUNCTION extends CodeConverterState {
 			}
 			$this->stateMachine->clearVariableFlags();
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
+		}
+		if ($name=="("){
+			$this->stateMachine->pushScope(CODE_SCOPE_FUNCTION_PARAMETERS, '', $this->stateMachine->variableFlags);
+			$this->stateMachine->addJS("function ");
+			$this->changeToState(CONVERTER_STATE_DEFAULT);
+			$this->stateMachine->currentTokenStream->moveBack();
 		}
 	}
 }

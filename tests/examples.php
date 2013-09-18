@@ -14,7 +14,7 @@ $filesToConvert = array(
 	'SimpleExample.js' => 'SimpleExample.php', 'StaticTest.js' => 'StaticTest.php',
 	'SwitchStatement.js' => 'SwitchStatement.php', 'TryCatch.js' => 'TryCatch.php', 'TraitExample.js' => array(
 		'TraitInclude.php', 'TraitExample.php',
-	), 'TypeHinting.js' => 'TypeHinting.php',
+	), 'TypeHinting.js' => 'TypeHinting.php','AnonymusFunction.js'=>'AnonymusFunction.php'
 );
 //$filesToConvert = array(
 //    'countItems.js' => 'countItems.php',
