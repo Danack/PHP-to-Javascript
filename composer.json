@@ -1,17 +1,17 @@
 {
-	"name": "base-reality/php-to-javascript",
-	"description": "A PHP to Javascript converter for automatically converting PHP source code (including Classes) into Javascript.",
-	"license": "CC-BY-NC-SA-3.0",
-	"autoload": {
-		"psr-0": {
-			"PHPToJavascript": "src/"
-		}
-	},
-	"authors": [
-		{
-			"name": "Dan Ackroyd",
-			"email": "Danack@basereality.com",
-			"homepage": "http://www.basereality.com"
-		}
-	]
+    "name": "base-reality/php-to-javascript",
+    "description": "A PHP to Javascript converter for automatically converting PHP source code (including Classes) into Javascript.",
+    "license": "CC-BY-NC-SA-3.0",
+    "autoload": {
+        "psr-0": {
+            "PHPToJavascript": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dan Ackroyd",
+            "email": "Danack@basereality.com",
+            "homepage": "http://www.basereality.com"
+        }
+    ]
 }

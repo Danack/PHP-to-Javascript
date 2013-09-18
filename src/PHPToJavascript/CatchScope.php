@@ -1,65 +1,55 @@
 <?php
 
 namespace PHPToJavascript;
-
-
-class CatchScope extends CodeScope{
+class CatchScope extends CodeScope {
 
 	var $exceptionNames = array();
 
 	/**
 	 * @param $variableName
 	 * @param $isClassVariable - whether the variable was prefixed by $this
+	 *
 	 * @return mixed
 	 */
-	function	getScopedVariableForScope($variableName, $isClassVariable){
+	function    getScopedVariableForScope($variableName, $isClassVariable) {
 		$cVar = cvar($variableName);
-
-		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
+		if (array_key_exists($cVar, $this->scopedVariables) == true) {
 			$variableFlag = $this->scopedVariables[$cVar];
-			if($variableFlag & DECLARATION_TYPE_STATIC){
-				return 	$this->name.".".$variableName;
-			}
-			else if($isClassVariable == TRUE){
-				if(strpos($variableName, "$") !== FALSE){
+			if ($variableFlag & DECLARATION_TYPE_STATIC) {
+				return $this->name . "." . $variableName;
+			} else if ($isClassVariable == true) {
+				if (strpos($variableName, "$") !== false) {
 					//it's a variable variable like "this->$var";
-					return 	'this['.$variableName.']';
-				}
-				else{
-					return 	'this.'.$variableName;
+					return 'this[' . $variableName . ']';
+				} else {
+					return 'this.' . $variableName;
 				}
 			}
-
 			return $variableName;
 		}
-
-		return NULL;
+		return null;
 	}
 
 	function getType() {
 		return CODE_SCOPE_CATCH;
 	}
 
-	function	getJS(){
-
-		$js = "";
+	function    getJS() {
+		$js    = "";
 		$jsRaw = parent::getJS();
-
-		$search = array();
+		$search  = array();
 		$replace = array();
-
-		foreach($this->exceptionNames as $exceptionName){
-			$search[] = "".$exceptionName.".getMessage()";
-			$replace[] = "".$exceptionName.".message";
+		foreach ($this->exceptionNames as $exceptionName) {
+			$search[]  = "" . $exceptionName . ".getMessage()";
+			$replace[] = "" . $exceptionName . ".message";
 		}
-
 		$jsRaw = str_replace($search, $replace, $jsRaw);
 		$js .= $jsRaw;
 		return $js;
 	}
 
 
-	function	addExceptionName($value){
+	function    addExceptionName($value) {
 		$this->exceptionNames[] = $value;
 	}
 }

@@ -1,8 +1,6 @@
 <?php
 
 namespace PHPToJavascript;
-
-
 class CodeConverterState_TVARIABLEARRAY extends CodeConverterState {
 
 	function    processToken($name, $value, $parsedToken) {

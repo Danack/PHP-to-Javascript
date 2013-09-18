@@ -1,30 +1,27 @@
 <?php
 
 namespace PHPToJavascript;
+class CodeConverterState_TIMPLEMENTSINTERFACE extends CodeConverterState {
 
-class CodeConverterState_TIMPLEMENTSINTERFACE  extends CodeConverterState{
+	public $first = false;
 
-	public $first = FALSE;
-
-	public function		enterState($extraParams = array()){
+	public function        enterState($extraParams = array()) {
 		parent::enterState($extraParams);
-		$this->first = TRUE;
+		$this->first = true;
 	}
 
-	function	processToken($name, $value, $parsedToken){
-		if($this->first == TRUE){
-			$this->first = FALSE;
+	function    processToken($name, $value, $parsedToken) {
+		if ($this->first == true) {
+			$this->first = false;
 			$this->stateMachine->addJS("/*");
 		}
-
-		if($name == 'T_STRING' || $name == 'T_WHITESPACE'){
+		if ($name == 'T_STRING' || $name == 'T_WHITESPACE') {
 			$this->stateMachine->addJS($value);
 		}
-
-		if($name == '{'){
+		if ($name == '{') {
 			$this->stateMachine->addJS("*/");
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
-			return TRUE;
+			return true;
 		}
 	}
 }

@@ -1,34 +1,24 @@
 <?php
 
 namespace PHPToJavascript;
+class CodeConverterState_TOBJECTOPERATOR extends CodeConverterState {
 
-
-class CodeConverterState_TOBJECTOPERATOR extends CodeConverterState{
-
-	function	processToken($name, $value, $parsedToken){
-
-		if($name == 'T_VARIABLE'){
-			if(strpos($value, '$') !== FALSE){
+	function    processToken($name, $value, $parsedToken) {
+		if ($name == 'T_VARIABLE') {
+			if (strpos($value, '$') !== false) {
 				$this->stateMachine->addJS("[");
 				$this->stateMachine->addSymbolAfterNextToken(']');
-			}
-			else{
+			} else {
 				$this->stateMachine->addJS(".");
 			}
-
 			$this->changeToState(CONVERTER_STATE_VARIABLE);
-			return TRUE;
+			return true;
 		}
-
-
-		if($name == "T_STRING"){
-
+		if ($name == "T_STRING") {
 			$this->stateMachine->addJS(".");
-
 			$this->changeToState(CONVERTER_STATE_DEFAULT);
-			return TRUE;
+			return true;
 		}
-
 		//echo "Interesting - name $name value = $value\n";
 	}
 }

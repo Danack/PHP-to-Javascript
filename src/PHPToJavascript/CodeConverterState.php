@@ -1,31 +1,29 @@
 <?php
 
 namespace PHPToJavascript;
-
-
-abstract class CodeConverterState{
+abstract class CodeConverterState {
 
 	/**
 	 * @var ConverterStateMachine
 	 */
-	protected $stateMachine = NULL;
+	protected $stateMachine = null;
 
-	function __construct(ConverterStateMachine $stateMachine){
+	function __construct(ConverterStateMachine $stateMachine) {
 		$this->stateMachine = $stateMachine;
 	}
 
-	function	changeToState($newState, $extraParams = array()){
+	function    changeToState($newState, $extraParams = array()) {
 		$this->stateMachine->changeToState($newState, $extraParams);
 	}
 
-	public function		enterState($extraParams = array()){
+	public function        enterState($extraParams = array()) {
 	}
 
 	/**
 	 * @param $name
 	 * @param $value
+	 *
 	 * @return bool Whether the token should be reprocessed by the new state
 	 */
-	abstract function	processToken($name, $value, $parsedToken);
-
+	abstract function    processToken($name, $value, $parsedToken);
 }
