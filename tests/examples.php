@@ -1,5 +1,8 @@
 <?php
-
+date_default_timezone_set('Europe/Bratislava');
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(E_ALL);
 require_once("SplClassLoader.php");
 
 $loader = new SplClassLoader('PHPToJavascript', '../src');
@@ -7,7 +10,6 @@ $loader->register();
 
 $exportPath = "export";
 
-error_reporting(E_ALL);
 
 $filesToConvert = array(
 	'ArrayExample.js' => 'ArrayExample.php',
@@ -20,7 +22,6 @@ $filesToConvert = array(
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
 
-	'NameSpace.js' => 'NameSpace.php',
 	//Broken test
 	//'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
@@ -29,14 +30,18 @@ $filesToConvert = array(
 
 	'SwitchStatement.js' => 'SwitchStatement.php',
 	'TryCatch.js' => 'TryCatch.php',
-	'TraitExample.js' => array(
-		'TraitInclude.php',
-		'TraitExample.php',
-	),
 	'TypeHinting.js' => 'TypeHinting.php',
     'AnonymusFunction.js'=>'AnonymusFunction.php'
 );
+$_ = \PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT; // autoload class
 
+if (TRAIT_SUPPORTED){
+	$filesToConvert['TraitExample.js']=array(
+		'TraitInclude.php',
+		'TraitExample.php',
+	);
+	$filesToConvert['NameSpace.js']='NameSpace.php';
+}
 //$filesToConvert = array(
 //    'countItems.js' => 'countItems.php',
 //	//'BugReports.js' => 'BugReports.php',
