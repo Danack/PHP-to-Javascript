@@ -1,13 +1,16 @@
 <?php
 
-
 function	getTotal($value1, $value2 = 5){
 	return $value1 + $value2;
 }
 
-$mathTotal = getTotal(5);
+$test = function(){
 
-assert(mathTotal, 10);
+	$mathTotal = getTotal(5);
 
-testEnd();
+	assert($mathTotal, 10);
+
+	testEnd();
+};
+$test();
 ?>

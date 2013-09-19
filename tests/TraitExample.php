@@ -25,15 +25,18 @@ class ExampleJSON{
 	}
 }
 
-$testObject = new ExampleJSON(1, "First", "Testing");
+$test = function(){
+	$testObject = new ExampleJSON(1, "First", "Testing");
 
-$json = $testObject->toJSON();
+	$json = $testObject->toJSON();
 
-$duplicate = ExampleJSON::factory($json);
+	$duplicate = ExampleJSON::factory($json);
 
-assert($duplicate->name == "First", TRUE);
-assert($duplicate->value == "Testing", TRUE);
+	assert($duplicate->name == "First", TRUE);
+	assert($duplicate->value == "Testing", TRUE);
 
-testEnd();
+	testEnd();
+};
+$test();
 
 ?>

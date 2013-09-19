@@ -22,15 +22,18 @@ function test2(array $array){
 }
 
 
-$test1 = test1(null);
-assert($test1, 1);
+$test = function(){
+	$test3 = test1(null);
+	assert($test3, 1);
 
 
 
-$testArray = array(1, 2, 3);
-$test2 = test2($testArray);
-assert($test2, 6);
+	$testArray = array(1, 2, 3);
+	$test4 = test2($testArray);
+	assert($test4, 6);
 
-testEnd();
+	testEnd();
+};
+$test();
 
 ?>

@@ -52,10 +52,13 @@ class ClassSetVarExample {
 }
 
 
+$test = function(){
 
-$classExample = new ClassSetVarExample();
-assert($classExample->getInstanceArrayValue(), 6);
-assert($classExample->getStaticArrayValue(), 10);
-testEnd();
+	$classExample = new ClassSetVarExample();
+	assert($classExample->getInstanceArrayValue(), 6);
+	assert($classExample->getStaticArrayValue(), 10);
+	testEnd();
 
+};
+$test();
 ?>

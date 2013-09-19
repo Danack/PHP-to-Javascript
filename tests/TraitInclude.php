@@ -1,28 +1,31 @@
 <?php
 
 
-trait JSONFactory{
+$test = function(){
+	trait JSONFactory{
 
-	static function	factory($jsonString){
-		$data = json_decode($jsonString);
+		static function	factory($jsonString){
+			$data = json_decode($jsonString);
 
-		$object = new static();
+			$object = new static();
 
-		foreach ($data AS $key => $value){
-			$object->$key = $value;
+			foreach ($data AS $key => $value){
+				$object->$key = $value;
+			}
+
+			return $object;
 		}
 
-		return $object;
+		function	toJSON(){
+
+			$className = get_class($this);
+
+			return json_encode_object($this, $className);
+		}
 	}
 
-	function	toJSON(){
-
-		$className = get_class($this);
-
-		return json_encode_object($this, $className);
-	}
-}
-
-testEnd();
+	testEnd();
+};
+$test();
 
 ?>

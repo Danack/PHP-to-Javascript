@@ -19,6 +19,9 @@ class StaticTest {
 	}
 }
 
-testEnd();
+$test = function(){
+	testEnd();
 
+};
+$test();
 ?>

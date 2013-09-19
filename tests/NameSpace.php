@@ -4,28 +4,31 @@ namespace BaseReality;
 
 use Intahwebz\TestNamespace;
 
-trait SomeTrait{
-	var $someVariable;
-}
+	trait SomeTrait{
+		var $someVariable;
+	}
 
 
 
-class TestClass{
+	class TestClass{
 
-	use Intahwebz\SomeTrait;
+		use Intahwebz\SomeTrait;
 
-}
+	}
 
-class OtherClass extends TestClass {
-
-
-}
-
-//echo "Hello, This is in a namspace.";
-
-//Todo - need some code that actually uses namespaces to test.
-assert(1, 1);
+	class OtherClass extends TestClass {
 
 
-testEnd();
+	}
+
+$test = function(){
+	//echo "Hello, This is in a namspace.";
+
+	//Todo - need some code that actually uses namespaces to test.
+	assert(1, 1);
+
+
+	testEnd();
+};
+$test();
 ?>

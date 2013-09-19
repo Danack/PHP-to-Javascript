@@ -1,31 +1,34 @@
 <?php
 
-//https://github.com/Danack/PHP-to-Javascript/issues/14
-//Modulus doesn't work
+$test = function(){
+	//https://github.com/Danack/PHP-to-Javascript/issues/14
+	//Modulus doesn't work
 
-$p2 = 8;
-$step = 6;
+	$p2 = 8;
+	$step = 6;
 
-$p2 -= ($p2 % $step);
+	$p2 -= ($p2 % $step);
 
-assert($p2, 6);
+	assert($p2, 6);
 
-//*************************************************************
-//*************************************************************
+	//*************************************************************
+	//*************************************************************
 
-//https://github.com/Danack/PHP-to-Javascript/issues/15
-$countValue = 4;
-$countValue--;
+	//https://github.com/Danack/PHP-to-Javascript/issues/15
+	$countValue = 4;
+	$countValue--;
 
-assert($countValue, 3);
+	assert($countValue, 3);
 
-$countValue--;
+	$countValue--;
 
-assert($countValue, 2);
-
-
-testEnd();
+	assert($countValue, 2);
 
 
+	testEnd();
+
+
+};
+$test();
 
 ?>

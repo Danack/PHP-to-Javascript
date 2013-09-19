@@ -1,16 +1,19 @@
 <?php
 
-//This test requires PHP.js
+$test = function(){
+	//This test requires PHP.js
 
-$testArray = array('foo', 'bar', 'zot');
-
-
-$countValues = count($testArray);
+	$testArray = array('foo', 'bar', 'zot');
 
 
-assert($countValues, 3);
+	$countValues = count($testArray);
 
-testEnd();
 
+	assert($countValues, 3);
+
+	testEnd();
+
+};
+$test();
 
 ?> 

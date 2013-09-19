@@ -1,18 +1,22 @@
 <?php
 
 
-$total = 0;
+$test = function(){
+	$total = 0;
 
-for($i=0;$i<10;$i++){
+	for($i=0;$i<10;$i++){
 
-    if (($i%2) == 0) {
-        continue;
-    }
+		if (($i%2) == 0) {
+			continue;
+		}
 
-    $total++;
-}
+		$total++;
+	}
 
 
-assert($total, 5);
+	assert($total, 5);
 
-testEnd();
+	testEnd();
+
+};
+$test();

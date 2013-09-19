@@ -22,22 +22,25 @@ function sumArray($intArray){
 }
 
 
-$array = array(
-	'index1' => 1,
-	'index2' => 2,
-	'index3' => 3,
-);
+$test = function(){
+	$array = array(
+		'index1' => 1,
+		'index2' => 2,
+		'index3' => 3,
+	);
 
 
 
-$unsetArray = testUnset($array);
+	$unsetArray = testUnset($array);
 
 
-$result = sumArray($unsetArray);
+	$result = sumArray($unsetArray);
 
 
-assert($result, 4);
+	assert($result, 4);
 
-testEnd();
+	testEnd();
+};
+$test();
 
 ?>

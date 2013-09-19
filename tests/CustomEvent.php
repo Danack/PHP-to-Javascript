@@ -30,12 +30,14 @@ class CustomEvent{
 	public static $lastPage =  "basereality.lastPage";
 }
 
+// TODO: BUG https://github.com/Danack/PHP-to-Javascript/issues/37
+//$test = function(){
 
+	assert(CustomEvent::$nextPage, 'basereality.nextPage');
 
-assert(CustomEvent::$nextPage, 'basereality.nextPage');
+	assert(CustomEvent::$valueAfterComment, 10560325);
 
-assert(CustomEvent::$valueAfterComment, 10560325);
-
-
-testEnd();
+	testEnd();
+//};
+//$test();
 ?>

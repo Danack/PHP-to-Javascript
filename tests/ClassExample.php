@@ -75,61 +75,64 @@ class ClassExample {
 }
 
 
+$test = function(){
 
-$classExample = new ClassExample(5);
+	$classExample = new ClassExample(5);
 
-$classExample->addValue(5);
+	$classExample->addValue(5);
 
-assert($classExample->value, 10);
+	assert($classExample->value, 10);
 
-assert($classExample->getArrayValue(), 6);
+	assert($classExample->getArrayValue(), 6);
 
-assert($classExample->getArrayValueWithIndex(), 6);
+	assert($classExample->getArrayValueWithIndex(), 6);
 
-assert($classExample->publicVal5, 5);
+	assert($classExample->publicVal5, 5);
 
-assert($classExample->publicArr['a'], 5);
-
-
-$classExample->testStatic();
-$classExample->testStatic();
-$result = $classExample->testStatic();
+	assert($classExample->publicArr['a'], 5);
 
 
-//Called two times, but value is only incremented twice
-assert($result, 2);
-/*  In js is impossible make private fields or methods
-$privateAccessed = false;
-$exceptionCaught = false;
-try{
-	//Yes IDE - I know this isn't allowed.
-	///** @noinspection PhpIllegalArrayKeyTypeInspection * /
-
-	// @SuppressWarnings
-	$classExample->privateFunction();
-	$privateAccessed = true;
-}
-catch(Exception $error){
-	//This correct - the private function should not be callable.
-	$exceptionCaught = true;
-}
-
-assert($privateAccessed, false);
-assert($exceptionCaught, true);
-*/
-$value = $classExample->publicAccess();
-assert($value, 'foo');
-$value = $classExample->privateField();
-assert($value, 'foo');
+	$classExample->testStatic();
+	$classExample->testStatic();
+	$result = $classExample->testStatic();
 
 
-$classExample->testFunctionStatic();
-$classExample->testFunctionStatic();
-$classExample->testFunctionStatic();
-$value = $classExample->testFunctionStatic();
+	//Called two times, but value is only incremented twice
+	assert($result, 2);
+	/*  In js is impossible make private fields or methods
+	$privateAccessed = false;
+	$exceptionCaught = false;
+	try{
+		//Yes IDE - I know this isn't allowed.
+		///** @noinspection PhpIllegalArrayKeyTypeInspection * /
 
-assert($value, 4);
+		// @SuppressWarnings
+		$classExample->privateFunction();
+		$privateAccessed = true;
+	}
+	catch(Exception $error){
+		//This correct - the private function should not be callable.
+		$exceptionCaught = true;
+	}
 
-testEnd();
+	assert($privateAccessed, false);
+	assert($exceptionCaught, true);
+	*/
+	$value = $classExample->publicAccess();
+	assert($value, 'foo');
+	$value = $classExample->privateField();
+	assert($value, 'foo');
 
+
+	$classExample->testFunctionStatic();
+	$classExample->testFunctionStatic();
+	$classExample->testFunctionStatic();
+	$value = $classExample->testFunctionStatic();
+
+	assert($value, 4);
+
+	testEnd();
+
+};
+$test();
 ?>

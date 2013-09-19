@@ -1,39 +1,42 @@
 <?php
 
-$exceptionCaught = false;
+$test = function(){
+	$exceptionCaught = false;
 
 
-function testFunction($value1){
-	adddlert("Welcome guest $value1 !");
-}
+	function testFunction($value1){
+		adddlert("Welcome guest $value1 !");
+	}
 
-$exceptionMessage = false;
+	$exceptionMessage = false;
 
-try{
-	$result = testFunction(5);
-	echo "Result is $result";
-}
-catch(Exception $e){
-	$exceptionCaught = true;
-	//echo "Exception caught ".$e->getMessage();
-	$exceptionMessage = $e->getMessage();
-}
+	try{
+		$result = testFunction(5);
+		echo "Result is $result";
+	}
+	catch(Exception $e){
+		$exceptionCaught = true;
+		//echo "Exception caught ".$e->getMessage();
+		$exceptionMessage = $e->getMessage();
+	}
 
-assert($exceptionCaught, true);
-assertGreater(strlen($exceptionMessage), 5);
+	assert($exceptionCaught, true);
+	assertGreater(strlen($exceptionMessage), 5);
 
 
-$thrownExceptionCaught = false;
-try{
-	throw new Exception("What is this?");
-}
-catch(Exception $e){
-	//echo "Exception caught ".$e->getMessage();
-	$thrownExceptionCaught = true;
-}
+	$thrownExceptionCaught = false;
+	try{
+		throw new Exception("What is this?");
+	}
+	catch(Exception $e){
+		//echo "Exception caught ".$e->getMessage();
+		$thrownExceptionCaught = true;
+	}
 
-assert($thrownExceptionCaught, true);
+	assert($thrownExceptionCaught, true);
 
-testEnd();
+	testEnd();
+};
+$test();
 
 ?>

@@ -42,18 +42,21 @@ class Child extends Adult {
 	}
 }
 
-$adultOnly = new Adult();
+$test = function(){
+	$adultOnly = new Adult();
 
-assert($adultOnly->adultValue(), 123);
-assert($adultOnly->isExtended, false);
+	assert($adultOnly->adultValue(), 123);
+	assert($adultOnly->isExtended, false);
 
-$child = new Child();
+	$child = new Child();
 
-assert($child->childValue(), 12345);
-assert($child->adultValue(), 123);
-assert($child->isExtended, true);
+	assert($child->childValue(), 12345);
+	assert($child->adultValue(), 123);
+	assert($child->isExtended, true);
 
 
-testEnd();
+	testEnd();
+};
+$test();
 
 ?>

@@ -31,10 +31,13 @@ function 	testSwitchFunction($name, $value = FALSE){
 }
 
 
-assert(testSwitchFunction('output'), 'output');
-assert(testSwitchFunction('custom', 'bar'), 'bar');
-assert(testSwitchFunction('shamoan'), 'Unknown');
+$test = function(){
+	assert(testSwitchFunction('output'), 'output');
+	assert(testSwitchFunction('custom', 'bar'), 'bar');
+	assert(testSwitchFunction('shamoan'), 'Unknown');
 
-testEnd();
+	testEnd();
+};
+$test();
 
 ?>
