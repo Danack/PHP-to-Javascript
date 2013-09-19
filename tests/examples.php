@@ -36,11 +36,11 @@ $filesToConvert = array(
 	'TypeHinting.js' => 'TypeHinting.php',
 );
 
-$filesToConvert = array(
+//$filesToConvert = array(
 //    'countItems.js' => 'countItems.php',
 //	//'BugReports.js' => 'BugReports.php',
-    'SimpleExample.js' => 'SimpleExample.php',
-);
+//    'SimpleExample.js' => 'SimpleExample.php',
+//);
 
 
 $convertedFiles = array();
