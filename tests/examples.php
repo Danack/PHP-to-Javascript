@@ -14,6 +14,7 @@ $filesToConvert = array(
 	'AssigningThis.js' => 'AssigningThis.php',
 	'BugReports.js' => 'BugReports.php',
 	'ClassExample.js' => 'ClassExample.php',
+    'Closure.js' => 'Closure.php',
     'continue.js' => 'continue.php',
     'countItems.js' => 'countItems.php',
 	'CustomEvent.js' => 'CustomEvent.php' ,
@@ -37,9 +38,7 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//    'countItems.js' => 'countItems.php',
-//	//'BugReports.js' => 'BugReports.php',
-//    'SimpleExample.js' => 'SimpleExample.php',
+//    'Closure.js' => 'Closure.php',
 //);
 
 
@@ -89,7 +88,7 @@ function generateTestPage($convertedFiles){
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-	//$phpToJavascript->setTrace(true);
+	$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 

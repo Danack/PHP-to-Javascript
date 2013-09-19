@@ -1,5 +1,6 @@
 <?php
 
+$test = function() {
 
 
 $dataMap = [
@@ -127,4 +128,6 @@ assert($value, 123);
 
 testEnd();
 
-?>
+};
+
+$test();
