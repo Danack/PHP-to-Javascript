@@ -1,35 +1,40 @@
 <?php
 
 
-function    testSwitchFunction($name, $value = false) {
-	$result = false;
-	switch ($name) {
-		case('output'):
-		{
-			$result = 'output';
+function 	testSwitchFunction($name, $value = FALSE){
+
+	$result = FALSE;
+
+	switch($name){
+
+		case('output'):{
+			$result =  'output';
 			break;
 		}
-		case('silent'):
-		{
-			$result = 'notloud';
+
+		case('silent'):{
+			$result =  'notloud';
 			break;
 		}
-		case('custom'):
-		{
+
+		case('custom'):{
 			$result = $value;
 			break;
 		}
-		default:
-			{
+
+		default:{
 			$result = 'Unknown';
-			}
+		}
 	}
+
 	return $result;
 }
+
 
 assert(testSwitchFunction('output'), 'output');
 assert(testSwitchFunction('custom', 'bar'), 'bar');
 assert(testSwitchFunction('shamoan'), 'Unknown');
+
 testEnd();
 
 ?>
