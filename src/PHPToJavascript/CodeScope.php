@@ -81,7 +81,7 @@ abstract class CodeScope{
 				}
 				else{
 					//The variable really ought to exist in the class scope
-					throw new Exception("Ought of order use for varaible [".$variableName."]. Please have your variables above your methods. It makes life easier.");
+					throw new \Exception("Out of order use for variable [".$variableName."]. Please have your variables above your methods. It makes life easier.");
 				}
 			}
 		}
