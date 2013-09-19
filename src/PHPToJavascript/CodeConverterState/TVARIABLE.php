@@ -1,35 +1,42 @@
 <?php
 
 namespace PHPToJavascript;
+
 class CodeConverterState_TVARIABLE extends CodeConverterState {
 
-	function    processToken($name, $value, $parsedToken) {
-		if ($this->stateMachine->currentScope instanceof GlobalScope) {
+	function	processToken($name, $value, $parsedToken){
+
+		if($this->stateMachine->currentScope instanceof GlobalScope){
 			$this->changeToState(CONVERTER_STATE_VARIABLE_GLOBAL);
-			return true;
+			return TRUE;
 		}
-		if ($this->stateMachine->currentScope instanceof FunctionScope) {
+
+		if($this->stateMachine->currentScope instanceof FunctionScope){
 			//TODO - Double-check FunctionParameterScope is meant to be the same as FunctionScope
 			$this->changeToState(CONVERTER_STATE_VARIABLE_FUNCTION);
-			return true;
+			return TRUE;
 		}
-		if ($this->stateMachine->currentScope instanceof FunctionParameterScope) {
+
+		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
 			$this->changeToState(CONVERTER_STATE_VARIABLE_FUNCTION_PARAMETER);
-			return true;
+			return TRUE;
 		}
-		if ($this->stateMachine->currentScope instanceof ClassScope) {
+
+		if($this->stateMachine->currentScope instanceof ClassScope){
 			$this->changeToState(CONVERTER_STATE_VARIABLE_CLASS);
-			return true;
+			return TRUE;
 		}
-		if ($this->stateMachine->currentScope instanceof ArrayScope) {
+		if($this->stateMachine->currentScope instanceof ArrayScope){
 			$this->changeToState(CONVERTER_STATE_VARIABLE_ARRAY);
-			return true;
+			return TRUE;
 		}
-		if ($this->stateMachine->currentScope instanceof CatchScope) {
+
+		if($this->stateMachine->currentScope instanceof CatchScope){
 			$this->changeToState(CONVERTER_STATE_VARIABLE_CATCH);
-			return true;
+			return TRUE;
 		}
-		throw new \Exception("Unknown scope [" . get_class($this->stateMachine->currentScope) . "] - don't know how to process variables.");
+
+		throw new \Exception("Unknown scope [".get_class($this->stateMachine->currentScope)."] - don't know how to process variables.");
 	}
 }
 
