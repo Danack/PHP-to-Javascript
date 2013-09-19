@@ -237,7 +237,7 @@ class	ConverterStateMachine{
 	}
 
 	/**
-	 * Encloses a varaible so that it can be used in a string properly e.g.
+	 * Encloses a variable so that it can be used in a string properly e.g.
 	 * $target = "world";
 	 * $greeting = "Hello $target!";
 	 *
