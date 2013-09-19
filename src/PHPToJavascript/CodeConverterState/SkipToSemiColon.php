@@ -1,7 +1,7 @@
 <?php
 
 namespace PHPToJavascript;
-class CodeConverterState_Semicolon extends CodeConverterState {
+class CodeConverterState_SkipToSemiColon extends CodeConverterState {
 
 	function    processToken($name, $value, $parsedToken) {
 		if ($name==";"){

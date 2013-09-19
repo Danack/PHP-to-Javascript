@@ -92,7 +92,7 @@ define('CONVERTER_STATE_T_TRY', 'CONVERTER_STATE_T_TRY');
 
 define('CONVERTER_STATE_T_CATCH', 'CONVERTER_STATE_T_CATCH');
 define('CONVERTER_STATE_GLOBAL', 'CONVERTER_STATE_GLOBAL');
-define('CONVERTER_STATE_SEMICOLON', 'CONVERTER_STATE_SEMICOLON');
+define('CONVERTER_STATE_SKIP_TO_SEMICOLON', 'CONVERTER_STATE_SKIP_TO_SEMICOLON');
 /**
  * Converts a PHP constructor into the parameter string and then body, so that it
  * can be inlined to Javascript style constructors.
