@@ -53,6 +53,7 @@ $test = function(){
 	$strFunc = $testGlobal->toString();
 	assert($strFunc->indexOf('global') || $strFunc->indexOf('foo1') || $strFunc->indexOf('foo2') || $strFunc->indexOf(';'), -1);
 
+	// TODO: BUG https://github.com/Danack/PHP-to-Javascript/issues/36
 	$testGlobal2= function(){
 		global $foo1,$foo2,$foo4,$foo5,$foo6,$window;
 		$foo3 = $foo2;
