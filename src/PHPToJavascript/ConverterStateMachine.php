@@ -207,7 +207,13 @@ class	ConverterStateMachine{
 		$this->variableFlags |= $variableFlag;
 	}
 
-	function	processToken($name, $value, $parsedToken){
+    /**
+     * @param $name
+     * @param $value
+     * @param $parsedToken
+     * @return bool true if the token should be reprocessed, e.g. because of a change of state.
+     */
+    function	processToken($name, $value, $parsedToken){
 		if(PHPToJavascript::$TRACE == true){
 			echo "SM ".get_class($this->getState())." token [$name] => [$value]  ".NL;
 		}
