@@ -45,12 +45,22 @@ $value = testFunction($testArray);
 assert($value, 6);
 
 assert(eval('typeof Function.prototype.toString'), "function");
+
 $testGlobal= function(){
 	global $foo1,$foo2;
 };
 $strFunc = $testGlobal->toString();
 assert($strFunc->indexOf('global') || $strFunc->indexOf('foo1') || $strFunc->indexOf('foo2') || $strFunc->indexOf(';'), -1);
 
+$testGlobal2= function(){
+	global $foo1,$foo2,$foo4,$foo5,$foo6,$window;
+	$foo3 = $foo2;
+	$foo3 = eval($foo4);
+	$foo3 = $foo4 + $foo5;
+	$foo3 = $window;
+	return $foo6;
+};
+assert($testGlobal2(),5);
 
 testEnd();
 

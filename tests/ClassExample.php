@@ -70,6 +70,8 @@ class ClassExample {
 	public function privateField(){
 		return $this->privateFieldVal;
 	}
+
+	public $publicArr = array('a'=>5);
 }
 
 
@@ -83,6 +85,10 @@ assert($classExample->value, 10);
 assert($classExample->getArrayValue(), 6);
 
 assert($classExample->getArrayValueWithIndex(), 6);
+
+assert($classExample->publicVal5, 5);
+
+assert($classExample->publicArr['a'], 5);
 
 
 $classExample->testStatic();

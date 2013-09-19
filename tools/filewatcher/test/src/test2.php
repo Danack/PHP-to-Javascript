@@ -1,5 +1,4 @@
 <?php
 
-function test(){
-	global $foo, $foo2;
-}
+Q::test();
+Q();
