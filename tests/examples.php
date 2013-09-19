@@ -36,10 +36,11 @@ $filesToConvert = array(
 	'TypeHinting.js' => 'TypeHinting.php',
 );
 
-//$filesToConvert = array(
+$filesToConvert = array(
 //    'countItems.js' => 'countItems.php',
 //	//'BugReports.js' => 'BugReports.php',
-//);
+    'SimpleExample.js' => 'SimpleExample.php',
+);
 
 
 $convertedFiles = array();
@@ -88,7 +89,7 @@ function generateTestPage($convertedFiles){
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-	//$phpToJavascript->setTrace(true);
+	$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 
