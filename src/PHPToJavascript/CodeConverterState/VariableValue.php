@@ -32,17 +32,18 @@ class CodeConverterState_VariableValue extends CodeConverterState{
 
 			$classScope = false;
 			$this->stateMachine->startArrayScope("");
-			//	if ($this->stateMachine->currentScope instanceof ClassScope) {
-			//		$classScope = $this->stateMachine->currentScope;
-			//	}
-			//
-			//	$this->stateMachine->pushScope(CODE_SCOPE_ARRAY, $value, DECLARATION_TYPE_SQUARE_ARRAY);
-			//
-			//	if ($classScope != false) {
-			//		$this->stateMachine->currentScope->setVariableName($classScope->currentVariableName);
-			//	}
-			//
-			//	$this->changeToState(CONVERTER_STATE_DEFAULT);
+//			if ($this->stateMachine->currentScope instanceof ClassScope) {
+//				$classScope = $this->stateMachine->currentScope;
+//			}
+//
+//
+//			$this->stateMachine->pushScope(CODE_SCOPE_ARRAY, $value, DECLARATION_TYPE_SQUARE_ARRAY);
+//
+//			if ($classScope != false) {
+//				$this->stateMachine->currentScope->setVariableName($classScope->currentVariableName);
+//			}
+//
+//			$this->changeToState(CONVERTER_STATE_DEFAULT);
 			$this->stateMachine->currentTokenStream->insertToken('(');
 			return false;
 		}

@@ -13,13 +13,13 @@ $test = function(){
 		$total += $i;
 	}
 
-	assert(total, 15);
+	assert($total, 15);
 
 	$value = '123';
 	$delta = 123;
 	$value = /*value*/$value + $delta;
 
-	assert(value, 246);
+	assert($value, 246);
 
 	$result = str_pad($value, 6, '0', STR_PAD_LEFT);
 
@@ -45,6 +45,17 @@ $test = function(){
 
 	assert($value, 6);
 
+	//****************************************
+	//$globalVar1 = 1;
+
+	function testGlobal(){
+		global $globalVar1;
+		$localVar = $globalVar1 + 2;
+		return $localVar;
+	};
+
+	assert(testGlobal(), 3);
+
 	assert(eval('typeof Function.prototype.toString'), "function");
 
 	$testGlobal= function(){
@@ -54,7 +65,7 @@ $test = function(){
 	assert($strFunc->indexOf('global') || $strFunc->indexOf('foo1') || $strFunc->indexOf('foo2') || $strFunc->indexOf(';'), -1);
 
 	// TODO: BUG https://github.com/Danack/PHP-to-Javascript/issues/36
-	$testGlobal2= function(){
+	/*$testGlobal2= function(){
 		global $foo1,$foo2,$foo4,$foo5,$foo6,$window;
 		$foo3 = $foo2;
 		$foo3 = eval($foo4);
@@ -62,7 +73,7 @@ $test = function(){
 		$foo3 = $window;
 		return $foo6;
 	};
-	assert($testGlobal2(),5);
+	assert($testGlobal2(),5);*/
 
 	testEnd();
 };

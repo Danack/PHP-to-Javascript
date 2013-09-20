@@ -140,8 +140,10 @@ class	ConverterStateMachine{
 
 
 		$this->states[CONVERTER_STATE_VARIABLE_CATCH] = new CodeConverterState_TVARIABLECATCH($this);
-		$this->states[CONVERTER_STATE_GLOBAL] = new CodeConverterState_TGLOBAL($this);
-		$this->states[CONVERTER_STATE_SKIP_TO_SEMICOLON] = new CodeConverterState_SkipToSemiColon($this);
+
+        $this->states[CONVERTER_STATE_GLOBAL] = new CodeConverterState_TGLOBAL($this);
+        $this->states[CONVERTER_STATE_SKIP_TO_SEMICOLON] = new CodeConverterState_SkipToSemiColon($this);
+
 		$this->currentState = CONVERTER_STATE_DEFAULT;
 	}
 
@@ -205,6 +207,12 @@ class	ConverterStateMachine{
 		$this->variableFlags |= $variableFlag;
 	}
 
+    /**
+     * @param $name
+     * @param $value
+     * @param $parsedToken
+     * @return bool true if the token should be reprocessed, e.g. because of a change of state.
+     */
 	function	processToken($name, $value, $parsedToken){
 		if(PHPToJavascript::$TRACE == true){
 			echo "SM ".get_class($this->getState())." token [$name] => [$value]  ".NL;
