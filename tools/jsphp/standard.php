@@ -1,4 +1,5 @@
 <?php
+// TODO: finalize this file with all js features
 function alert($arg){};
 class Str{
 	public $length;
