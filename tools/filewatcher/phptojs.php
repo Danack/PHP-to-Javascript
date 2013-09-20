@@ -1,4 +1,7 @@
 <?php
+date_default_timezone_set('Europe/Bratislava');
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
 error_reporting(E_ALL);
 $file = realpath(getcwd() . DIRECTORY_SEPARATOR . $argv[1]);
 if (!$file) {
@@ -30,4 +33,6 @@ $phpToJavascript = new PHPToJavascript\PHPToJavascript();
 $phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_CONSOLE_LOG);
 $phpToJavascript->addFromFile($file);
 $phpToJavascript->generateFile($outputFile, $file);
+
+echo "OK";
 

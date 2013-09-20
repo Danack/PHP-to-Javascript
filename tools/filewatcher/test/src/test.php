@@ -45,3 +45,31 @@ $foo->fooAbs();
 
 
 
+
+
+class Foo3{
+	protected $foo=5;
+
+	function foooo(){
+		$foo==6;
+	}
+}
+class Foo5 extends Foo3{
+
+	function foooo(){
+		$this->foo=6;
+		parent::foooo();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
