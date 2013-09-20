@@ -85,6 +85,12 @@ function generateTestPage($convertedFiles){
 	fclose($fileHandle);
 }
 
+function encapsulateJavascriptFile($outputFilename) {
+    $fileContents = file_get_contents($outputFilename);
+    $fileContents = "(function(){\n".$fileContents."})();\n";
+    file_put_contents($outputFilename, $fileContents);
+}
+
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
@@ -109,6 +115,8 @@ foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 
 	$phpToJavascript->generateFile("output/".$outputFilename, $inputFilename);
 
+    encapsulateJavascriptFile("output/".$outputFilename);
+    
 	$convertedFiles[] = $outputFilename;
 }
 
