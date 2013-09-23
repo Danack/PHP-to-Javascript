@@ -21,6 +21,7 @@ $filesToConvert = array(
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
 
+    'MultiLine.js' => 'MultiLine.php',
 	'NameSpace.js' => 'NameSpace.php',
 	//Broken test
 	//'PublicPrivate.js' => 'PublicPrivate.php',
