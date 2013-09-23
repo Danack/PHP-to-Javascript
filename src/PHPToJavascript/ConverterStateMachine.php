@@ -597,7 +597,7 @@ class	ConverterStateMachine{
 		'/', '+', '-', '>',
 		'<', '[', ']', "\"",
 		"'", ":",
-		'%',
+		'%', '?',
 	);
 
 	/** @var array these tokens keeps their value */

@@ -29,6 +29,7 @@ $filesToConvert = array(
 	'StaticTest.js' => 'StaticTest.php',
 
 	'SwitchStatement.js' => 'SwitchStatement.php',
+    'Ternary2.js' => 'Ternary2.php',
 	'TryCatch.js' => 'TryCatch.php',
 	'TraitExample.js' => array(
 		'TraitInclude.php',
@@ -38,7 +39,7 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//    'Closure.js' => 'Closure.php',
+//    'Ternary2.js' => 'Ternary2.php',
 //);
 
 
