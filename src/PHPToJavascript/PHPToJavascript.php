@@ -315,7 +315,16 @@ function processTokenStream(TokenStream $tokenStream, ConverterStateMachine $sta
 
 		$parsedToken = $stateMachine->parseToken($name, $value, $count);
 
-		$stateMachine->accountForOpenBrackets($name);
+        //TODO - both of these should be somewhere more logical.
+        if ($name == 'T_CONSTANT_ENCAPSED_STRING'){
+            $value = convertMultiLineString($value);
+        }
+
+        if ($name == 'T_ENCAPSED_AND_WHITESPACE') {
+            $parsedToken = convertMultiLineString($parsedToken);
+        }
+
+        $stateMachine->accountForOpenBrackets($name);
 		$stateMachine->accountForQuotes($name);
 		$stateMachine->scopePreStateMagic($name, $value);
 

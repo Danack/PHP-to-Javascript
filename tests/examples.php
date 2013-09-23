@@ -23,6 +23,7 @@ $filesToConvert = array(
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
 
+    'MultiLine.js' => 'MultiLine.php',
 	//Broken test
 	//'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
@@ -30,6 +31,7 @@ $filesToConvert = array(
 	'StaticTest.js' => 'StaticTest.php',
 
 	'SwitchStatement.js' => 'SwitchStatement.php',
+    'Ternary2.js' => 'Ternary2.php',
 	'TryCatch.js' => 'TryCatch.php',
 	'TypeHinting.js' => 'TypeHinting.php',
     'AnonymusFunction.js'=>'AnonymusFunction.php'
@@ -91,6 +93,12 @@ function generateTestPage($convertedFiles){
 	fclose($fileHandle);
 }
 
+function encapsulateJavascriptFile($outputFilename) {
+    $fileContents = file_get_contents($outputFilename);
+    $fileContents = "(function(){\n".$fileContents."})();\n";
+    file_put_contents($outputFilename, $fileContents);
+}
+
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
@@ -114,6 +122,8 @@ foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript->addPostConversionReplace("//JS", "");
 
 	$phpToJavascript->generateFile("output/".$outputFilename, $inputFilename);
+
+    encapsulateJavascriptFile("output/".$outputFilename);
 
 	$convertedFiles[] = $outputFilename;
 }

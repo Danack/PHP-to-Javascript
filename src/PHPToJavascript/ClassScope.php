@@ -194,7 +194,11 @@ class ClassScope extends CodeScope{
 			$constructorInfo = trimConstructor($constructor);
 			$constructorInfo['body'] = $parentConstructor.$constructorInfo['body'];
 			$js = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, $constructorInfo['parameters'], $js);
-			$js = str_replace(CONSTRUCTOR_POSITION_MARKER, $constructorInfo['body'], $js);
+			// TODO: add constructor to end of class
+			//$js = substr($js,0,strrpos($js,'}')).$constructorInfo['body'].PHP_EOL.'}'.substr($js,strrpos($js,'}')+1,strlen($js));
+			$pos = strrpos($js, CONSTRUCTOR_POSITION_MARKER);
+			$js = substr_replace($js, $constructorInfo['body'], $pos, strlen(CONSTRUCTOR_POSITION_MARKER));
+			//$js = str_replace(CONSTRUCTOR_POSITION_MARKER, $constructorInfo['body'], $js);
 		}
 		else{
 			//There is no constructor - just remove the magic strings

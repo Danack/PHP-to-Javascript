@@ -47,7 +47,12 @@ abstract class CodeScope{
 	/**
 	 * @var string[]
 	 */
-	public $scopedVariables = array();
+	public $scopedVariables = array(
+		// TODO: add scoprd variable from global keyword
+		'window'=>false,
+		'screen'=>false,
+		'Q'=>false
+	);
 
 	/**
 	 * @param $variableName

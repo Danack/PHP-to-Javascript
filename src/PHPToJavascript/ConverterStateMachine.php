@@ -3,6 +3,10 @@
 namespace PHPToJavascript;
 
 
+function convertMultiLineString($string) {
+    return str_replace("\n", "\\\n", $string);
+}
+
 
 function	unencapseString($string){
 	if($string[0] == '"' ||
@@ -213,9 +217,9 @@ class	ConverterStateMachine{
      * @param $parsedToken
      * @return bool true if the token should be reprocessed, e.g. because of a change of state.
      */
-	function	processToken($name, $value, $parsedToken){
+    function	processToken($name, $value, $parsedToken){
 		if(PHPToJavascript::$TRACE == true){
-			echo "SM ".get_class($this->getState())." token [$name] => [$value]  ".NL;
+			echo "SM ".get_class($this->getState())." token [$name] => [$value]".NL;
 		}
 		return $this->getState()->processToken($name, $value, $parsedToken);
 	}
@@ -596,7 +600,7 @@ class	ConverterStateMachine{
 		'/', '+', '-', '>',
 		'<', '[', ']', "\"",
 		"'", ":",
-		'%',
+		'%', '?', '!'
 	);
 
 	/** @var array these tokens keeps their value */

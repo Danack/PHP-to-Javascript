@@ -10,6 +10,9 @@ class CodeConverterState_VariableDefault extends CodeConverterState{
 			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
 		}
 		else{
+			/*if (substr($value,0,1)=="'" || substr($value,0,1)=='"'){
+				$value = str_replace(PHP_EOL,'\\'.PHP_EOL,$value);
+			}*/
 			$this->stateMachine->addJS($value);
 		}
 
