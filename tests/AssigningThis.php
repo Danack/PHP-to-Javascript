@@ -7,7 +7,7 @@ function	paramTest($object, $otherVar){
 
 class TestClass{
 
-	var $five = 5;
+	private $five = 5;
 
 	function	getThis(){
 		return $this;

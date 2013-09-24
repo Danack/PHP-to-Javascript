@@ -4,7 +4,7 @@ class StaticTest {
 
 	static $staticClassVar = 0;
 
-	var $instanceVar = 0;
+	public $instanceVar = 0;
 
 	static function staticMethod(){
 		self::$staticClassVar++;

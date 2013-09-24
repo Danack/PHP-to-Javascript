@@ -3,8 +3,9 @@
 class ClassExample {
 
 
-	var		$value = null;
-	var 	$testArray = null;
+	public	$value = null;
+	public 	$testArray = null;
+	var $local = 9;
 
 	static public 	$staticVar = 0;
 
@@ -63,6 +64,10 @@ class ClassExample {
 		return $countUnique;
 	}
 
+	public function getLocal(){
+		global $local;
+		return $local;
+	}
 
 }
 
@@ -112,6 +117,10 @@ assert($exceptionCaught, true);
 */
 $value = $classExample->publicAccess();
 assert($value, 5);
+
+
+$value = $classExample->getLocal();
+assert($value, 9);
 
 
 $classExample->testFunctionStatic();
