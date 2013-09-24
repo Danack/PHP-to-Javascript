@@ -6,7 +6,8 @@ namespace PHPToJavascript;
 class CodeConverterState_TPRIVATE extends CodeConverterState{
 
 	function	processToken($name, $value, $parsedToken){
-		$this->stateMachine->variableFlags |= DECLARATION_TYPE_PRIVATE;
+		// In js is impossible make private fields or methods
+		$this->stateMachine->variableFlags |= DECLARATION_TYPE_PUBLIC;
 		$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}
 }

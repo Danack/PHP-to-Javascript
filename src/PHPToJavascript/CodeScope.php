@@ -171,6 +171,13 @@ abstract class CodeScope extends UsingSafeAccess{
 		//Yes, I know this is terrible OO-ness.
 	}
 
+	/**
+	 * @deprecated public cant be defined in prototype. see https://github.com/Danack/PHP-to-Javascript/issues/35
+	 *
+	 * @param $variableName
+	 *
+	 * @throws \Exception
+	 */
 	function addPublicVariable($variableName){
 		throw new \Exception("This should only be called on ClassScope");
 		//Yes, I know this is terrible OO-ness.

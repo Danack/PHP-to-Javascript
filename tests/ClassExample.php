@@ -90,11 +90,13 @@ assert($result, 2);
 
 
 
+/*
+private is impossible in plain js. see https://github.com/Danack/PHP-to-Javascript/issues/33
 $privateAccessed = false;
 $exceptionCaught = false;
 try{
 	//Yes IDE - I know this isn't allowed.
-	///** @noinspection PhpIllegalArrayKeyTypeInspection */
+	///** @noinspection PhpIllegalArrayKeyTypeInspection * /
 
 	// @SuppressWarnings
 	$classExample->privateFunction();
@@ -107,7 +109,7 @@ catch(Exception $error){
 
 assert($privateAccessed, false);
 assert($exceptionCaught, true);
-
+*/
 $value = $classExample->publicAccess();
 assert($value, 5);
 

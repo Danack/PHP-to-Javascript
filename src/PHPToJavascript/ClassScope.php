@@ -114,7 +114,7 @@ class ClassScope extends CodeScope{
 
 		$js = $this->replaceConstructorInJS($js);
 
-		$js = $this->manglePrivateFunctions($js);
+		//$js = $this->manglePrivateFunctions($js);
 
 		return $js;
 	}
@@ -249,6 +249,10 @@ class ClassScope extends CodeScope{
 		$this->currentVariableName = $variableName;
 	}
 
+	/**
+	 * @deprecated public cant be defined in prototype. see https://github.com/Danack/PHP-to-Javascript/issues/35
+	 * @param $variableName
+	 */
 	function addPublicVariable($variableName){
 		$this->publicVariables[$variableName] = false;
 		$this->currentVariableForConcattingValue = &$this->publicVariables[$variableName];
