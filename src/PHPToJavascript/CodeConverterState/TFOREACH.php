@@ -104,7 +104,8 @@ class CodeConverterState_TFOREACH extends CodeConverterState {
 		$value = trim(implode('', $this->keyOrValueElements));
 
 		$this->stateMachine->addJS( "for (var {$value}Key in $array) {".
-			"		\n                 var $value = $array"."[{$value}Key];");
+								   "\n".TAB.TAB.TAB.TAB."if (!{$array}.hasOwnProperty({$value}Key)) continue;".
+								   "\n".TAB.TAB.TAB.TAB."var $value = $array" . "[{$value}Key];");
 
 		$this->stateMachine->currentScope->addScopedVariable($value, 0);
 	}
@@ -114,8 +115,9 @@ class CodeConverterState_TFOREACH extends CodeConverterState {
 		$key = trim(implode('', $this->keyOrValueElements));
 		$value = trim(implode('', $this->valueElements));
 
-		$this->stateMachine->addJS("for (var $key in $array) {".
-			"\n       var $value = $array"."[$key];");
+		$this->stateMachine->addJS("for (var $key in $array) {" .
+								   "\n".TAB.TAB.TAB.TAB."if (!{$array}.hasOwnProperty({$key})) continue;".
+								   "\n".TAB.TAB.TAB.TAB."var $value = $array" . "[$key];");
 
 		$this->stateMachine->currentScope->addScopedVariable($key, 0);
 		$this->stateMachine->currentScope->addScopedVariable($value, 0);

@@ -6,6 +6,9 @@ namespace PHPToJavascript;
 if(defined('NL') == FALSE){
 	define('NL', "\r\n");
 }
+if (defined('TAB') == false) {
+	define('TAB', "\t");
+}
 
 define('TRAIT_SUPPORTED',version_compare(phpversion(), '5.4.0', '>='));
 
