@@ -1,6 +1,4 @@
 <?php
-// TODO: implement all browser class and functions
-// TODO: fix arguments and return types of methods in auto generated classes
 function alert($arg) { }
 
 ;
@@ -107,68 +105,72 @@ class Window {
 		$onkeydown,$oninvalid,$oninput,$onhashchange,$onfocus,$onerror,$onended,$onemptied,$ondurationchange,$ondrop,$ondragstart,$ondragover,$ondragleave,$ondragenter,$ondragend,$ondrag,
 		$ondblclick,$oncontextmenu,$onclick,$onchange,$oncanplaythrough,$oncanplay,$onblur,$onbeforeunload,$onabort,$TEMPORARY,$PERSISTENT;
 
-		public function logEvent(){return $this;}
-		public function EventTracker(){return $this;}
-		public function parseHtmlSubset(){return $this;}
-		public function assert(){return $this;}
-		public function chromeSend(){return $this;}
-		public function getSupportedScaleFactors(){return $this;}
-		public function url(){return $this;}
-		public function imageset(){return $this;}
-		public function parseQueryParams(){return $this;}
-		public function findAncestorByClass(){return $this;}
-		public function findAncestor(){return $this;}
-		public function swapDomNodes(){return $this;}
-		public function disableTextSelectAndDrag(){return $this;}
-		public function preventDefaultOnPoundLinkClicks(){return $this;}
-		public function isRTL(){return $this;}
-		public function getRequiredElement(){return $this;}
-		public function appendParam(){return $this;}
-		public function getFaviconImageSet(){return $this;}
-		public function getFaviconUrlForCurrentDevicePixelRatio(){return $this;}
-		public function createElementWithClassName(){return $this;}
-		public function toCssPx(){return $this;}
-		public function postMessage(){return $this;}
-		public function blur(){return $this;}
-		public function focus(){return $this;}
-		public function getSelection(){return $this;}
-		public function stop(){return $this;}
-		public function showModalDialog(){return $this;}
-		public function alert(){return $this;}
-		public function confirm(){return $this;}
-		public function prompt(){return $this;}
-		public function find(){return $this;}
-		public function scrollBy(){return $this;}
-		public function scrollTo(){return $this;}
-		public function scroll(){return $this;}
-		public function moveBy(){return $this;}
-		public function moveTo(){return $this;}
-		public function resizeBy(){return $this;}
-		public function resizeTo(){return $this;}
-		public function matchMedia(){return $this;}
-		public function requestAnimationFrame(){return $this;}
-		public function cancelAnimationFrame(){return $this;}
-		public function webkitRequestAnimationFrame(){return $this;}
-		public function webkitCancelAnimationFrame(){return $this;}
-		public function webkitCancelRequestAnimationFrame(){return $this;}
-		public function atob(){return $this;}
-		public function btoa(){return $this;}
-		public function addEventListener(){return $this;}
-		public function removeEventListener(){return $this;}
-		public function captureEvents(){return $this;}
-		public function releaseEvents(){return $this;}
-		public function setTimeout(){return $this;}
-		public function clearTimeout(){return $this;}
-		public function setInterval(){return $this;}
-		public function clearInterval(){return $this;}
-		public function getComputedStyle(){return $this;}
-		public function getMatchedCSSRules(){return $this;}
-		public function webkitConvertPointFromPageToNode(){return $this;}
-		public function webkitConvertPointFromNodeToPage(){return $this;}
-		public function dispatchEvent(){return $this;}
-		public function webkitRequestFileSystem(){return $this;}
-		public function webkitResolveLocalFileSystemURL(){return $this;}
-		public function openDatabase(){return $this;}
+	public function logEvent(){return $this;}
+	public function EventTracker(){return $this;}
+	public function parseHtmlSubset(){return $this;}
+	public function assert(){return $this;}
+	public function chromeSend(){return $this;}
+	public function getSupportedScaleFactors(){return $this;}
+	public function url(){return $this;}
+	public function imageset(){return $this;}
+	public function parseQueryParams(){return $this;}
+	public function findAncestorByClass(){return $this;}
+	public function findAncestor(){return $this;}
+	public function swapDomNodes(){return $this;}
+	public function disableTextSelectAndDrag(){return $this;}
+	public function preventDefaultOnPoundLinkClicks(){return $this;}
+	public function isRTL(){return $this;}
+	public function getRequiredElement(){return $this;}
+	public function appendParam(){return $this;}
+	public function getFaviconImageSet(){return $this;}
+	public function getFaviconUrlForCurrentDevicePixelRatio(){return $this;}
+	public function createElementWithClassName(){return $this;}
+	public function toCssPx(){return $this;}
+	public function postMessage(){return $this;}
+	public function blur(){return $this;}
+	public function focus(){return $this;}
+	public function getSelection(){return $this;}
+	public function stop(){return $this;}
+	public function showModalDialog(){return $this;}
+	public function alert(){return $this;}
+	public function confirm(){return $this;}
+	public function prompt(){return $this;}
+	public function find(){return $this;}
+	public function scrollBy(){return $this;}
+	public function scrollTo(){return $this;}
+	public function scroll(){return $this;}
+	public function moveBy(){return $this;}
+	public function moveTo(){return $this;}
+	public function resizeBy(){return $this;}
+	public function resizeTo(){return $this;}
+	public function matchMedia(){return $this;}
+	public function requestAnimationFrame(){return $this;}
+	public function cancelAnimationFrame(){return $this;}
+	public function webkitRequestAnimationFrame(){return $this;}
+	public function webkitCancelAnimationFrame(){return $this;}
+	public function webkitCancelRequestAnimationFrame(){return $this;}
+	public function atob(){return $this;}
+	public function btoa(){return $this;}
+	public function addEventListener(){return $this;}
+	public function removeEventListener(){return $this;}
+	public function captureEvents(){return $this;}
+	public function releaseEvents(){return $this;}
+	public function setTimeout(){return $this;}
+	public function clearTimeout(){return $this;}
+	public function setInterval(){return $this;}
+	public function clearInterval(){return $this;}
+	public function getComputedStyle(){return $this;}
+	public function getMatchedCSSRules(){return $this;}
+	public function webkitConvertPointFromPageToNode(){return $this;}
+	public function webkitConvertPointFromNodeToPage(){return $this;}
+	public function dispatchEvent(){return $this;}
+	public function webkitRequestFileSystem(){return $this;}
+	public function webkitResolveLocalFileSystemURL(){return $this;}
+	public function openDatabase(){return $this;}
+}
+
+class JsEvent{
+	function stopPropagation(){}
 }
 
 class Screen {
@@ -184,7 +186,7 @@ class Console {
 	 * @param $args ...
 	 */
 	public function log($args) { }
-	
+
 	public function debug(){return $this;}
 	public function error(){return $this;}
 	public function info(){return $this;}
@@ -205,6 +207,11 @@ class Console {
 	public function groupCollapsed(){return $this;}
 	public function groupEnd(){return $this;}
 	public function clear(){return $this;}
+}
+
+class Math{
+	public static function random(){}
+	public static function round($val){}
 }
 
 $screen  = new Screen();
