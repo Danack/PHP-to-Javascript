@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskOptions>
+    <TaskOptions>
+        <option name="arguments"
+                value="-f Y:\dev\mostka\phpjs\filewatcher\phptojs.php $FileName$ $ProjectFileDir$\filewatcher\test\src $ProjectFileDir$\filewatcher\test\js"/>
+        <option name="checkSyntaxErrors" value="true"/>
+        <option name="description" value="phptojs"/>
+        <option name="exitCodeBehavior" value="ALWAYS"/>
+        <option name="fileExtension" value="php"/>
+        <option name="immediateSync" value="true"/>
+        <option name="name" value="phptojs"/>
+        <option name="output" value="$ProjectFileDir$\filewatcher\test\js\"/>
+        <option name="outputFilters">
+            <array/>
+        </option>
+        <option name="outputFromStdout" value="false"/>
+        <option name="passParentEnvs" value="true"/>
+        <option name="program" value="$PhpExecutable$"/>
+        <option name="scopeName" value="js"/>
+        <option name="trackOnlyRoot" value="false"/>
+        <option name="workingDir" value="$FileDir$"/>
+        <envs/>
+    </TaskOptions>
+</TaskOptions>
+

@@ -3,8 +3,9 @@
 class ClassExample {
 
 
-	var		$value = null;
-	var 	$testArray = null;
+	public	$value = null;
+	public 	$testArray = null;
+	var $local = 9;
 
 	static public 	$staticVar = 0;
 
@@ -63,6 +64,10 @@ class ClassExample {
 		return $countUnique;
 	}
 
+	public function getLocal(){
+		global $local;
+		return $local;
+	}
 
 }
 
@@ -90,11 +95,13 @@ assert($result, 2);
 
 
 
+/*
+private is impossible in plain js. see https://github.com/Danack/PHP-to-Javascript/issues/33
 $privateAccessed = false;
 $exceptionCaught = false;
 try{
 	//Yes IDE - I know this isn't allowed.
-	///** @noinspection PhpIllegalArrayKeyTypeInspection */
+	///** @noinspection PhpIllegalArrayKeyTypeInspection * /
 
 	// @SuppressWarnings
 	$classExample->privateFunction();
@@ -107,9 +114,13 @@ catch(Exception $error){
 
 assert($privateAccessed, false);
 assert($exceptionCaught, true);
-
+*/
 $value = $classExample->publicAccess();
 assert($value, 5);
+
+
+$value = $classExample->getLocal();
+assert($value, 9);
 
 
 $classExample->testFunctionStatic();

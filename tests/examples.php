@@ -1,13 +1,14 @@
 <?php
-
+date_default_timezone_set('Europe/Bratislava');
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(E_ALL);
 require_once("SplClassLoader.php");
 
 $loader = new SplClassLoader('PHPToJavascript', '../src');
 $loader->register();
 
 $exportPath = "export";
-
-error_reporting(E_ALL);
 
 $filesToConvert = array(
 	'ArrayExample.js' => 'ArrayExample.php',
@@ -22,7 +23,6 @@ $filesToConvert = array(
 	'Inheritance.js' => 'Inheritance.php',
 
     'MultiLine.js' => 'MultiLine.php',
-	'NameSpace.js' => 'NameSpace.php',
 	//Broken test
 	//'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
@@ -32,13 +32,17 @@ $filesToConvert = array(
 	'SwitchStatement.js' => 'SwitchStatement.php',
     
 	'TryCatch.js' => 'TryCatch.php',
-	'TraitExample.js' => array(
-		'TraitInclude.php',
-		'TraitExample.php',
-	),
 	'TypeHinting.js' => 'TypeHinting.php',
 );
+$_ = \PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT; // autoload class
 
+if (TRAIT_SUPPORTED){
+	$filesToConvert['TraitExample.js']=array(
+		'TraitInclude.php',
+		'TraitExample.php',
+	);
+	$filesToConvert['NameSpace.js']='NameSpace.php';
+}
 //$filesToConvert = array(
 //    'Ternary2.js' => 'Ternary2.php',
 //);
@@ -50,7 +54,7 @@ function generateTestPage($convertedFiles){
 
 	$fileHandle = fopen("output/test.html",  "w");
 
-	fwrite($fileHandle, "<html><body>Tests are loaded via javascript into this webpage. <br/>&nbsp;<br/> If nothing turns green then probably the conversion failed completely, and either the Javascript files are not present or so invalid that the can't be compiled. <br/>&nbsp;<br/>");
+	fwrite($fileHandle, "<html><body><a href='../examples.php'>rebuild</a><br>Tests are loaded via javascript into this webpage. <br/>&nbsp;<br/> If nothing turns green then probably the conversion failed completely, and either the Javascript files are not present or so invalid that the can't be compiled. <br/>&nbsp;<br/>");
 
 	foreach($convertedFiles as $convertedFile){
 		$testID = str_replace(".", "_", $convertedFile);
@@ -91,6 +95,10 @@ function encapsulateJavascriptFile($outputFilename) {
     $fileContents = file_get_contents($outputFilename);
     $fileContents = "(function(){\n".$fileContents."})();\n";
     file_put_contents($outputFilename, $fileContents);
+}
+
+if (php_sapi_name() !== 'cli'){
+	echo '<a href="./output/test.html">result</a> ';
 }
 
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){

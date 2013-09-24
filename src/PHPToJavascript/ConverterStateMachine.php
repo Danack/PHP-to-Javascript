@@ -4,7 +4,8 @@ namespace PHPToJavascript;
 
 
 function convertMultiLineString($string) {
-    return str_replace("\n", "\\\n", $string);
+	$string = str_replace(PHP_EOL, "\\".PHP_EOL, $string);
+	return str_replace("\n", "\\\n", $string);
 }
 
 
@@ -103,6 +104,7 @@ class	ConverterStateMachine{
 
 		$this->states[CONVERTER_STATE_T_PUBLIC] = new CodeConverterState_TPUBLIC($this);
 		$this->states[CONVERTER_STATE_T_PRIVATE] = new CodeConverterState_TPRIVATE($this);
+		$this->states[CONVERTER_STATE_T_VAR] = new CodeConverterState_TVAR($this);
 
 		$this->states[CONVERTER_STATE_DEFINE] = new CodeConverterState_define($this);
 
