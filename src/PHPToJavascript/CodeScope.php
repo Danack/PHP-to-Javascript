@@ -2,10 +2,15 @@
 
 namespace PHPToJavascript;
 
+if (TRAIT_SUPPORTED){
+	require_once __DIR__.'/UsingSafeAccessPHP54.php';
+}else{
+	require_once __DIR__.'/UsingSafeAccessPHP53.php';
+}
+/** @noinspection PhpUndefinedClassInspection */
+abstract class CodeScope extends UsingSafeAccess{
 
-abstract class CodeScope{
-
-	use SafeAccess;
+	//use SafeAccess; is inherited by UsingSafeAccess
 
 	var $bracketCount = 0;
 

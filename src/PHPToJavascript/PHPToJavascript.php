@@ -7,6 +7,8 @@ if(defined('NL') == FALSE){
 	define('NL', "\r\n");
 }
 
+define('TRAIT_SUPPORTED',version_compare(phpversion(), '5.4.0', '>='));
+
 define('CODE_SCOPE_GLOBAL', 'CODE_SCOPE_GLOBAL');
 define('CODE_SCOPE_FUNCTION', 'CODE_SCOPE_FUNCTION');
 define('CODE_SCOPE_FUNCTION_PARAMETERS', 'CODE_SCOPE_FUNCTION_PARAMETERS');
@@ -153,6 +155,7 @@ class PHPToJavascript{
 
 	public static $ECHO_TO_ALERT = 'alert(';
 	public static $ECHO_TO_DOCUMENT_WRITE = 'document.write(';
+	public static $ECHO_TO_CONSOLE_LOG = 'console.log(';
 
 	/** @var string */
 	var $srcFilename = NULL;
@@ -374,23 +377,6 @@ function processTokenStream(TokenStream $tokenStream, ConverterStateMachine $sta
 	}
 }
 
-
-/**
- * I hate PHPs 'feature' of not throwing an error when you set a variable for a class that doesn't exist.
- * e.g. I meant to type:
- * $this->isValidated = true;
- * but accidentally type
- * $this->isVlidated = true;
- *
- * As you spend an hour trying to find out why isValidated isn't being set. This trait turns all bad
- * get and set calls on non-existent variables into exceptions.
- */
-trait SafeAccess {
-	public function __set($name, $value) {
-		throw new \Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can set it");
-	}
-	public function __get($name) {
-		throw new \Exception("Property [$name] doesn't exist for class [".__CLASS__."] so can get it");
-	}
+if (TRAIT_SUPPORTED){
+	require_once __DIR__."/SafeAccess.php";
 }
-
