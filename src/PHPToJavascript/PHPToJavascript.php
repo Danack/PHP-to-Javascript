@@ -191,11 +191,11 @@ class PHPToJavascript{
 	}
 
 	function	addFromFile($filename){
-		$code = join(PHP_EOL,file($filename,FILE_IGNORE_NEW_LINES));
+		$code = file($filename,FILE_IGNORE_NEW_LINES);
 		if($code === FALSE){
 			throw new \Exception("Could not open $filename.");
 		}
-
+		$code = join(PHP_EOL,$code);
 		$tokenStream = new TokenStream($code);
 		processTokenStream($tokenStream, $this->stateMachine, NULL);
 	}
