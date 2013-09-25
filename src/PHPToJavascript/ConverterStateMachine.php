@@ -4,8 +4,7 @@ namespace PHPToJavascript;
 
 
 function convertMultiLineString($string) {
-	$string = str_replace(PHP_EOL, "\\".PHP_EOL, $string);
-	return str_replace("\n", "\\\n", $string);
+	return str_replace(PHP_EOL, "\\".PHP_EOL, $string);
 }
 
 
