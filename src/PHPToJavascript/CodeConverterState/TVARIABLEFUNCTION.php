@@ -49,6 +49,7 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 			$scopedVariableName = $this->stateMachine->getVariableNameForScope($variableName, $this->stateMachine->variableFlags);
 			$enclosedVariableName = $this->stateMachine->encloseVariable($scopedVariableName);
 			$this->stateMachine->addJS($enclosedVariableName);
+            $this->stateMachine->variableFlags = 0;
 		}
 		else{
 			throw new \Exception("Unexpected token in state CodeConverterState_TVARIABLEFUNCTION, wasn't expected an [".$name."]");

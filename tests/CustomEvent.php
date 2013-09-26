@@ -37,5 +37,17 @@ assert(CustomEvent::$nextPage, 'basereality.nextPage');
 assert(CustomEvent::$valueAfterComment, 10560325);
 
 
+$test = function(){
+    assert(CustomEvent::$nextPage, 'basereality.nextPage');
+    assert(CustomEvent::$valueAfterComment, 10560325);
+
+    return CustomEvent::$valueCommentNewLine;
+};
+
+$result = $test();
+
+assert(12345, $result);
+
+
 testEnd();
 ?>
