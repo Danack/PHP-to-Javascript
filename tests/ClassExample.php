@@ -119,6 +119,22 @@ $value = $classExample->testFunctionStatic();
 
 assert($value, 4);
 
+
+class TestClass {
+    public $var1 = 1;
+    public $var2 = 2;
+    
+    function foo() {
+        
+    }
+}
+
+$testClass = new TestClass();
+
+foreach($testClass as $key => $objectValue) {
+    echo "value= ".$objectValue;
+}
+
 testEnd();
 
 ?>
