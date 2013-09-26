@@ -1,5 +1,12 @@
 <?php
 
+$value1 = 5;
+
+$value2 = "Hello ${value1} there";
+
+assert($value2, "Hello 5 there");
+
+
 //https://github.com/Danack/PHP-to-Javascript/issues/14
 //Modulus doesn't work
 
@@ -22,6 +29,20 @@ assert($countValue, 3);
 $countValue--;
 
 assert($countValue, 2);
+
+
+//https://github.com/Danack/PHP-to-Javascript/issues/48
+
+
+
+function add($value1, $value2 = -1) {
+    return $value1 + $value2;
+}
+
+assert(add(5, 5), 10);
+
+assert(add(5), 4);
+
 
 
 testEnd();
