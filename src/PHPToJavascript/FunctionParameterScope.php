@@ -88,9 +88,11 @@ class FunctionParameterScope extends CodeScope{
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
-			$variableFlag = $this->scopedVariables[$cVar];
+			//$variableFlag = $this->scopedVariables[$cVar];
+            $variable = $this->scopedVariables[$cVar];
 
-			if($variableFlag & DECLARATION_TYPE_STATIC){
+			//if($variableFlag & DECLARATION_TYPE_STATIC){
+            if ($variable->isStatic() == true) { 
 				return 	$this->name.".".$variableName;
 			}
 			else if ($variableFlags & DECLARATION_TYPE_CLASS) {

@@ -1,23 +1,18 @@
 <?php
 
-class StaticTest {
+class SimplePrivate {
+    private $foo = 4;
 
-	public static	$publicStaticClassVar = 0;
-	public 			$publicInstanceClassVar = 0;
-
-	private static 	$privateStaticClassVar = 0;
-	private  		$privateInstanceClassVar = 0;
-
-	static function staticMethod(){
-		self::$publicStaticClassVar++;
-		self::$privateStaticClassVar++;
-	}
-
-	function	instanceMethod(){
-		$this->publicInstanceClassVar++;
-		$this->privateInstanceClassVar++;
-	}
+    public function getFoo(){
+        return $this->foo;
+    }
 }
+
+$f = new SimplePrivate();
+
+$value = $f->getFoo();
+
+assert($value, 4);
 
 testEnd();
 

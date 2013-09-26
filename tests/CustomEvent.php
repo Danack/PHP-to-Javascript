@@ -31,7 +31,6 @@ class CustomEvent{
 }
 
 
-
 assert(CustomEvent::$nextPage, 'basereality.nextPage');
 
 assert(CustomEvent::$valueAfterComment, 10560325);

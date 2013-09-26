@@ -16,8 +16,8 @@ class CatchScope extends CodeScope{
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
-			$variableFlag = $this->scopedVariables[$cVar];
-			if($variableFlag & DECLARATION_TYPE_STATIC){
+			//$variableFlag = $this->scopedVariables[$cVar];
+			if($variableFlags & DECLARATION_TYPE_STATIC){
 				return 	$this->name.".".$variableName;
 			}
 			else if(($variableFlags & DECLARATION_TYPE_CLASS)){

@@ -27,7 +27,17 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			$this->stateMachine->addJS( "/*". $value ."*/");
 		}
 		else{
-			$this->stateMachine->addJS($value);
+            $variable = $this->stateMachine->getVariableFromScopes($value);
+            if ($variable) {
+                if ($variable->flags & DECLARATION_TYPE_PRIVATE) {
+                    if ($this->stateMachine->previousTokensMatch(['this', '.']) == true) {
+                        //For the record, this is the hackiest bit of code, so far.
+                        $this->stateMachine->deleteTokens(2);
+                    }
+                }
+            }
+
+            $this->stateMachine->addJS($value);
 		}
 
 		//TODO - added this to fix "SomeClass::someFunc()" leaving variableFlags in non zero state

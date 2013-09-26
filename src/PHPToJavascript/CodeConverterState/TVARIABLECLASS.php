@@ -25,7 +25,12 @@ class CodeConverterState_TVARIABLECLASS extends CodeConverterState {
 			$this->changeToState(CONVERTER_STATE_VARIABLE_VALUE);
 		}
 		else{
-			//All other variables are treated as private
+
+//            if($this->stateMachine->variableFlags & DECLARATION_TYPE_CLASS){
+//			    //All other variables are treated as private
+//                $this->stateMachine->currentScope->addScopedVariable($variableName, $this->stateMachine->variableFlags);
+//            }
+            
 			$this->stateMachine->addJS("var ");
 			$this->stateMachine->addJS($variableName);
 			$this->stateMachine->clearVariableFlags();

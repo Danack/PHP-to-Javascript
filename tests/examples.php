@@ -21,16 +21,14 @@ $filesToConvert = array(
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
 
-    'MultiLine.js' => 'MultiLine.php',
 	'NameSpace.js' => 'NameSpace.php',
 	//Broken test
 	//'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
-    'SimpleOps.js' => 'SimpleOps.php',
+
 	'StaticTest.js' => 'StaticTest.php',
 
 	'SwitchStatement.js' => 'SwitchStatement.php',
-    
 	'TryCatch.js' => 'TryCatch.php',
 	'TraitExample.js' => array(
 		'TraitInclude.php',
@@ -39,9 +37,11 @@ $filesToConvert = array(
 	'TypeHinting.js' => 'TypeHinting.php',
 );
 
-//$filesToConvert = array(
-//    'BugReports.js' => 'BugReports.php',
-//);
+$filesToConvert = array(
+    'ArrayExample.js' => 'ArrayExample.php',
+    'CustomEvent.js' => 'CustomEvent.php' ,
+    'PublicPrivate.js' => 'PublicPrivate.php',
+);
 
 
 $convertedFiles = array();
@@ -96,7 +96,7 @@ function encapsulateJavascriptFile($outputFilename) {
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-//    $phpToJavascript->setTrace(true);
+	$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 

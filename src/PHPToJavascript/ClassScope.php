@@ -7,6 +7,12 @@ class ClassScope extends CodeScope{
 	var		$methodsStartIndex = false;
 
 	var 	$publicVariables = array();
+
+    /**
+     * @var Variable[]
+     */
+    var     $privateVariables = array();
+    
 	var		$staticVariables = array();
 
 	var 	$parentClasses = array();
@@ -14,6 +20,17 @@ class ClassScope extends CodeScope{
 	var 	$currentVariableName = null;
 	var 	$currentVariableForConcattingValue = null;
 
+//    function getVariableFromScopeInternal($variableName) {
+//        if (array_key_exists($variableName, $this->privateVariables)) {
+//            return $this->privateVariables[$variableName];
+//        }
+//
+//        if (array_key_exists($variableName, $this->publicVariables)) {
+//            return $this->publicVariables[$variableName];
+//        }
+//    }
+    
+    
 	function addParent($value){
 		$this->parentClasses[] = $value;
 	}
@@ -229,24 +246,23 @@ class ClassScope extends CodeScope{
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == true){
-			$variableFlag = $this->scopedVariables[$cVar];
+			//$variableFlag = $this->scopedVariables[$cVar];
 
 			if ($variableFlags & DECLARATION_TYPE_CLASS){
-				if($variableFlag & DECLARATION_TYPE_PRIVATE){
+				if($variableFlags & DECLARATION_TYPE_PRIVATE){
 					return 	$variableName;
 				}
-				if($variableFlag & DECLARATION_TYPE_STATIC){
+				if($variableFlags & DECLARATION_TYPE_STATIC){
 					return 	$variableName;
 				}
-				if($variableFlag & DECLARATION_TYPE_PUBLIC){
+				if($variableFlags & DECLARATION_TYPE_PUBLIC){
 					//TODO should the 'this' be here, or in the T_OBJECTOPERATOR
-					return 	$variableName;
+					return 	'this.'.$variableName;
 				}
 			}
 		}
 
 		if ($variableFlags & DECLARATION_TYPE_CLASS) {
-
             if ($variableFlags & DECLARATION_TYPE_STATIC) {
                 return 	$variableName;
             }
@@ -272,6 +288,12 @@ class ClassScope extends CodeScope{
 		$this->currentVariableForConcattingValue = &$this->publicVariables[$variableName];
 		$this->currentVariableName = $variableName;
 	}
+
+    function addPrivateVariable($variableName) {
+        $this->privateVariables[$variableName] = false;
+        $this->currentVariableForConcattingValue = &$this->privateVariables[$variableName];
+        $this->currentVariableName = $variableName;
+    }
 
 	function setVariableString($variableName, $string) {
 		if (array_key_exists($variableName, $this->staticVariables) == true) {

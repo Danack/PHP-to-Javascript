@@ -162,6 +162,15 @@ class	ConverterStateMachine{
 		return $this->currentTokenStream->getPreviousNonWhitespaceToken($name, $value);
 	}
 
+    function previousTokensMatch($tokens) {
+        return $this->currentScope->previousTokensMatch($tokens);
+    }
+    
+    function deleteTokens($tokenCountToDelete) {
+        $this->currentScope->deleteTokens($tokenCountToDelete);
+    }
+    
+    
 
 	/**
 	 * Adds a variable to the current scope.
@@ -176,6 +185,14 @@ class	ConverterStateMachine{
 	function	getVariableNameForScope($variableName,  $variableFlags){
 		return $this->currentScope->getScopedVariable($variableName,  $variableFlags, true);
 	}
+
+    function getVariableFromScopes($variableName) {
+        return $this->currentScope->getVariableFromScope($variableName);
+    }
+    
+//    function    getVariableFlagsForScope($value) {
+//        return $this->currentScope->getScopedVariable($variableName,  $variableFlags, true);
+//    }
 
 	function	findScopeType($type){
 		foreach($this->scopesStack as $scope){
@@ -194,6 +211,10 @@ class	ConverterStateMachine{
 	}
 
 	public function addJS($jsString){
+        if(is_object($jsString) == true) {
+            echo "bugger";
+        }
+        
 		if(PHPToJavascript::$TRACE){
 			echo "$jsString \n";
 		}

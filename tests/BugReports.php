@@ -1,6 +1,22 @@
 <?php
 
 
+//https://github.com/Danack/PHP-to-Javascript/issues/33
+
+class ClassWithPrivate {
+    private $foo = 4;
+    
+    function __construct(){
+        echo $this->foo;
+    }
+    
+    public function accessPrivate(){
+        echo $this->foo;
+    }
+}
+
+$f = new ClassWithPrivate();
+$f->accessPrivate();
 
 
 //https://github.com/Danack/PHP-to-Javascript/issues/35
