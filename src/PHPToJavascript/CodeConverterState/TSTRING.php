@@ -18,10 +18,10 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			strcmp('self', $value) == 0){
 			$this->stateMachine->addJS($this->stateMachine->getClassName());
 		}
-		else if($this->stateMachine->currentScope instanceof FunctionParameterScope){
-			$this->stateMachine->addJS( "/*". $value ."*/");
-			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
-		}
+//		else if($this->stateMachine->currentScope instanceof FunctionParameterScope){
+//			$this->stateMachine->addJS( "/*". $value ."*/");
+//			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
+//		}
 		else if($this->stateMachine->currentScope instanceof CatchScope){
 			//$this->stateMachine->currentScope->addExceptionName($value);
 			$this->stateMachine->addJS( "/*". $value ."*/");

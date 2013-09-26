@@ -254,5 +254,10 @@ abstract class CodeScope{
 
 		return $this->parentScope->findAncestorScopeByType($type);
 	}
+
+
+    function	addToJsForPreviousVariable($value) {
+        throw new \Exception("This has no default implementation.");
+    }
 }
 

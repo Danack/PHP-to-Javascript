@@ -6,8 +6,8 @@ class CodeConverterState_VariableDefault extends CodeConverterState{
 	function	processToken($name, $value, $parsedToken){
 
 		if($this->stateMachine->currentScope instanceof FunctionParameterScope){
-			$this->stateMachine->addJS( "/*". $value ."*/");
-			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
+			//$this->stateMachine->addJS( "/*". $value ."*/");
+			$this->stateMachine->currentScope->addToJsForPreviousVariable($value);
 		}
 		else{
 			$this->stateMachine->addJS($value);

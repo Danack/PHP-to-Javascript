@@ -24,7 +24,7 @@ assert($p2, 6);
 $countValue = 4;
 $countValue--;
 
-assert($countValue, 3);
+//assert($countValue, 3);
 
 $countValue--;
 
@@ -38,6 +38,7 @@ assert($countValue, 2);
 function add($value1, $value2 = -1) {
     return $value1 + $value2;
 }
+
 
 assert(add(5, 5), 10);
 

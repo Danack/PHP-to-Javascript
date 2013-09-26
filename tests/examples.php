@@ -39,9 +39,9 @@ $filesToConvert = array(
 	'TypeHinting.js' => 'TypeHinting.php',
 );
 
-//$filesToConvert = array(
-//    'Ternary2.js' => 'Ternary2.php',
-//);
+$filesToConvert = array(
+    'TypeHinting.js' => 'TypeHinting.php',
+);
 
 
 $convertedFiles = array();
