@@ -23,8 +23,6 @@ class CodeConverterState_TVARIABLEFUNCTION extends CodeConverterState {
 		$variableName = cVar($value);
 
 		if($this->stateMachine->variableFlags & DECLARATION_TYPE_STATIC){
-			//$variableName = $this->stateMachine->getScopeName().$variableName;
-
 			$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
 
 			$scopedName = $this->stateMachine->getVariableNameForScope($variableName, $this->stateMachine->variableFlags);

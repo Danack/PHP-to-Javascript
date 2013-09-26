@@ -151,6 +151,7 @@ class	ConverterStateMachine{
         $this->states[CONVERTER_STATE_SKIP_TO_SEMICOLON] = new CodeConverterState_SkipToSemiColon($this);
 
         $this->states[CONVERTER_STATE_CAPTURING_DEFAULT_VALUE] = new CodeConverterState_CapturingDefaultValue($this);
+        $this->states[CONVERTER_STATE_EMBEDDED_VARIABLE] = new CodeConverterState_EmbeddedVariable($this);
         
 
 		$this->currentState = CONVERTER_STATE_DEFAULT;

@@ -40,7 +40,7 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//    'TypeHinting.js' => 'TypeHinting.php',
+//    'BugReports.js' => 'BugReports.php',
 //);
 
 
