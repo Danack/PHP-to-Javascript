@@ -18,7 +18,6 @@ class ClassScope extends CodeScope{
 		$this->parentClasses[] = $value;
 	}
 
-
 	function getType(){
 		return CODE_SCOPE_CLASS;
 	}
@@ -85,25 +84,29 @@ class ClassScope extends CodeScope{
 
 	function getJSForClassInPlace(){
 
-		$js = "";
+		$jsArray = array();
 
 		foreach($this->jsElements as $jsElement){
 			if($jsElement instanceof CodeScope){
-				$js .= $jsElement->getInPlaceJS();
+                $jsArray[] = $jsElement->getInPlaceJS();
 			}
 			else if(is_string($jsElement)){
-				$js .= $jsElement;
+                $jsArray[] = $jsElement;
 			}
 			else{
 				throw new \Exception("Unknown type in this->jsElements of type [".get_class($jsElement)."]");
 			}
 		}
-		return $js;
+        
+        $lastElement = array_pop($jsArray); //Always (?) going to be '}' so not sure if worth doing properly
+
+        $jsArray[] = END_OF_CLASS_POSITION_MARKER;
+        $jsArray[] = $lastElement;
+        
+		return implode($jsArray);
 	}
 
 	function	getJS(){
-
-		$js = "//Start class here \n";
 
 		$js = "";
 		$js .= $this->getJSForClassInPlace();
@@ -191,7 +194,7 @@ class ClassScope extends CodeScope{
 			$constructorInfo = trimConstructor($constructor);
 			$constructorInfo['body'] = $parentConstructor.$constructorInfo['body'];
 			$js = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, $constructorInfo['parameters'], $js);
-			$js = str_replace(CONSTRUCTOR_POSITION_MARKER, $constructorInfo['body'], $js);
+            $js = str_replace(END_OF_CLASS_POSITION_MARKER, $constructorInfo['body'], $js);
 		}
 		else{
 			//There is no constructor - just remove the magic strings
@@ -209,7 +212,7 @@ class ClassScope extends CodeScope{
 	function	markMethodsStart(){
 		if($this->methodsStartIndex === false){
 			$this->methodsStartIndex = count($this->jsElements);
-			$this->addJS(CONSTRUCTOR_POSITION_MARKER);
+			//$this->addJS(CONSTRUCTOR_POSITION_MARKER);
 		}
 	}
 

@@ -1,5 +1,31 @@
 <?php
 
+
+//https://github.com/Danack/PHP-to-Javascript/issues/39
+
+class Foo{
+    
+    private $foo = 0;
+    
+    function __construct(){
+        $this->setFoo(5);
+    }
+    function setFoo($foo){
+        $this->foo = $foo;
+    }
+
+    function getFoo(){
+        return $this->foo;
+    }
+}
+
+$foo = new Foo();
+
+assert($foo->getFoo(), 5);
+
+
+
+
 //https://github.com/Danack/PHP-to-Javascript/issues/44
 //Embedded variables
 
