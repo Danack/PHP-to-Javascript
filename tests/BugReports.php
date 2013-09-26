@@ -1,6 +1,38 @@
 <?php
 
 
+//https://github.com/Danack/PHP-to-Javascript/issues/45
+
+class TestClass {
+ 
+    public $instance;
+    public $message;
+    
+    function __construct($message) {
+        $this->instance = $this;
+        $this->message = $message;
+    }
+    
+    function windowCloseFunction() {
+        echo "Goodbye ".$this->message;
+    }
+
+    //If you have jQuery 
+    //JS window.onresize = $.proxy(this, 'windowCloseFunction');
+    
+    //Or with standard Javascript
+//    //JS this.makeWindowCloseFunction = function($context, $functionName) {
+//    //JS    return function() {
+//    //JS        $functionName.call($context);
+//    //JS    }
+//    //JS}
+//    //JS
+//    //JS window.onresize = this.makeWindowCloseFunction(this, this.windowCloseFunction);
+}
+
+$test = new TestClass("cruel world!");
+
+
 //https://github.com/Danack/PHP-to-Javascript/issues/39
 
 class Foo{
