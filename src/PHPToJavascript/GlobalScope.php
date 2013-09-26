@@ -9,8 +9,8 @@ class GlobalScope extends CodeScope{
 		return CODE_SCOPE_GLOBAL;
 	}
 
-	function	getScopedVariableForScope($variableName, $isClassVariable){
-		if($isClassVariable == TRUE){
+	function	getScopedVariableForScope($variableName, $variableFlags){
+		if($variableFlags & DECLARATION_TYPE_CLASS){
 			return NULL;	//Class variables would not use a global variable
 		}
 

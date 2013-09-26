@@ -51,24 +51,22 @@ abstract class CodeScope{
 
 	/**
 	 * @param $variableName
-	 * @param $isClassVariable - whether the variable was prefixed by $this
+	 * @param $variableFlags
 	 * @return mixed
 	 *
 	 * For a given variable name, try to find the variable in the current scope.
-	 *
-	 * //TODO - change $isClassVaraible to be a flag to support FLAG_THIS, FLAG_SELF, FLAG_STATIC, FLAG_PARENT
 	 */
-	abstract	function	getScopedVariableForScope($variableName, $isClassVariable);
+	abstract	function	getScopedVariableForScope($variableName, $variableFlags);
 	abstract	function getType();
 
 	function	getScopedVariable($variableName,  $variableFlags, $originalScope){
 
 		$isClassVariable = ($variableFlags & DECLARATION_TYPE_CLASS);
-		$result = $this->getScopedVariableForScope($variableName, $isClassVariable);
+		$result = $this->getScopedVariableForScope($variableName, $variableFlags);
 
 		if($result == NULL){
 			if($this->parentScope != NULL){
-				$result = $this->parentScope->getScopedVariable($variableName, $isClassVariable, $variableFlags, FALSE);
+				$result = $this->parentScope->getScopedVariable($variableName, $variableFlags, FALSE);
 			}
 		}
 

@@ -28,12 +28,12 @@ class ArrayScope extends CodeScope{
 
 	/**
 	 * @param $variableName
-	 * @param $isClassVariable - whether the variable was prefixed by $this
+	 * @param $variableFlags
 	 * @return mixed
 	 *
 	 * For a given variable name, try to find the variable in the current scope.
 	 */
-	function    getScopedVariableForScope($variableName, $isClassVariable) {
+	function    getScopedVariableForScope($variableName, $variableFlags) {
 		//Array scopes don't contain variables.
 		return NULL;
 	}

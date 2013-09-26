@@ -1,15 +1,51 @@
 <?php
 
 
+// https://github.com/Danack/PHP-to-Javascript/issues/31
+
+class Class1{
+    public static $instance;
+    public $foo = "foo";
+}
+
+class Class2{
+    function __construct(){
+        Class1::$instance->foo = 'foo';
+    }
+}
+
+
 //https://github.com/Danack/PHP-to-Javascript/issues/45
+
+
+//class ParentClass {
+//    public $wth = "foo";
+//
+//
+//    public function foo() {
+//        return "parent";
+//    }
+//}
+//
+//class ChildClass extends ParentClass {
+//    
+//    static public $wth2 = "hmm";
+//    
+//    function __construct() {
+//        echo parent::foo();
+//        echo self::$wth2;
+//    }
+//}
+
+
+//$test = new ChildClass();
+
 
 class TestClass {
  
-    public $instance;
     public $message;
     
     function __construct($message) {
-        $this->instance = $this;
         $this->message = $message;
     }
     
@@ -17,8 +53,8 @@ class TestClass {
         echo "Goodbye ".$this->message;
     }
 
-    //If you have jQuery 
-    //JS window.onresize = $.proxy(this, 'windowCloseFunction');
+//    //If you have jQuery 
+//    //JS window.onresize = $.proxy(this, 'windowCloseFunction');
     
     //Or with standard Javascript
 //    //JS this.makeWindowCloseFunction = function($context, $functionName) {

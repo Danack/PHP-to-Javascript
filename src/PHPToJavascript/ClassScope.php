@@ -216,13 +216,13 @@ class ClassScope extends CodeScope{
 		}
 	}
 
-	function	getScopedVariableForScope($variableName, $isClassVariable){
+	function	getScopedVariableForScope($variableName, $variableFlags){
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == true){
 			$variableFlag = $this->scopedVariables[$cVar];
 
-			if($isClassVariable == true){
+			if ($variableFlags & DECLARATION_TYPE_CLASS){
 				if($variableFlag & DECLARATION_TYPE_PRIVATE){
 					return 	$variableName;
 				}
@@ -236,10 +236,16 @@ class ClassScope extends CodeScope{
 			}
 		}
 
-		if($isClassVariable == true){
-			//Either a function or property set below where it is defined.
-			// OR it could be a variable that is defined in the parent class' scope.
-			return 	'this.'.$variableName;
+		if ($variableFlags & DECLARATION_TYPE_CLASS) {
+
+            if ($variableFlags & DECLARATION_TYPE_STATIC) {
+                return 	$variableName;
+            }
+            else {
+                //Either a function or property set below where it is defined.
+                // OR it could be a variable that is defined in the parent class' scope.
+                return 	'this.'.$variableName;
+            }
 		}
 
 		return null;

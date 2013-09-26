@@ -27,7 +27,7 @@ class FunctionScope extends CodeScope{
 	}
 
 
-	function	getScopedVariableForScope($variableName, $isClassVariable){
+	function	getScopedVariableForScope($variableName, $variableFlags){
 		$cVar = cvar($variableName);
 
 		if(array_key_exists($cVar, $this->scopedVariables) == TRUE){
@@ -35,7 +35,7 @@ class FunctionScope extends CodeScope{
 			if($variableFlag & DECLARATION_TYPE_STATIC){
 				return 	$this->getScopedName().".".$variableName;
 			}
-			else if($isClassVariable == TRUE){
+			else if($variableFlags & DECLARATION_TYPE_CLASS){
 				if(strpos($variableName, "$") !== FALSE){
 					//it's a variable variable like "this->$var";
 					return 	'this['.$variableName.']';
