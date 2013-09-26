@@ -199,7 +199,7 @@ class ClassScope extends CodeScope{
 		else{
 			//There is no constructor - just remove the magic strings
 			$js = str_replace(CONSTRUCTOR_PARAMETERS_POSITION, '', $js);
-			$js = str_replace(CONSTRUCTOR_POSITION_MARKER, $parentConstructor, $js);
+			$js = str_replace(END_OF_CLASS_POSITION_MARKER, $parentConstructor, $js);
 		}
 
 		return $js;
