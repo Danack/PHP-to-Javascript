@@ -1,5 +1,23 @@
 <?php
 
+//https://github.com/Danack/PHP-to-Javascript/issues/44
+//Embedded variables
+
+$value1 = 5;
+
+$value2 = "Hello " . $value1 . " there";
+assert($value2, "Hello 5 there");
+
+$value3 = "Hello ${value1} there";
+assert($value3, "Hello 5 there");
+
+function greet($name) {
+    return "Hello ${name}!";
+}
+
+assert(greet("Bob"), "Hello Bob!");
+
+
 //https://github.com/Danack/PHP-to-Javascript/issues/14
 //Modulus doesn't work
 
@@ -17,11 +35,26 @@ assert($p2, 6);
 $countValue = 4;
 $countValue--;
 
-assert($countValue, 3);
+//assert($countValue, 3);
 
 $countValue--;
 
 assert($countValue, 2);
+
+
+//https://github.com/Danack/PHP-to-Javascript/issues/48
+
+
+
+function add($value1, $value2 = -1) {
+    return $value1 + $value2;
+}
+
+
+assert(add(5, 5), 10);
+
+assert(add(5), 4);
+
 
 
 testEnd();

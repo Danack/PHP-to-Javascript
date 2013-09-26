@@ -10,7 +10,7 @@ class CodeConverterState_TVARIABLEPARAMETER extends CodeConverterState {
 
 		$this->stateMachine->addScopedVariable($variableName, $this->stateMachine->variableFlags);
 		$this->stateMachine->addJS($variableName);
-		$this->changeToState(CONVERTER_STATE_DEFAULT);
+		$this->changeToState(CONVERTER_STATE_CAPTURING_DEFAULT_VALUE);
 	}
 }
 

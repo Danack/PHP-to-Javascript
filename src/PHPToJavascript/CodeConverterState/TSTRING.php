@@ -19,8 +19,8 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			$this->stateMachine->addJS($this->stateMachine->getClassName());
 		}
 		else if($this->stateMachine->currentScope instanceof FunctionParameterScope){
+            //Probably a typehint.
 			$this->stateMachine->addJS( "/*". $value ."*/");
-			$this->stateMachine->currentScope->setDefaultValueForPreviousVariable($value);
 		}
 		else if($this->stateMachine->currentScope instanceof CatchScope){
 			//$this->stateMachine->currentScope->addExceptionName($value);

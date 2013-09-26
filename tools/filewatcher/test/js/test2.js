@@ -1,4 +1,4 @@
-//Auto-generated file by PHP-To-Javascript at Tue, 24 Sep 13 08:35:24 +0200
+//Auto-generated file by PHP-To-Javascript at Tue, 24 Sep 13 16:22:31 +0200
 //
 //DO NOT EDIT - all changes will be lost.
 //
@@ -6,15 +6,16 @@
 
 
 function Foo(){
-	this.foo = function (){
-		
-		var foo2=foo;
-		var var2=var;
+	 this.foos = function (){
 	};
 
 
+	  
 }
 
 
 
 
+Foo.-foo2 = function (){
+
+	}

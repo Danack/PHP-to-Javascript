@@ -43,7 +43,8 @@ class CodeConverterState_Default extends CodeConverterState {
 		'T_UNSET' 			=> CONVERTER_STATE_T_UNSET,
 		'T_TRY'				=> CONVERTER_STATE_T_TRY,
 		'T_CATCH'			=> CONVERTER_STATE_T_CATCH,
-        'T_GLOBAL'          => CONVERTER_STATE_GLOBAL
+        'T_GLOBAL'          => CONVERTER_STATE_GLOBAL,
+        'T_DOLLAR_OPEN_CURLY_BRACES' => CONVERTER_STATE_EMBEDDED_VARIABLE,
 	);
 
 	function	processToken($name, $value, $parsedToken){

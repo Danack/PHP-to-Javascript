@@ -103,7 +103,7 @@ class FunctionParameterScope extends CodeScope{
 		return NULL;
 	}
 
-	function	setDefaultValueForPreviousVariable($value){
+	function	addToJsForPreviousVariable($value) {
 
 		if($this->beforeVariable == TRUE){
 			//It's actually a type-hint not a default value, as it before the variable name
@@ -117,7 +117,11 @@ class FunctionParameterScope extends CodeScope{
 
 		$variableName = $allKeys[count($allKeys) - 1];
 
-		$this->defaultValues[$variableName] = convertPHPValueToJSValue($value);
+        if (isset($this->defaultValues[$variableName]) == false) {
+            $this->defaultValues[$variableName] = '';
+        }
+
+		$this->defaultValues[$variableName] .= convertPHPValueToJSValue($value);
 	}
 
 	/**

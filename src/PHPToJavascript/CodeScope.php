@@ -85,14 +85,12 @@ abstract class CodeScope extends UsingSafeAccess{
 					$result = "var $variableName";
 				}
 				else{
-					//The variable really ought to exist in the class scope
-					throw new \Exception("Out of order use for variable [".$variableName."]. Please have your variables above your methods. It makes life easier.");
+                    //The variable really ought to exist in the class scope
+                    //But maybe it's been declared after it's use or is a SomeClass::param
+                    $result = $variableName;
 				}
 			}
 		}
-
-
-
 
 		return $result;
 	}
@@ -266,5 +264,10 @@ abstract class CodeScope extends UsingSafeAccess{
 
 		return $this->parentScope->findAncestorScopeByType($type);
 	}
+
+
+    function	addToJsForPreviousVariable($value) {
+        throw new \Exception("This has no default implementation.");
+    }
 }
 
