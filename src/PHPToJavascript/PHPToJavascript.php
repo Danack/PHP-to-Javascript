@@ -87,13 +87,12 @@ define('CONVERTER_STATE_CAPTURING_DEFAULT_VALUE', 'CONVERTER_STATE_CAPTURING_DEF
 define('CONVERTER_STATE_EMBEDDED_VARIABLE', 'CONVERTER_STATE_EMBEDDED_VARIABLE');
 
 
-
-
 /**
  * Converts a PHP constructor into the parameter string and then body, so that it
  * can be inlined to Javascript style constructors.
  *
  * @param $constructor
+ * @throws \Exception
  * @return array
  */
 function trimConstructor($constructor){
