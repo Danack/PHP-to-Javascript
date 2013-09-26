@@ -15,7 +15,8 @@ class CodeConverterState_CapturingDefaultValue extends CodeConverterState {
         }
         else{
             
-            if ($name == 'T_STRING') {
+            if ($name == 'T_STRING' ||
+                $name == 'T_CONSTANT_ENCAPSED_STRING') {
                 $this->stateMachine->currentScope->addToJsForPreviousVariable($value);
             }
             else {
