@@ -1,6 +1,32 @@
 <?php
 
 
+
+
+//https://github.com/Danack/PHP-to-Javascript/issues/35
+
+class Person {
+
+    public $skillLevel = 0;
+
+    function addSkill($skillLevel) {
+        $this->$skillLevel += $skillLevel;
+    }
+}
+
+
+
+
+$person1 = new Person();
+$person1->addSkill("5");
+
+$person2 = new Person();
+$person2->addSkill("6");
+
+assert($person1->skillLevel, 5);
+assert($person2->skillLevel, 6);
+
+
 // https://github.com/Danack/PHP-to-Javascript/issues/31
 
 class Class1{

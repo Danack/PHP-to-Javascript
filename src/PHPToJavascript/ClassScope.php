@@ -28,7 +28,7 @@ class ClassScope extends CodeScope{
 		$js .= $this->getClassInheritanceJS();
 		$js .= "\n";
 		$js .= $this->getClassVariableInitJS();
-		return $js;
+        return $js;
 	}
 
 	function getClassInheritanceJS(){
@@ -63,13 +63,13 @@ class ClassScope extends CodeScope{
 	function	getClassVariableInitJS(){
 		$js = "";
 
-		foreach($this->publicVariables as $name => $value){
-			if($value === false){
-				$value = 'null';
-			}
-
-			$js .= $this->name.".prototype.".$name." = $value;\n";
-		}
+//		foreach($this->publicVariables as $name => $value){
+//			if($value === false){
+//				$value = 'null';
+//			}
+//
+//			$js .= $this->name.".prototype.".$name." = $value;\n";
+//		}
 
 		foreach($this->staticVariables as $name => $value){
 			if($value === false){
@@ -99,6 +99,15 @@ class ClassScope extends CodeScope{
 		}
         
         $lastElement = array_pop($jsArray); //Always (?) going to be '}' so not sure if worth doing properly
+
+        foreach($this->publicVariables as $name => $value){
+            if($value === false){
+                $value = 'null';
+            }
+            $jsArray[] = 'this.'.$name." = $value;\n";
+        }
+        
+        
 
         $jsArray[] = END_OF_CLASS_POSITION_MARKER;
         $jsArray[] = $lastElement;
@@ -303,12 +312,12 @@ class ClassScope extends CodeScope{
 	function	getDelayedJS($parentScopeName){
 		$output = "";
 
-		foreach($this->publicVariables as $name => $value){
-			if($value === false){
-				$value = 'null';
-			}
-			$output .= $this->name.".prototype.".$name." = $value;\n";
-		}
+//		foreach($this->publicVariables as $name => $value){
+//			if($value === false){
+//				$value = 'null';
+//			}
+//			$output .= $this->name.".prototype.".$name." = $value;\n";
+//		}
 
 		foreach($this->staticVariables as $name => $value){
 			if($value === false){

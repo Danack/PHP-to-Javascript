@@ -192,20 +192,20 @@ abstract class CodeScope{
 		return "";
 	}
 
-	function	getJSRaw(){
-		$js = "";
-		$js .= $this->getJS_InPlace();
-		$js .= "\n";
-		$js .= $this->getEndOfScopeJS();
-		$js .= "\n";
-		$js .= $this->getChildDelayedJS();
-
-
-
-
-
-		return $js;
-	}
+//	function	getJSRaw(){
+//		$js = "";
+//		$js .= $this->getJS_InPlace();
+//		$js .= "\n";
+//		$js .= $this->getEndOfScopeJS();
+//		$js .= "\n";
+//		$js .= $this->getChildDelayedJS();
+//
+//
+//
+//
+//
+//		return $js;
+//	}
 
 	function	getChildDelayedJS(){
 		$js = "";
