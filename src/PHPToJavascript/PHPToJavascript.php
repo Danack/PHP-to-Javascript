@@ -157,6 +157,7 @@ class PHPToJavascript{
 
 	public static $ECHO_TO_ALERT = 'alert(';
 	public static $ECHO_TO_DOCUMENT_WRITE = 'document.write(';
+    public static $ECHO_TO_CONSOLE_LOG = 'console.log(';
 
 	/** @var string */
 	var $srcFilename = NULL;

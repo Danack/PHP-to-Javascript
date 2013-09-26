@@ -37,9 +37,9 @@ $filesToConvert = array(
 	'TypeHinting.js' => 'TypeHinting.php',
 );
 
-$filesToConvert = array(
-   'schedule.js' => 'schedule.php',
-);
+//$filesToConvert = array(
+//'PublicPrivate.js' => 'PublicPrivate.php',
+//);
 
 
 $convertedFiles = array();
