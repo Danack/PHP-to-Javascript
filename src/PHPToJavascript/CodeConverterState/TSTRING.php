@@ -27,7 +27,8 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			$this->stateMachine->addJS( "/*". $value ."*/");
 		}
 		else{
-            $variable = $this->stateMachine->getVariableFromScopes($value);
+            $variable = $this->stateMachine->getVariableFromScope($value, CODE_SCOPE_CLASS);
+
             if ($variable) {
                 if ($variable->flags & DECLARATION_TYPE_PRIVATE) {
                     if ($this->stateMachine->previousTokensMatch(['this', '.']) == true) {

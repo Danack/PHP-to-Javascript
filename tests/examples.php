@@ -23,7 +23,7 @@ $filesToConvert = array(
 
 	'NameSpace.js' => 'NameSpace.php',
 	//Broken test
-	//'PublicPrivate.js' => 'PublicPrivate.php',
+	'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
 
 	'StaticTest.js' => 'StaticTest.php',
@@ -38,9 +38,7 @@ $filesToConvert = array(
 );
 
 $filesToConvert = array(
-    'ArrayExample.js' => 'ArrayExample.php',
-    'CustomEvent.js' => 'CustomEvent.php' ,
-    'PublicPrivate.js' => 'PublicPrivate.php',
+   'schedule.js' => 'schedule.php',
 );
 
 
@@ -96,7 +94,7 @@ function encapsulateJavascriptFile($outputFilename) {
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-	$phpToJavascript->setTrace(true);
+//	$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 

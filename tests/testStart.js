@@ -12,6 +12,7 @@ function assert(var1, var2){
 
 	if(var1 != var2){
 		testErrors.push("Test " + testsRunForModule + "assert failed " + var1 + " != " + var2 );
+        debugger;
 	}
 	else{
 		testsPassedForModule++;

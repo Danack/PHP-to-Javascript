@@ -61,6 +61,15 @@ abstract class CodeScope{
 	abstract	function	getScopedVariableForScope($variableName, $variableFlags);
 	abstract	function getType();
 
+    function getVariable($variableName){
+        if (array_key_exists($variableName, $this->scopedVariables)) {
+            return $this->scopedVariables[$variableName];
+        }
+        return null;
+    }
+    
+    
+
 	function	getScopedVariable($variableName, $variableFlags, $originalScope){
 
 		$result = $this->getScopedVariableForScope($variableName, $variableFlags);

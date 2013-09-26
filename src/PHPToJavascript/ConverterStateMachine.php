@@ -3,9 +3,18 @@
 namespace PHPToJavascript;
 
 
+
+
+/**
+ * Converts php multi-line strings to their javascript equivalents. Test with:
+ * 
+ * $string = "This is a windows\r\n break, a unix\n break and a darwin\r This is a long bit to check the CR;";
+ * 
+ * @param $string
+ * @return mixed
+ */
 function convertMultiLineString($string) {
-    $string = str_replace("\r\n", "\\".PHP_EOL, $string); //Windows and unix
-    $string = str_replace(["\r", "\n"], "\\".PHP_EOL, $string);
+    $string = preg_replace('/((\r\n)|(\n)|(\r))/i', "\\".PHP_EOL, $string);
     return $string;
 }
 
@@ -385,6 +394,22 @@ class	ConverterStateMachine{
 		return $this->currentScope->type;
 	}
 
+    /**
+     * @param $variableName
+     * @param $scopeType
+     * @return null|Variable
+     */
+    function getVariableFromScope($variableName, $scopeType) {
+        $parentClassScope = $this->currentScope->findAncestorScopeByType($scopeType);
+        
+        if ($parentClassScope) {
+            return $parentClassScope->getVariable($variableName);
+        }
+        
+        return null;
+    }
+    
+    
 	function	getScopeName(){
 		$parentClassScope = $this->currentScope->findAncestorScopeByType(CODE_SCOPE_CLASS);
 		if($parentClassScope != null){

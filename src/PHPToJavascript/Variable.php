@@ -10,12 +10,7 @@ class Variable {
 
     public $name;
     
-    public function __construct($name, $flags) {
-        
-        if ($name == 'test') {
-            echo "hmm";
-        }
-        
+    public function __construct($name, $flags) {        
         $this->name = $name;
         $this->flags = $flags;
     }
