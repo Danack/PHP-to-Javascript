@@ -1,6 +1,19 @@
 <?php
 
 
+class InstanceTest{}
+
+$instanceTest = new InstanceTest();
+
+$correctInstance = false;
+
+if ($instanceTest instanceof InstanceTest){
+    $correctInstance = true;
+}
+
+assert($correctInstance, true);
+
+
 //https://github.com/Danack/PHP-to-Javascript/issues/33
 
 class ClassWithPrivate {

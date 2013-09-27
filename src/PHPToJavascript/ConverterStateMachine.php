@@ -639,7 +639,7 @@ class	ConverterStateMachine{
 		'T_EVAL' => 'eval',
 		'T_ELSEIF' => 'else if',
 		'T_BREAK' => 'break',
-		//'T_DOUBLE_ARROW' => ':', //Replaced by state
+        'T_INSTANCEOF' => 'instanceof'
 	);
 
 	/** @var array these tokens stays the same */
