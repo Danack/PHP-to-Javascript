@@ -1,0 +1,11 @@
+<?php
+$to = "$agent_mailID, Satish.anandan@concentrix.com, Balaji.sadagopan@concentrix.com";
+$subject = "TMR Form";
+$message = "Hi ".$Associate_Name.$newline.","."<br/>". "One of your call has been monitored by your QA with Case ID:".$case_id." and Call ID is :" .$cls_call_id.$newline."Link:".$link.$newline.$newline."<br/>"."Regards"."<br/>".$newline."Quality Team";
+// To send HTML mail, the Content-type header must be set
+$headers  = 'MIME-Version: 1.0' . "\r\n";
+$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+$headers .= "From:". $creat_mailid;
+mail($to,$subject,$message,$headers);
+echo "TMR Mail Sent.";
+?>
