@@ -8,10 +8,9 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 
 		$value = convertPHPValueToJSValue($value);
 
-		$defineValue = $this->stateMachine->getDefine($value);
-
-		if($defineValue !== FALSE){
-			$this->stateMachine->addJS("'".$defineValue."'");
+        if($this->stateMachine->isDefined($value)) {
+            $defineValue = $this->stateMachine->getDefine($value);
+            $this->stateMachine->addJS($defineValue);
 		}
 		//TODO add isClass($value)
 		else if(strcmp('static', $value) == 0 ||

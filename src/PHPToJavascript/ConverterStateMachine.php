@@ -199,10 +199,6 @@ class	ConverterStateMachine{
         return $this->currentScope->getVariableFromScope($variableName);
     }
     
-//    function    getVariableFlagsForScope($value) {
-//        return $this->currentScope->getScopedVariable($variableName,  $variableFlags, true);
-//    }
-
 	function	findScopeType($type){
 		foreach($this->scopesStack as $scope){
 			//TODO How to convert this bad code into
@@ -220,10 +216,6 @@ class	ConverterStateMachine{
 	}
 
 	public function addJS($jsString){
-        if(is_object($jsString) == true) {
-            echo "bugger";
-        }
-        
 		if(PHPToJavascript::$TRACE){
 			echo "$jsString \n";
 		}
@@ -510,18 +502,19 @@ class	ConverterStateMachine{
 	}
 
 	function	addDefine($name, $value){
-		$name = unencapseString($name);
-		$value = unencapseString($value);
-
 		$this->defines[$name] = $value;
 	}
 
-	function	getDefine($name){
-		if(array_key_exists($name, $this->defines) == true){
-			return $this->defines[$name];
-		}
+    function	isDefined($name){
+        return array_key_exists($name, $this->defines) == true;
+	}
 
-		return false;
+	function	getDefine($name) {
+        if(array_key_exists($name, $this->defines) == true){
+            return (string)$this->defines[$name];
+        }
+
+        return null;
 	}
 
 	function	getClassName(){
@@ -674,29 +667,6 @@ class	ConverterStateMachine{
         'T_DNUMBER'
 	);
 
-	function     generateFile($outputFilename, $originalFilename, $jsOutput) {
-
-		$outputDirectory = pathinfo($outputFilename, PATHINFO_DIRNAME);
-
-		ensureDirectoryExists($outputDirectory);
-
-		$fileHandle = fopen($outputFilename, "w");
-
-		if ($fileHandle == false) {
-			throw new \Exception("Failed to open file [$outputFilename] for writing.");
-		}
-
-		fwrite($fileHandle, "//Auto-generated file by PHP-To-Javascript at ".date(DATE_RFC822).NL);
-		fwrite($fileHandle, "//\n");
-		fwrite($fileHandle, "//DO NOT EDIT - all changes will be lost.\n");
-		fwrite($fileHandle, "//\n");
-		fwrite($fileHandle, "//Please edit the file " . $originalFilename . " and then reconvert to make any changes\n");
-		fwrite($fileHandle, "\n");
-
-		fwrite($fileHandle, $jsOutput);
-
-		fclose($fileHandle);
-	}
 }
 
 

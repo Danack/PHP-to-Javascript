@@ -38,7 +38,7 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//'PublicPrivate.js' => 'PublicPrivate.php',
+//    'BugReports.js' => 'BugReports.php',
 //);
 
 

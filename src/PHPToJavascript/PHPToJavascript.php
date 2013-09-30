@@ -128,15 +128,15 @@ function trimConstructor($constructor){
  */
 function	convertPHPValueToJSValue($value){
 
-	if($value == 'FALSE'){
+	if(strcasecmp($value, 'FALSE') == 0) {
 		return 'false';
 	}
 
-	if($value == 'TRUE'){
+	if(strcasecmp($value, 'TRUE') == 0) {
 		return 'true';
 	}
 
-	if($value == 'NULL'){
+	if(strcasecmp($value, 'NULL') == 0) {
 		return 'null';
 	}
 

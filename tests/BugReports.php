@@ -1,9 +1,8 @@
 <?php
 
+define('NULL_VAL', NULL);
 
 //Sent via email
-
-
 define('BOOL_VAL', true);
 define('INT_VAL', 5);
 define('FLOAT_VAL', 0.5);
@@ -16,12 +15,13 @@ assert(INT_VAL * 2, 10);
 
 assert(FLOAT_VAL + 1, 1.5);
 
+assert(NULL_VAL, NULL);
 
 
 
-//Sent via email
-$var3 = array('name' => 'gordon'); // dummy
-$x =  array($var3['name']);
+////Sent via email
+//$var3 = array('name' => 'gordon'); // dummy
+//$x =  array($var3['name']);
 
 
 //Sent via email
