@@ -1,6 +1,36 @@
 <?php
 
 
+//Sent via email
+
+
+define('BOOL_VAL', true);
+define('INT_VAL', 5);
+define('FLOAT_VAL', 0.5);
+
+
+
+assert(BOOL_VAL, true);
+
+assert(INT_VAL * 2, 10);
+
+assert(FLOAT_VAL + 1, 1.5);
+
+
+
+
+//Sent via email
+$var3 = array('name' => 'gordon'); // dummy
+$x =  array($var3['name']);
+
+
+//Sent via email
+$boolTrue = true;
+$boolFalse = !$boolTrue;
+assert($boolFalse, false);
+
+
+
 class InstanceTest{}
 
 $instanceTest = new InstanceTest();
@@ -12,6 +42,9 @@ if ($instanceTest instanceof InstanceTest){
 }
 
 assert($correctInstance, true);
+
+
+
 
 
 //https://github.com/Danack/PHP-to-Javascript/issues/33
