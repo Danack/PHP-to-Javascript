@@ -670,7 +670,8 @@ class	ConverterStateMachine{
 		'T_DEFAULT',
 		'T_THROW',
 		'T_FOR',
-        'T_CONTINUE'
+        'T_CONTINUE',
+        'T_DNUMBER'
 	);
 
 	function     generateFile($outputFilename, $originalFilename, $jsOutput) {
