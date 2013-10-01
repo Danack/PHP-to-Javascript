@@ -7,6 +7,8 @@ define('ARRAY_ELEMENT_START_MAGIC', '/*ARRAY_ELEMENT_START_MAGIC*/');
 
 class ArrayScope extends CodeScope{
 
+    public  $startedBySquareBracket = false;
+    var $squareBracketCount = 0;
 	var $parensCount = 0;
 	var $keyCount = 0;
 
@@ -16,10 +18,8 @@ class ArrayScope extends CodeScope{
 
 	var $variableName = null;
 
-
 	var $variableFlag = false;
 
-	//$currentScope->variableFlag & DECLARATION_TYPE_SQUARE_ARRAY
 
 	function	__construct($name, $parentScope, $variableFlag = 0){
 		parent::__construct($name, $parentScope);
@@ -28,12 +28,12 @@ class ArrayScope extends CodeScope{
 
 	/**
 	 * @param $variableName
-	 * @param $isClassVariable - whether the variable was prefixed by $this
+	 * @param $variableFlags
 	 * @return mixed
 	 *
 	 * For a given variable name, try to find the variable in the current scope.
 	 */
-	function    getScopedVariableForScope($variableName, $isClassVariable) {
+	function    getScopedVariableForScope($variableName, $variableFlags) {
 		//Array scopes don't contain variables.
 		return NULL;
 	}
@@ -137,13 +137,24 @@ class ArrayScope extends CodeScope{
 	//Contains hacks
 	function	postStateMagic($name, $value){
 		parent::postStateMagic($name, $value);
-
-//		if($this->arrayElementStarted == false){
-//			if ($name == '(') { //past array opening '('
-//				$this->addJS(ARRAY_ELEMENT_START_MAGIC);
-//				$this->arrayElementStarted = true;
-//			}
-//		}
 	}
+
+    function incrementSquareBracketCount() {
+        $this->squareBracketCount++;
+//        if(PHPToJavascript::$TRACE){
+//            echo "inc squareBracketCount ".$this->squareBracketCount."\n";
+//        }
+    }
+
+    function decrementSquareBracketCount() {
+        $this->squareBracketCount--;
+//        if(PHPToJavascript::$TRACE){
+//            echo "dec squareBracketCount ".$this->squareBracketCount."\n";
+//        }
+    }
+
+    function getSquareBracketCount() {
+        return $this->squareBracketCount;
+    }
 }
 

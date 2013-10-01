@@ -8,10 +8,9 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 
 		$value = convertPHPValueToJSValue($value);
 
-		$defineValue = $this->stateMachine->getDefine($value);
-
-		if($defineValue !== FALSE){
-			$this->stateMachine->addJS("'".$defineValue."'");
+        if($this->stateMachine->isDefined($value)) {
+            $defineValue = $this->stateMachine->getDefine($value);
+            $this->stateMachine->addJS($defineValue);
 		}
 		//TODO add isClass($value)
 		else if(strcmp('static', $value) == 0 ||
@@ -27,7 +26,18 @@ class CodeConverterState_TSTRING extends CodeConverterState{
 			$this->stateMachine->addJS( "/*". $value ."*/");
 		}
 		else{
-			$this->stateMachine->addJS($value);
+            $variable = $this->stateMachine->getVariableFromScope($value, CODE_SCOPE_CLASS);
+
+            if ($variable) {
+                if ($variable->flags & DECLARATION_TYPE_PRIVATE) {
+                    if ($this->stateMachine->previousTokensMatch(array('this', '.')) == true) {
+                        //For the record, this is the hackiest bit of code, so far.
+                        $this->stateMachine->deleteTokens(2);
+                    }
+                }
+            }
+
+            $this->stateMachine->addJS($value);
 		}
 
 		//TODO - added this to fix "SomeClass::someFunc()" leaving variableFlags in non zero state

@@ -20,6 +20,7 @@ define('CODE_SCOPE_ARRAY', 'CODE_SCOPE_ARRAY');
 define('CODE_SCOPE_CATCH', 'CODE_SCOPE_CATCH');
 
 define("CONSTRUCTOR_POSITION_MARKER", "/*CONSTRUCTOR GOES HERE*/");
+define("END_OF_CLASS_POSITION_MARKER", "/*END OF CLASS IS HERE*/");
 
 
 define('DECLARATION_TYPE_STATIC', 0x1);
@@ -133,15 +134,15 @@ function trimConstructor($constructor){
  */
 function	convertPHPValueToJSValue($value){
 
-	if($value == 'FALSE'){
+	if(strcasecmp($value, 'FALSE') == 0) {
 		return 'false';
 	}
 
-	if($value == 'TRUE'){
+	if(strcasecmp($value, 'TRUE') == 0) {
 		return 'true';
 	}
 
-	if($value == 'NULL'){
+	if(strcasecmp($value, 'NULL') == 0) {
 		return 'null';
 	}
 
@@ -162,7 +163,7 @@ class PHPToJavascript{
 
 	public static $ECHO_TO_ALERT = 'alert(';
 	public static $ECHO_TO_DOCUMENT_WRITE = 'document.write(';
-	public static $ECHO_TO_CONSOLE_LOG = 'console.log(';
+    public static $ECHO_TO_CONSOLE_LOG = 'console.log(';
 
 	/** @var string */
 	var $srcFilename = NULL;
@@ -194,11 +195,11 @@ class PHPToJavascript{
 	}
 
 	function	addFromFile($filename){
-		$code = file($filename,FILE_IGNORE_NEW_LINES);
+		$code = file_get_contents($filename);
 		if($code === FALSE){
 			throw new \Exception("Could not open $filename.");
 		}
-		$code = join(PHP_EOL,$code);
+
 		$tokenStream = new TokenStream($code);
 		processTokenStream($tokenStream, $this->stateMachine, NULL);
 	}

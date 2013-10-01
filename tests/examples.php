@@ -22,15 +22,13 @@ $filesToConvert = array(
 	'DefaultValue.js' => 'DefaultValue.php',
 	'Inheritance.js' => 'Inheritance.php',
 
-    'MultiLine.js' => 'MultiLine.php',
 	//Broken test
-	//'PublicPrivate.js' => 'PublicPrivate.php',
+	'PublicPrivate.js' => 'PublicPrivate.php',
 	'SimpleExample.js' => 'SimpleExample.php',
-    'SimpleOps.js' => 'SimpleOps.php',
+
 	'StaticTest.js' => 'StaticTest.php',
 
 	'SwitchStatement.js' => 'SwitchStatement.php',
-    
 	'TryCatch.js' => 'TryCatch.php',
 	'TypeHinting.js' => 'TypeHinting.php',
 );
@@ -43,8 +41,9 @@ if (TRAIT_SUPPORTED){
 	);
 	$filesToConvert['NameSpace.js']='NameSpace.php';
 }
+
 //$filesToConvert = array(
-//    'Ternary2.js' => 'Ternary2.php',
+//    'ArrayExample.js' => 'ArrayExample.php',
 //);
 
 
@@ -104,7 +103,7 @@ if (php_sapi_name() !== 'cli'){
 foreach($filesToConvert as $outputFilename =>  $inputFileList ){
 	$phpToJavascript = new PHPToJavascript\PHPToJavascript();
 
-//    $phpToJavascript->setTrace(true);
+//	$phpToJavascript->setTrace(true);
 
 	$phpToJavascript->setEchoConversionFunction(PHPToJavascript\PHPToJavascript::$ECHO_TO_ALERT);
 

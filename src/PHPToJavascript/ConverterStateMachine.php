@@ -3,8 +3,19 @@
 namespace PHPToJavascript;
 
 
+
+
+/**
+ * Converts php multi-line strings to their javascript equivalents. Test with:
+ *
+ * $string = "This is a windows\r\n break, a unix\n break and a darwin\r This is a long bit to check the CR;";
+ *
+ * @param $string
+ * @return mixed
+ */
 function convertMultiLineString($string) {
-	return str_replace(PHP_EOL, "\\".PHP_EOL, $string);
+    $string = preg_replace('/((\r\n)|(\n)|(\r))/i', "\\".PHP_EOL, $string);
+    return $string;
 }
 
 
@@ -161,6 +172,15 @@ class	ConverterStateMachine{
 		return $this->currentTokenStream->getPreviousNonWhitespaceToken($name, $value);
 	}
 
+    function previousTokensMatch($tokens) {
+        return $this->currentScope->previousTokensMatch($tokens);
+    }
+
+    function deleteTokens($tokenCountToDelete) {
+        $this->currentScope->deleteTokens($tokenCountToDelete);
+    }
+
+
 
 	/**
 	 * Adds a variable to the current scope.
@@ -175,6 +195,10 @@ class	ConverterStateMachine{
 	function	getVariableNameForScope($variableName,  $variableFlags){
 		return $this->currentScope->getScopedVariable($variableName,  $variableFlags, true);
 	}
+
+    function getVariableFromScopes($variableName) {
+        return $this->currentScope->getVariableFromScope($variableName);
+    }
 
 	function	findScopeType($type){
 		foreach($this->scopesStack as $scope){
@@ -363,6 +387,22 @@ class	ConverterStateMachine{
 		return $this->currentScope->type;
 	}
 
+    /**
+     * @param $variableName
+     * @param $scopeType
+     * @return null|Variable
+     */
+    function getVariableFromScope($variableName, $scopeType) {
+        $parentClassScope = $this->currentScope->findAncestorScopeByType($scopeType);
+
+        if ($parentClassScope) {
+            return $parentClassScope->getVariable($variableName);
+        }
+
+        return null;
+    }
+
+
 	function	getScopeName(){
 		$parentClassScope = $this->currentScope->findAncestorScopeByType(CODE_SCOPE_CLASS);
 		if($parentClassScope != null){
@@ -463,18 +503,19 @@ class	ConverterStateMachine{
 	}
 
 	function	addDefine($name, $value){
-		$name = unencapseString($name);
-		$value = unencapseString($value);
-
 		$this->defines[$name] = $value;
 	}
 
-	function	getDefine($name){
-		if(array_key_exists($name, $this->defines) == true){
-			return $this->defines[$name];
-		}
+    function	isDefined($name){
+        return array_key_exists($name, $this->defines) == true;
+	}
 
-		return false;
+	function	getDefine($name) {
+        if(array_key_exists($name, $this->defines) == true){
+            return (string)$this->defines[$name];
+        }
+
+        return null;
 	}
 
 	function	getClassName(){
@@ -533,7 +574,7 @@ class	ConverterStateMachine{
 	}
 
 
-	function 	startArrayScope($scopeName) {
+	function 	startArrayScope($scopeName, $startedBySquareBracket) {
 
 		$classScope = false;
 
@@ -547,6 +588,12 @@ class	ConverterStateMachine{
 		if ($classScope != false) {
 			$this->currentScope->setVariableName($classScope->currentVariableName);
 		}
+
+        if ($startedBySquareBracket == true) {
+            $this->currentScope->incrementSquareBracketCount();
+        }
+
+        $this->currentScope->startedBySquareBracket = $startedBySquareBracket;
 	}
 
 
@@ -592,7 +639,7 @@ class	ConverterStateMachine{
 		'T_EVAL' => 'eval',
 		'T_ELSEIF' => 'else if',
 		'T_BREAK' => 'break',
-		//'T_DOUBLE_ARROW' => ':', //Replaced by state
+        'T_INSTANCEOF' => 'instanceof'
 	);
 
 	/** @var array these tokens stays the same */
@@ -623,32 +670,10 @@ class	ConverterStateMachine{
 		'T_DEFAULT',
 		'T_THROW',
 		'T_FOR',
-        'T_CONTINUE'
+        'T_CONTINUE',
+        'T_DNUMBER'
 	);
 
-	function     generateFile($outputFilename, $originalFilename, $jsOutput) {
-
-		$outputDirectory = pathinfo($outputFilename, PATHINFO_DIRNAME);
-
-		ensureDirectoryExists($outputDirectory);
-
-		$fileHandle = fopen($outputFilename, "w");
-
-		if ($fileHandle == false) {
-			throw new \Exception("Failed to open file [$outputFilename] for writing.");
-		}
-
-		fwrite($fileHandle, "//Auto-generated file by PHP-To-Javascript at ".date(DATE_RFC822).NL);
-		fwrite($fileHandle, "//\n");
-		fwrite($fileHandle, "//DO NOT EDIT - all changes will be lost.\n");
-		fwrite($fileHandle, "//\n");
-		fwrite($fileHandle, "//Please edit the file " . $originalFilename . " and then reconvert to make any changes\n");
-		fwrite($fileHandle, "\n");
-
-		fwrite($fileHandle, $jsOutput);
-
-		fclose($fileHandle);
-	}
 }
 
 

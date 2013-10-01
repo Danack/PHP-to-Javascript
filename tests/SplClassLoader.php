@@ -133,7 +133,7 @@ class SplClassLoader
 			$fullFileName = ($this->_includePath !== null ? $this->_includePath . DIRECTORY_SEPARATOR : '') . $fileName;
 
 			if(file_exists($fullFileName) == false){
-				xdebug_break();
+				//xdebug_break();
 			}
 
             require ($this->_includePath !== null ? $this->_includePath . DIRECTORY_SEPARATOR : '') . $fileName;

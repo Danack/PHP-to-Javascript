@@ -67,17 +67,30 @@ class CodeConverterState_Default extends CodeConverterState {
 				$previousName == ',' ||
 				$previousName == '(' ||
 				$previousName == '[' ) { //Yep, this is the start of an array declaration.
+				$this->stateMachine->startArrayScope("", true);
 
-				$this->stateMachine->startArrayScope("");
+                //$this->stateMachine->currentScope->incrementSquareBracketCount();
+
 				$this->stateMachine->currentTokenStream->insertToken('(');
 				return false;
 			}
+            else if ($this->stateMachine->currentScope instanceof ArrayScope) {
+                $this->stateMachine->currentScope->incrementSquareBracketCount();
+            }
 		}
 
 		if ($name == ']') {
 			if ($this->stateMachine->currentScope instanceof ArrayScope) {
-				$this->stateMachine->currentTokenStream->insertToken(')');
-				return false;
+                $this->stateMachine->currentScope->decrementSquareBracketCount();
+
+                if ($this->stateMachine->currentScope->getSquareBracketCount() <= 0) {
+                    if ($this->stateMachine->currentScope->startedBySquareBracket) {
+                        $this->stateMachine->currentTokenStream->insertToken(')');
+                        return false;
+                    }
+                }
+                $this->stateMachine->currentScope->addJS(']');
+                return false;
 			}
 		}
 

@@ -18,6 +18,11 @@ abstract class CodeScope extends UsingSafeAccess{
 
 	var $defaultValues = array();
 
+    /**
+     * @var Variable[]
+     */
+    protected $scopedVariables = array();
+
 	/** @var CodeScope */
 	var $parentScope;
 
@@ -49,31 +54,34 @@ abstract class CodeScope extends UsingSafeAccess{
 		throw new \Exception("This should only be called on ClassScope");
 	}
 
-	/**
-	 * @var string[]
-	 */
-	public $scopedVariables = array();
+
 
 	/**
 	 * @param $variableName
-	 * @param $isClassVariable - whether the variable was prefixed by $this
+	 * @param $variableFlags
 	 * @return mixed
 	 *
 	 * For a given variable name, try to find the variable in the current scope.
-	 *
-	 * //TODO - change $isClassVaraible to be a flag to support FLAG_THIS, FLAG_SELF, FLAG_STATIC, FLAG_PARENT
 	 */
-	abstract	function	getScopedVariableForScope($variableName, $isClassVariable);
+	abstract	function	getScopedVariableForScope($variableName, $variableFlags);
 	abstract	function getType();
 
-	function	getScopedVariable($variableName,  $variableFlags, $originalScope){
+    function getVariable($variableName){
+        if (array_key_exists($variableName, $this->scopedVariables)) {
+            return $this->scopedVariables[$variableName];
+        }
+        return null;
+    }
 
-		$isClassVariable = ($variableFlags & DECLARATION_TYPE_CLASS);
-		$result = $this->getScopedVariableForScope($variableName, $isClassVariable);
+
+
+	function	getScopedVariable($variableName, $variableFlags, $originalScope){
+
+		$result = $this->getScopedVariableForScope($variableName, $variableFlags);
 
 		if($result == NULL){
 			if($this->parentScope != NULL){
-				$result = $this->parentScope->getScopedVariable($variableName, $isClassVariable, $variableFlags, FALSE);
+				$result = $this->parentScope->getScopedVariable($variableName, $variableFlags, FALSE);
 			}
 		}
 
@@ -94,6 +102,30 @@ abstract class CodeScope extends UsingSafeAccess{
 
 		return $result;
 	}
+
+
+    function getVariableFromScopeInternal($variableName) {
+        if (array_key_exists($variableName, $this->scopedVariables)) {
+            return $this->scopedVariables[$variableName];
+        }
+
+        return null;
+    }
+
+
+    function getVariableFromScope($variableName) {
+
+        $result = $this->getVariableFromScopeInternal($variableName);
+
+        if($result == NULL){
+            if($this->parentScope != NULL){
+                $result = $this->parentScope->getVariableFromScope($variableName);
+            }
+        }
+
+        return $result;
+    }
+
 
 	function getName(){
 		return $this->name;
@@ -135,20 +167,23 @@ abstract class CodeScope extends UsingSafeAccess{
 	 */
 	function	addScopedVariable($variableName, $variableFlag){
 
-		if($variableFlag & DECLARATION_TYPE_CLASS){
-			//In cases lile "$this->variableName" variableName is never
-			//added to the scope.
-			return false;
+		if($variableFlag & DECLARATION_TYPE_CLASS) {
+            if (!($variableFlag & DECLARATION_TYPE_PRIVATE)) {
+                //In cases like "$this->variableName" variableName is never
+                //added to the scope.
+                return false;
+            }
 		}
 
 		$cVar = cvar($variableName);
 
 		if(PHPToJavascript::$TRACE == TRUE){
-			echo "Added variable $variableName to scope ".get_class($this)."\n";
+			echo "Added variable $variableName to scope ".get_class($this)." with flag $variableFlag\n";
 		}
 
 		if(array_key_exists($cVar, $this->scopedVariables) == FALSE){
-			$this->scopedVariables[$cVar] = $variableFlag;
+            $variable = new Variable($cVar, $variableFlag);
+			$this->scopedVariables[$cVar] = $variable;
 			return TRUE;
 		}
 		return FALSE;
@@ -206,20 +241,20 @@ abstract class CodeScope extends UsingSafeAccess{
 		return "";
 	}
 
-	function	getJSRaw(){
-		$js = "";
-		$js .= $this->getJS_InPlace();
-		$js .= "\n";
-		$js .= $this->getEndOfScopeJS();
-		$js .= "\n";
-		$js .= $this->getChildDelayedJS();
-
-
-
-
-
-		return $js;
-	}
+//	function	getJSRaw(){
+//		$js = "";
+//		$js .= $this->getJS_InPlace();
+//		$js .= "\n";
+//		$js .= $this->getEndOfScopeJS();
+//		$js .= "\n";
+//		$js .= $this->getChildDelayedJS();
+//
+//
+//
+//
+//
+//		return $js;
+//	}
 
 	function	getChildDelayedJS(){
 		$js = "";
@@ -268,6 +303,27 @@ abstract class CodeScope extends UsingSafeAccess{
 
     function	addToJsForPreviousVariable($value) {
         throw new \Exception("This has no default implementation.");
+    }
+
+    function previousTokensMatch($tokens) {
+
+        $tokens = array_reverse($tokens);//Tokens are matched from the end.
+
+        $position = count($this->jsElements) - 1;
+
+        foreach ($tokens as $token) {
+            if (strcmp($token, $this->jsElements[$position]) != 0) {
+                return false;
+            }
+            $position--;
+        }
+        return true;
+    }
+
+    function deleteTokens($tokenCountToDelete) {
+        for ($x=0 ; $x<$tokenCountToDelete ; $x++) {
+            $discardedToken = array_pop($this->jsElements);
+        }
     }
 }
 
