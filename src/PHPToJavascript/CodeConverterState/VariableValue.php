@@ -31,7 +31,7 @@ class CodeConverterState_VariableValue extends CodeConverterState{
 		if ($name == "[") {
 
 			$classScope = false;
-			$this->stateMachine->startArrayScope("");
+			$this->stateMachine->startArrayScope("", true);
 //			if ($this->stateMachine->currentScope instanceof ClassScope) {
 //				$classScope = $this->stateMachine->currentScope;
 //			}

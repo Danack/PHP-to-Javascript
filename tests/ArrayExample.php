@@ -1,11 +1,18 @@
 <?php
 
-$test = function() {
+//Sent via email
+
+
+$nameArray = array('name' => 'gordon');
+$name = array($nameArray['name']);
+
+assert($name[0], 'gordon');
+
 
 
 $dataMap = [
 	array('photoID', 'id'),
-	['owner', 'owner'],
+	['owner', 'Danack'],
 ];
 
 $gah = [1, 2];
@@ -127,7 +134,3 @@ assert($value, 123);
 
 
 testEnd();
-
-};
-
-$test();

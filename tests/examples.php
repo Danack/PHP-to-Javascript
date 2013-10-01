@@ -38,7 +38,7 @@ $filesToConvert = array(
 );
 
 //$filesToConvert = array(
-//    'BugReports.js' => 'BugReports.php',
+//    'ArrayExample.js' => 'ArrayExample.php',
 //);
 
 

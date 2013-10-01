@@ -17,7 +17,7 @@ class CodeConverterState_ARRAY extends CodeConverterState {
 
 		$classScope = false;
 
-		$this->stateMachine->startArrayScope($value);
+		$this->stateMachine->startArrayScope($value, false);
 
 		//$this->changeToState(CONVERTER_STATE_DEFAULT);
 	}

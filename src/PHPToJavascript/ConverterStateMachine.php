@@ -573,7 +573,7 @@ class	ConverterStateMachine{
 	}
 
 
-	function 	startArrayScope($scopeName) {
+	function 	startArrayScope($scopeName, $startedBySquareBracket) {
 
 		$classScope = false;
 
@@ -587,6 +587,12 @@ class	ConverterStateMachine{
 		if ($classScope != false) {
 			$this->currentScope->setVariableName($classScope->currentVariableName);
 		}
+
+        if ($startedBySquareBracket == true) {
+            $this->currentScope->incrementSquareBracketCount();
+        }
+
+        $this->currentScope->startedBySquareBracket = $startedBySquareBracket;
 	}
 
 
