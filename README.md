@@ -1,3 +1,5 @@
+This was a joke project that went far too far. I'm archiving it....but leaving it online as a piece of art.
+
 PHP-to-Javascript
 =================
 
